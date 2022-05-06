@@ -1,26 +1,50 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Routes from "./routes";
+import {BrowserRouter} from "react-router-dom";
+import {ThemeProvider} from "@mui/material/styles";
+import CssBaseline from '@mui/material/CssBaseline';
+import createGlobalTheme from "./theme";
+import Auth from "./components/Auth";
+import useSettings from "./hooks/useSettings";
+import {GlobalStyles} from "@mui/material";
+
+const inputGlobalStyles = <GlobalStyles styles={{
+    '*': {
+        boxSizing: 'border-box',
+        margin: 0,
+        padding: 0
+    },
+    html: {
+        '-webkit-font-smoothing': 'antialiased',
+        '-moz-osx-font-smoothing': 'grayscale',
+        height: '100%',
+        width: '100%'
+    },
+    body: {
+        height: '100%',
+        width: '100%'
+    },
+    '#root': {
+        height: '100%',
+        width: '100%'
+    }
+}} />;
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const {settings} = useSettings();
+
+    return (
+        <ThemeProvider theme={createGlobalTheme(settings)}>
+            {inputGlobalStyles}
+            <GlobalStyles styles={{ h1: { color: 'grey' } }} />
+            <CssBaseline />
+            <Auth>
+                <BrowserRouter>
+                    <Routes />
+                </BrowserRouter>
+            </Auth>
+        </ThemeProvider>
+    );
 }
 
 export default App;
