@@ -10,7 +10,7 @@ const Header: React.FC<{title?: string}> = ({title}) => (
                 <Link underline="hover" color="inherit" to="/home" component={RouterLink}>
                     Главная
                 </Link>
-                <Link underline="hover" color="inherit" to="/guest" component={RouterLink}>
+                <Link underline="hover" color="inherit" to="/guests" component={RouterLink}>
                     Гости
                 </Link>
                 <Typography color="text.primary">{title ? title : 'Создание'}</Typography>

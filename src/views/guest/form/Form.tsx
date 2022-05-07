@@ -10,7 +10,6 @@ import {
     Card,
     CardContent,
     Checkbox,
-    FormControlLabel,
     Grid,
     MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField, Typography
@@ -23,56 +22,13 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import {FiCamera} from "react-icons/fi";
 
-const countries: ICountry[] = [
-    {
-        id: 1,
-        flag: '',
-        nameRu: 'Таджикистан',
-        nameEn: 'Tajikistan',
-        nameTj: 'Точикистон'
-    },
-    {
-        id: 2,
-        flag: '',
-        nameRu: 'Россия',
-        nameEn: 'Russia',
-        nameTj: 'Руссия'
-    },
-    {
-        id: 3,
-        flag: '',
-        nameRu: 'США',
-        nameEn: 'USA',
-        nameTj: 'ИМА'
-    },
-]
-
-function createData(
-    id: number,
-    name: string,
-
-): ILocation {
-    return {
-        id,
-        name,
-
-    };
-}
-
-const rows = [
-    createData(1, 'Cupcake'),
-    createData(2, 'Donut'),
-    createData(3, 'Eclair'),
-    createData(4, 'Frozen yoghurt'),
-
-];
-
-const Form: React.FC<{guest?: IGuest, locations: ILocation[]}> = ({guest, locations: eventLocations}) => {
+const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountry[]}> = (props) => {
+    const {guest, locations: eventLocations, countries} = props
     const navigate = useNavigate();
     const {enqueueSnackbar} = useSnackbar();
-    const [locations, setLocations] = useState<number[]>(guest?.locations || []);
-    const [passportPreview, setPassportPreview] = useState<string>();
-    const [photoPreview, setPhotoPreview] = useState<string>();
+    const [locations, setLocations] = useState<number[]>((guest?.locations as number[]) || []);
+    const [passportPreview, setPassportPreview] = useState<string>(guest?.passportImage as string);
+    const [photoPreview, setPhotoPreview] = useState<string>(guest?.photo as string);
     const [uploadError, setUploadError] = useState<boolean>(false);
     const [locationError, setLocationError] = useState<boolean>(false);
 
@@ -95,7 +51,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[]}> = ({guest, locati
         try {
             values.locations = locations
 
-            if (!values.passportImage || !values.photo) {
+            if (!passportPreview || !photoPreview) {
                 setUploadError(true)
                 return
             }
@@ -118,7 +74,31 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[]}> = ({guest, locati
     }
 
     const handleUpdate = async (values: IGuest, formActions: { [key: string]: any }) => {
+        values.id = guest?.id
         values.locations = locations
+
+        try {
+            if (!passportPreview || !photoPreview) {
+                setUploadError(true)
+                return
+            }
+
+            if (values.locations.length === 0) {
+                setLocationError(true)
+                return
+            }
+
+            await guestService.putUpdateGuest(values)
+
+            enqueueSnackbar('Успешно обновлен', {variant: 'success'});
+            navigate(-1)
+        } catch (error: any) {
+            formActions.setStatus({success: false});
+            formActions.setErrors({submit: error.message});
+            formActions.setSubmitting(false);
+
+            enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+        }
     }
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -241,7 +221,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[]}> = ({guest, locati
                                                 {
                                                     countries.map(item => (
                                                         <MenuItem key={item.id} value={item.id}>
-                                                            {item.nameTj}
+                                                            {item.name}
                                                         </MenuItem>
                                                     ))
                                                 }
@@ -377,7 +357,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[]}> = ({guest, locati
                                                             onChange={handleSelectAllClick}
                                                         />
                                                     </TableCell>
-                                                    <TableCell>Места проведения</TableCell>
+                                                    <TableCell>Все</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
@@ -386,7 +366,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[]}> = ({guest, locati
                                                         const isPlaceLocated = isLocation(item.id!);
 
                                                         return(
-                                                            <TableRow hover key={item.id} onClick={(event) => handleChangeLocation(item.id!)}>
+                                                            <TableRow hover key={item.id} onClick={() => handleChangeLocation(item.id!)}>
                                                                 <TableCell padding="checkbox">
                                                                     <Checkbox
                                                                         color="primary"

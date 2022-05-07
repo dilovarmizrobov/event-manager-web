@@ -33,7 +33,7 @@ const routes: RouteObject[] = [
                         element: <GuestCreateView />
                     },
                     {
-                        path: '/guests/edit',
+                        path: '/guests/:guestId/edit',
                         element: <GuestEditView />
                     },
                     {

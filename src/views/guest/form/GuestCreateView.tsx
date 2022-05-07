@@ -10,6 +10,8 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import {useNavigate} from "react-router-dom";
 import LoadingLayout from "../../../components/LoadingLayout";
+import {ICountry} from "../../../models/ICountry";
+import countryService from "../../../services/CountryService";
 
 const Root = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
@@ -22,6 +24,7 @@ const GuestCreateView = () => {
     const {enqueueSnackbar} = useSnackbar()
     const navigate = useNavigate()
     const [locations, setLocations] = useState<ILocation[]>([])
+    const [countries, setCountries] = useState<ICountry[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
 
@@ -33,13 +36,15 @@ const GuestCreateView = () => {
                 setLoading(true)
 
                 const data: any = await eventLocationService.getLocations()
+                const dataCountries: any = await countryService.getCountries()
 
                 if (!cancel) {
-                    if (data.length === 0) {
+                    if (data.length === 0 || dataCountries.length === 0) {
                         navigate(-1)
-                        enqueueSnackbar('Добавьте с начала места проведения', {variant: 'info'})
+                        enqueueSnackbar('Добавьте с начала места проведения и страны', {variant: 'info'})
                     } else {
                         setLocations(data)
+                        setCountries(dataCountries)
                     }
                 }
             } catch (error: any) {
@@ -57,12 +62,12 @@ const GuestCreateView = () => {
         <>
             <Page title="Гости"/>
             {
-                locations.length > 0 ? (
+                locations.length > 0 && countries.length > 0 ? (
                     <Root>
                         <Container maxWidth="xl">
                             <Header />
                             <Box mt={3}>
-                                <Form locations={locations} />
+                                <Form locations={locations} countries={countries} />
                             </Box>
                         </Container>
                     </Root>
