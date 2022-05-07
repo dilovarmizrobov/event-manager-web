@@ -12,7 +12,7 @@ import {
     Checkbox,
     FormControlLabel,
     Grid,
-    MenuItem,
+    MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField, Typography
 } from "@mui/material";
 import {useNavigate} from "react-router-dom";
@@ -47,6 +47,26 @@ const countries: ICountry[] = [
     },
 ]
 
+function createData(
+    id: number,
+    name: string,
+
+): ILocation {
+    return {
+        id,
+        name,
+
+    };
+}
+
+const rows = [
+    createData(1, 'Cupcake'),
+    createData(2, 'Donut'),
+    createData(3, 'Eclair'),
+    createData(4, 'Frozen yoghurt'),
+
+];
+
 const Form: React.FC<{guest?: IGuest, locations: ILocation[]}> = ({guest, locations: eventLocations}) => {
     const navigate = useNavigate();
     const {enqueueSnackbar} = useSnackbar();
@@ -54,6 +74,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[]}> = ({guest, locati
     const [passportPreview, setPassportPreview] = useState<string>();
     const [photoPreview, setPhotoPreview] = useState<string>();
     const [uploadError, setUploadError] = useState<boolean>(false);
+    const [locationError, setLocationError] = useState<boolean>(false);
 
     const initialValues: IGuest = {
         fullName: guest?.fullName || '',
@@ -70,15 +91,6 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[]}> = ({guest, locati
         email: Yup.string().max(255),
     })
 
-    const handleChangeLocation = (id: number) => {
-        let newState = [...locations]
-        let index = newState.findIndex(item => item === id)
-
-        index > -1 ? newState.splice(index, 1) : newState.push(id)
-
-        setLocations(newState);
-    };
-
     const handleAdd = async (values: IGuest, formActions: { [key: string]: any }) => {
         try {
             values.locations = locations
@@ -88,6 +100,10 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[]}> = ({guest, locati
                 return
             }
 
+            if (values.locations.length === 0) {
+                setLocationError(true)
+                return
+            }
             await guestService.postNewGuest(values)
 
             enqueueSnackbar('Успешно создан', {variant: 'success'});
@@ -104,6 +120,30 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[]}> = ({guest, locati
     const handleUpdate = async (values: IGuest, formActions: { [key: string]: any }) => {
         values.locations = locations
     }
+
+    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.checked) {
+            let newState = eventLocations.map((n) => n.id!);
+            setLocationError(false)
+            setLocations(newState);
+            return;
+        }
+
+        setLocationError(true)
+        setLocations([]);
+    };
+
+    const handleChangeLocation = (id: number) => {
+        let newState = [...locations]
+        let index = newState.findIndex(item => item === id)
+
+        index > -1 ? newState.splice(index, 1) : newState.push(id)
+
+        setLocationError(newState.length === 0)
+        setLocations(newState);
+    };
+
+    const isLocation = (id: number) => locations.indexOf(id) !== -1;
 
     return (
         <Formik
@@ -325,24 +365,52 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[]}> = ({guest, locati
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    {
-                                        eventLocations.map(item => (
-                                            <div key={item.id}>
-                                                <FormControlLabel
-                                                    control={
+                                    <TableContainer>
+                                        <Table>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell padding="checkbox">
                                                         <Checkbox
                                                             color="primary"
-                                                            onChange={() => handleChangeLocation(item.id!)}
+                                                            indeterminate={locations.length > 0 && locations.length < eventLocations.length}
+                                                            checked={locations.length > 0 && locations.length === eventLocations.length}
+                                                            onChange={handleSelectAllClick}
                                                         />
-                                                    }
-                                                    label={item.name}
-                                                />
-                                            </div>
-                                        ))
-                                    }
+                                                    </TableCell>
+                                                    <TableCell>Места проведения</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {
+                                                    eventLocations.map((item) => {
+                                                        const isPlaceLocated = isLocation(item.id!);
+
+                                                        return(
+                                                            <TableRow hover key={item.id} onClick={(event) => handleChangeLocation(item.id!)}>
+                                                                <TableCell padding="checkbox">
+                                                                    <Checkbox
+                                                                        color="primary"
+                                                                        checked={isPlaceLocated}
+                                                                    />
+                                                                </TableCell>
+                                                                <TableCell component="th" scope="row">
+                                                                    {item.name}
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        )
+                                                    })
+                                                }
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                    {locationError && (
+                                        <Typography variant="subtitle2" sx={{mt: 2, ml: 2, color: "red"}}>
+                                            Выберите места проведения
+                                        </Typography>
+                                    )}
                                 </Grid>
                             </Grid>
-                            <Box sx={{my: 2, float: 'right'}}>
+                            <Box sx={{mb: 3, mt: 4, float: 'right'}}>
                                 <Button
                                     variant="outlined"
                                     color="secondary"
