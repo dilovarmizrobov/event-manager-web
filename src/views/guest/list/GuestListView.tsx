@@ -213,11 +213,11 @@ const GuestListView = () => {
                                                         onChange={handleSelectAllClick}
                                                     />
                                                 </TableCell>
-                                                <TableCell>Dessert (100g serving)</TableCell>
-                                                <TableCell>Calories</TableCell>
-                                                <TableCell>Fat (g)</TableCell>
-                                                <TableCell>Carbs (g)</TableCell>
-                                                <TableCell>Protein (g)</TableCell>
+                                                <TableCell>Период</TableCell>
+                                                <TableCell>Мероприятие</TableCell>
+                                                <TableCell>Статус</TableCell>
+                                                <TableCell>Зарегистрированно</TableCell>
+                                                <TableCell>Участвовали</TableCell>
                                                 <TableCell/>
                                             </TableRow>
                                         </TableHead>
