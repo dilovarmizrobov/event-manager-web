@@ -67,7 +67,7 @@ const Index: React.FC<{openMobile: boolean, onMobileClose: VoidFunction}> = ({op
                         <Typography variant="body2" color="textSecondary">
                             {user!.roles.map(r => UserRolesMap.get(r)).join(', ')}
                             <br/>
-                            Yorov12@gmail.com
+                            {user!.email}
                         </Typography>
                     </Box>
                 </Box>

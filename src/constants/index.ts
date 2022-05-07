@@ -18,3 +18,15 @@ export const UserRolesMap = new Map(
         [UserRolesEnum.EMPLOYEE, 'Сотрудник'],
     ]
 )
+
+export enum GuestTypeEnum {
+    COMMON = "COMMON",
+    VIP = "VIP"
+}
+
+export const GuestTypeMap = new Map(
+    [
+        [GuestTypeEnum.COMMON, 'Обычный'],
+        [GuestTypeEnum.VIP, 'VIP'],
+    ]
+)
