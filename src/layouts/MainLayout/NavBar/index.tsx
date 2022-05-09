@@ -24,6 +24,11 @@ const navConfig = [
                 icon: FaUsers,
                 href: '/guests',
             },
+            {
+                title: 'Места проведения',
+                icon: FiLayout,
+                href: '/event-locations',
+            },
         ]
     },
 ]
