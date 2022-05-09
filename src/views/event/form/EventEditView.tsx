@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
+import {styled} from "@mui/material/styles";
 import Page from "../../../components/Page";
 import {Box, Container} from "@mui/material";
 import Header from "./Header";
 import Form from "./Form";
-import {styled} from "@mui/material/styles";
-import {useNavigate, useParams} from "react-router-dom";
 import {useSnackbar} from "notistack";
-import eventLocationService from "../../../services/EventLocationService";
+import {useNavigate, useParams} from "react-router-dom";
+import {IEventRequest} from "../../../models/IEvent";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
-import {ILocation} from "../../../models/ILocation";
+import eventService from "../../../services/EventService";
 import LoadingLayout from "../../../components/LoadingLayout";
 
 const Root = styled('div')(({ theme }) => ({
@@ -18,13 +18,13 @@ const Root = styled('div')(({ theme }) => ({
     paddingBottom: theme.spacing(3)
 }))
 
-const EventLocationEditView = () => {
+const EventEditView = () => {
     const {enqueueSnackbar} = useSnackbar()
     const navigate = useNavigate()
-    let { locationId } = useParams()
-    const [location, setLocation] = useState<ILocation>()
+    const { eventId } = useParams()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
+    const [event, setEvent] = useState<IEventRequest>()
 
     useEffect(() => {
         let cancel = false;
@@ -33,9 +33,9 @@ const EventLocationEditView = () => {
             try {
                 setLoading(true)
 
-                const data: any = await eventLocationService.getLocation(locationId || '')
+                const data: any = await eventService.getEvent(eventId || '')
 
-                if (!cancel) setLocation(data)
+                if (!cancel) setEvent(data)
             } catch (error: any) {
                 !cancel && setError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -45,25 +45,25 @@ const EventLocationEditView = () => {
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar, locationId, navigate])
+    }, [enqueueSnackbar, eventId, navigate])
 
     return (
         <>
-            <Page title="Добавление место проведения"/>
+            <Page title="Изменение место проведения"/>
             {
-                location ? (
+                event ? (
                     <Root>
                         <Container maxWidth="xl">
-                            <Header title={location.name} />
+                            <Header title={event.name} />
                             <Box mt={3}>
-                                <Form location={location} />
+                                <Form eventRequest={event} />
                             </Box>
                         </Container>
                     </Root>
                 ) : <LoadingLayout loading={loading} error={error} />
-             }
+            }
         </>
     );
 };
 
-export default EventLocationEditView;
+export default EventEditView;

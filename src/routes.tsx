@@ -11,6 +11,9 @@ import GuestEditView from "./views/guest/form/GuestEditView";
 import EventLocationListView from "./views/event-location/list/EventLocationListView";
 import EventLocationCreateView from "./views/event-location/form/EventLocationCreateView";
 import EventLocationEditView from "./views/event-location/form/EventLocationEditView";
+import EventListView from "./views/event/list/EventListView";
+import EventCreateView from "./views/event/form/EventCreateView";
+import EventEditView from "./views/event/form/EventEditView";
 
 const routes: RouteObject[] = [
     {
@@ -50,6 +53,18 @@ const routes: RouteObject[] = [
                     {
                         path: '/event-locations/:locationId/edit',
                         element: <EventLocationEditView />
+                    },
+                    {
+                        path: '/events',
+                        element: <EventListView />
+                    },
+                    {
+                        path: '/events/create',
+                        element: <EventCreateView />
+                    },
+                    {
+                        path: '/events/:eventId/edit',
+                        element: <EventEditView />
                     },
                     {
                         path: '/home',
