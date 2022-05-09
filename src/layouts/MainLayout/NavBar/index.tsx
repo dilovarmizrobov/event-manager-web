@@ -20,14 +20,19 @@ const navConfig = [
                 href: '/home',
             },
             {
-                title: 'Гости',
-                icon: FaUsers,
-                href: '/guests',
+                title: 'Мероприятия',
+                icon: FiLayout,
+                href: '/events',
             },
             {
                 title: 'Места проведения',
                 icon: FiLayout,
                 href: '/event-locations',
+            },
+            {
+                title: 'Гости',
+                icon: FaUsers,
+                href: '/guests',
             },
         ]
     },
