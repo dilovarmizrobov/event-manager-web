@@ -9,6 +9,8 @@ import {UserRolesMap} from "../../../constants";
 import NavItem from "./NavItem";
 import {FiLayout} from "react-icons/fi";
 import {FaUsers} from "react-icons/fa";
+import {MdEventSeat} from "react-icons/md";
+import {IoLocationSharp} from "react-icons/io5";
 
 const navConfig = [
     {
@@ -21,12 +23,12 @@ const navConfig = [
             },
             {
                 title: 'Мероприятия',
-                icon: FiLayout,
+                icon: MdEventSeat,
                 href: '/events',
             },
             {
                 title: 'Места проведения',
-                icon: FiLayout,
+                icon: IoLocationSharp,
                 href: '/event-locations',
             },
             {

@@ -14,8 +14,16 @@ import EventLocationEditView from "./views/event-location/form/EventLocationEdit
 import EventListView from "./views/event/list/EventListView";
 import EventCreateView from "./views/event/form/EventCreateView";
 import EventEditView from "./views/event/form/EventEditView";
+import hasPermission from "./utils/hasPermisson";
+import {UserRolesEnum} from "./constants";
+import PERMISSIONS from "./constants/permissions";
 
-const routes: RouteObject[] = [
+interface CustomRouteObject extends RouteObject {
+    perm?: UserRolesEnum[],
+    children?: CustomRouteObject[];
+}
+
+const routes: CustomRouteObject[] = [
     {
         path: '/',
         element: <Navigate to="/home" replace />,
@@ -36,34 +44,42 @@ const routes: RouteObject[] = [
                     },
                     {
                         path: '/guests/create',
+                        perm: PERMISSIONS.CREATE.GUEST,
                         element: <GuestCreateView />
                     },
                     {
                         path: '/guests/:guestId/edit',
+                        perm: PERMISSIONS.EDIT.GUEST,
                         element: <GuestEditView />
                     },
                     {
                         path: '/event-locations',
+                        perm: PERMISSIONS.LIST.EVENT_LOCATION,
                         element: <EventLocationListView />
                     },
                     {
                         path: '/event-locations/create',
+                        perm: PERMISSIONS.CREATE.EVENT_LOCATION,
                         element: <EventLocationCreateView />
                     },
                     {
                         path: '/event-locations/:locationId/edit',
+                        perm: PERMISSIONS.EDIT.EVENT_LOCATION,
                         element: <EventLocationEditView />
                     },
                     {
                         path: '/events',
+                        perm: PERMISSIONS.LIST.EVENT,
                         element: <EventListView />
                     },
                     {
                         path: '/events/create',
+                        perm: PERMISSIONS.CREATE.EVENT,
                         element: <EventCreateView />
                     },
                     {
                         path: '/events/:eventId/edit',
+                        perm: PERMISSIONS.EDIT.EVENT,
                         element: <EventEditView />
                     },
                     {
@@ -79,6 +95,18 @@ const routes: RouteObject[] = [
         element: <Error404 />
     },
 ]
+
+const filterRoutes = (routes: CustomRouteObject[]) => {
+    return routes.filter((route) => {
+        if (route.children) {
+            route.children = filterRoutes(route.children)
+            return true
+        } else {
+            if (route.perm) return hasPermission(route.perm)
+            else return true
+        }
+    })
+}
 
 const Routes: React.FC = () => {
     return useRoutes(routes)
