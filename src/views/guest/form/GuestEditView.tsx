@@ -73,7 +73,7 @@ const GuestEditView: React.FC = () => {
 
     return (
         <>
-            <Page title="Гости"/>
+            <Page title="Изменение гостя"/>
             {
                 locations.length > 0 && countries.length > 0 && guest ? (
                     <Root>

@@ -6,7 +6,7 @@ import Header from "./Header";
 import Form from "./Form";
 import {useSnackbar} from "notistack";
 import {useNavigate, useParams} from "react-router-dom";
-import {IEventRequest} from "../../../models/IEvent";
+import {IEventResponse} from "../../../models/IEvent";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import eventService from "../../../services/EventService";
 import LoadingLayout from "../../../components/LoadingLayout";
@@ -24,7 +24,7 @@ const EventEditView = () => {
     const { eventId } = useParams()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
-    const [event, setEvent] = useState<IEventRequest>()
+    const [event, setEvent] = useState<IEventResponse>()
 
     useEffect(() => {
         let cancel = false;
@@ -49,14 +49,14 @@ const EventEditView = () => {
 
     return (
         <>
-            <Page title="Изменение место проведения"/>
+            <Page title="Изменение мероприятия"/>
             {
                 event ? (
                     <Root>
                         <Container maxWidth="xl">
                             <Header title={event.name} />
                             <Box mt={3}>
-                                <Form eventRequest={event} />
+                                <Form event={event} />
                             </Box>
                         </Container>
                     </Root>

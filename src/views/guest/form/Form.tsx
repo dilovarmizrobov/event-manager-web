@@ -154,7 +154,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountr
                     <Card>
                         <CardContent sx={{p: 3}}>
                             <Grid container spacing={4}>
-                                <Grid item xs={12} md={6} lg={4}>
+                                <Grid item xs={12} lg={6}>
                                     <Grid container spacing={3}>
                                         <Grid item xs={12}>
                                             <TextField
@@ -283,9 +283,9 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountr
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                                <Grid item xs={12} md={6} lg={8}>
+                                <Grid item xs={12} lg={6}>
                                     <Grid container spacing={3}>
-                                        <Grid item xs={6} md={12} lg={6}>
+                                        <Grid item xs={6} lg={6}>
                                             <Typography variant="subtitle1" align="center" sx={{mb: 2}}>
                                                 Копия паспорта
                                             </Typography>
@@ -310,7 +310,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountr
                                                 />
                                             </label>
                                         </Grid>
-                                        <Grid item xs={6} md={12} lg={6}>
+                                        <Grid item xs={6} lg={6}>
                                             <Typography variant="subtitle1" align="center" sx={{mb: 2}}>
                                                 Фото
                                             </Typography>
@@ -344,7 +344,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountr
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={12} lg={6}>
                                     <TableContainer>
                                         <Table>
                                             <TableHead>
@@ -385,7 +385,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountr
                                     </TableContainer>
                                     {locationError && (
                                         <Typography variant="subtitle2" sx={{mt: 2, ml: 2, color: "red"}}>
-                                            Выберите места проведения
+                                            Выберите место проведения
                                         </Typography>
                                     )}
                                 </Grid>

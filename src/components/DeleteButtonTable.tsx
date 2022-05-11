@@ -43,7 +43,11 @@ const DeleteButtonTable: React.FC<DeleteButtonTableProps> = ({rowId, onDelete, h
     return (
         <>
             <Box sx={{position: 'relative', display: 'inline-block'}}>
-                <IconButton size="large">
+                <IconButton
+                    size="large"
+                    onClick={() => setOpenModal(true)}
+                    disabled={loading}
+                >
                     <FiTrash size={20} />
                 </IconButton>
                 {loading && <StyledCircularProgress size={44} color='secondary' thickness={2}/>}

@@ -20,8 +20,9 @@ import {ILocation} from "../../../models/ILocation";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import eventLocationService from "../../../services/EventLocationService";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
-import {FiEdit, FiTrash} from "react-icons/fi";
+import {FiEdit} from "react-icons/fi";
 import {NavLink as RouterLink} from "react-router-dom";
+import DeleteButtonTable from "../../../components/DeleteButtonTable";
 
 const Root = styled('div')(({theme}) => ({
     minHeight: '100%',
@@ -53,7 +54,14 @@ const EventLocationListView = () => {
         })()
 
         return () => {cancel = true}
-    },[])
+    },[enqueueSnackbar])
+
+    const handleDeleteRow = (rowId: number) => {
+        let newRows = [...rows]
+        let index = newRows.findIndex(row => row.id! === rowId)
+        newRows.splice(index, 1)
+        setRows(newRows)
+    }
 
     return (
         <>
@@ -90,9 +98,11 @@ const EventLocationListView = () => {
                                                                         >
                                                                             <FiEdit size={20} />
                                                                         </IconButton>
-                                                                        <IconButton size="large">
-                                                                            <FiTrash size={20} />
-                                                                        </IconButton>
+                                                                        <DeleteButtonTable
+                                                                            rowId={row.id!}
+                                                                            onDelete={eventLocationService.deleteLocation}
+                                                                            handleDelete={handleDeleteRow}
+                                                                        />
                                                                     </TableCell>
                                                                 </TableRow>
                                                             ))

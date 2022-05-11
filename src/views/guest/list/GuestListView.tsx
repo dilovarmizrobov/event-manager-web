@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import Page from "../../../components/Page";
 import {styled} from "@mui/material/styles";
-import {FiSearch as FiSearchIcon, FiEdit, FiTrash} from "react-icons/fi";
+import {FiSearch as FiSearchIcon, FiEdit} from "react-icons/fi";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { alpha } from '@mui/material/styles';
 import {IGuest} from "../../../models/IGuest";
@@ -26,6 +26,7 @@ import LoadingLayout from "../../../components/LoadingLayout";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import PrintBadgeButton from "./PrintBadgeButton";
 import ScanBadgeModal from "./ScanBadgeModal";
+import DeleteButtonTable from "../../../components/DeleteButtonTable";
 
 const Root = styled('div')(({ theme }) => ({
     minHeight: '100%',
@@ -132,6 +133,13 @@ const GuestListView = () => {
         }
 
         setSelected(newSelected);
+    };
+
+    const handleDeleteRow = (rowId: number) => {
+        let newRows = [...rows]
+        let index = newRows.findIndex(row => row.id! === rowId)
+        newRows.splice(index, 1)
+        setRows(newRows)
     };
 
     const isSelected = (id: number) => selected.indexOf(id) !== -1;
@@ -269,9 +277,11 @@ const GuestListView = () => {
                                                                                     >
                                                                                         <FiEdit size={20} />
                                                                                     </IconButton>
-                                                                                    <IconButton size="large">
-                                                                                        <FiTrash size={20} />
-                                                                                    </IconButton>
+                                                                                    <DeleteButtonTable
+                                                                                        rowId={row.id!}
+                                                                                        onDelete={guestService.deleteGuest}
+                                                                                        handleDelete={handleDeleteRow}
+                                                                                    />
                                                                                 </TableCell>
                                                                             </TableRow>
                                                                         )

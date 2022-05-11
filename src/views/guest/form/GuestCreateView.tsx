@@ -60,7 +60,7 @@ const GuestCreateView = () => {
 
     return (
         <>
-            <Page title="Гости"/>
+            <Page title="Создание гостя"/>
             {
                 locations.length > 0 && countries.length > 0 ? (
                     <Root>
