@@ -14,6 +14,10 @@ import EventLocationEditView from "./views/event-location/form/EventLocationEdit
 import EventListView from "./views/event/list/EventListView";
 import EventCreateView from "./views/event/form/EventCreateView";
 import EventEditView from "./views/event/form/EventEditView";
+import UsersListView from "./views/users/list/UsersListView";
+import CountryListView from "./views/country/list/CountryListView";
+import CountryCreateView from "./views/country/form/CountryCreateView";
+import CountryEditView from "./views/country/form/CountryEditView";
 
 const routes: RouteObject[] = [
     {
@@ -65,6 +69,22 @@ const routes: RouteObject[] = [
                     {
                         path: '/events/:eventId/edit',
                         element: <EventEditView />
+                    },
+                    {
+                        path: '/users',
+                        element: <UsersListView />
+                    },
+                    {
+                        path: '/countries',
+                        element: <CountryListView />
+                    },
+                    {
+                        path: '/countries/create',
+                        element: <CountryCreateView />
+                    },
+                    {
+                        path: '/countries/:countryId/edit',
+                        element: <CountryEditView />
                     },
                     {
                         path: '/home',

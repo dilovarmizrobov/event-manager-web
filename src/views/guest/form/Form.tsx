@@ -15,14 +15,14 @@ import {
     TextField, Typography
 } from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import {ICountry} from "../../../models/ICountry";
+import {ICountryResponse} from "../../../models/ICountry";
 import {ILocation} from "../../../models/ILocation";
 import guestService from "../../../services/GuestService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import {FiCamera} from "react-icons/fi";
 
-const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountry[]}> = (props) => {
+const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountryResponse[]}> = (props) => {
     const {guest, locations: eventLocations, countries} = props
     const navigate = useNavigate();
     const {enqueueSnackbar} = useSnackbar();
