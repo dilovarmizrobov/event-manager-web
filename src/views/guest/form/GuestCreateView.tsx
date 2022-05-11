@@ -10,7 +10,7 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import {useNavigate} from "react-router-dom";
 import LoadingLayout from "../../../components/LoadingLayout";
-import {ICountry} from "../../../models/ICountry";
+import {ICountryResponse} from "../../../models/ICountry";
 import countryService from "../../../services/CountryService";
 
 const Root = styled('div')(({ theme }) => ({
@@ -24,7 +24,7 @@ const GuestCreateView = () => {
     const {enqueueSnackbar} = useSnackbar()
     const navigate = useNavigate()
     const [locations, setLocations] = useState<ILocation[]>([])
-    const [countries, setCountries] = useState<ICountry[]>([])
+    const [countries, setCountries] = useState<ICountryResponse[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
 
