@@ -1,6 +1,6 @@
 import {GuestTypeEnum} from "../constants";
 import {ILocation} from "./ILocation";
-import {ICountry} from "./ICountry";
+import {ICountryResponse} from "./ICountry";
 
 export interface IGuest {
     [key: string]: any;
@@ -12,6 +12,6 @@ export interface IGuest {
     email: string;
     type: GuestTypeEnum;
     countryId: number;
-    country?: ICountry;
+    country?: ICountryResponse;
     locations: number[] | ILocation[];
 }

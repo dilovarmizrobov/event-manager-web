@@ -12,7 +12,7 @@ import LoadingLayout from "../../../components/LoadingLayout";
 import {styled} from "@mui/material/styles";
 import {IGuest} from "../../../models/IGuest";
 import guestService from "../../../services/GuestService";
-import {ICountry} from "../../../models/ICountry";
+import {ICountryResponse} from "../../../models/ICountry";
 import countryService from "../../../services/CountryService";
 
 const Root = styled('div')(({ theme }) => ({
@@ -27,7 +27,7 @@ const GuestEditView: React.FC = () => {
     const navigate = useNavigate()
     let {guestId} = useParams();
     const [locations, setLocations] = useState<ILocation[]>([])
-    const [countries, setCountries] = useState<ICountry[]>([])
+    const [countries, setCountries] = useState<ICountryResponse[]>([])
     const [guest, setGuest] = useState<IGuest>()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)

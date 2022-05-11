@@ -36,6 +36,16 @@ const navConfig = [
                 icon: FaUsers,
                 href: '/guests',
             },
+            {
+                title: 'Пользователи',
+                icon: FaUsers,
+                href: '/users',
+            },
+            {
+                title: 'Страна',
+                icon: FaUsers,
+                href: '/countries',
+            },
         ]
     },
 ]

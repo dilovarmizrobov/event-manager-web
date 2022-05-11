@@ -20,7 +20,7 @@ import {useSnackbar} from "notistack";
 import useDebounce from "../../../hooks/useDebounce";
 import {GuestTypeMap} from "../../../constants";
 import {NavLink as RouterLink, useNavigate} from "react-router-dom";
-import {ICountry} from "../../../models/ICountry";
+import {ICountryResponse} from "../../../models/ICountry";
 import countryService from "../../../services/CountryService";
 import LoadingLayout from "../../../components/LoadingLayout";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
@@ -47,7 +47,7 @@ const GuestListView = () => {
     const [error, setError] = useState(false)
     const [rows, setRows] = useState<IGuest[]>([])
     const [rowsCount, setRowsCount] = useState<number>(0);
-    const [countries, setCountries] = useState<ICountry[]>([])
+    const [countries, setCountries] = useState<ICountryResponse[]>([])
 
     useEffect(() => {
         let cancel = false;

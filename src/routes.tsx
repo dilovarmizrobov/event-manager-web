@@ -17,6 +17,10 @@ import EventEditView from "./views/event/form/EventEditView";
 import hasPermission from "./utils/hasPermisson";
 import {UserRolesEnum} from "./constants";
 import PERMISSIONS from "./constants/permissions";
+import UsersListView from "./views/users/list/UsersListView";
+import CountryListView from "./views/country/list/CountryListView";
+import CountryCreateView from "./views/country/form/CountryCreateView";
+import CountryEditView from "./views/country/form/CountryEditView";
 
 interface CustomRouteObject extends RouteObject {
     perm?: UserRolesEnum[],
@@ -81,6 +85,22 @@ const routes: CustomRouteObject[] = [
                         path: '/events/:eventId/edit',
                         perm: PERMISSIONS.EDIT.EVENT,
                         element: <EventEditView />
+                    },
+                    {
+                        path: '/users',
+                        element: <UsersListView />
+                    },
+                    {
+                        path: '/countries',
+                        element: <CountryListView />
+                    },
+                    {
+                        path: '/countries/create',
+                        element: <CountryCreateView />
+                    },
+                    {
+                        path: '/countries/:countryId/edit',
+                        element: <CountryEditView />
                     },
                     {
                         path: '/home',
