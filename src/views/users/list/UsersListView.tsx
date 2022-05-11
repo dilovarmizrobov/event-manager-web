@@ -8,8 +8,11 @@ import {
     Grid,
     InputAdornment,
     SvgIcon,
-    Table, TableCell,
-    TableContainer, TableHead, TableRow,
+    Table,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
     TextField,
     Toolbar
 } from "@mui/material";
@@ -39,16 +42,16 @@ const UsersListView = () => {
             <Page title="Пользователи"/>
             <Root>
                 <Container maxWidth="xl">
-                    <Header />
+                    <Header/>
                     <Box mt={3}>
                         <Card>
                             <PerfectScrollbar>
-                                <Box minWidth={750} sx={{mb:2}}>
+                                <Box minWidth={750} sx={{mb: 2}}>
                                     <Toolbar
                                         sx={{
                                             py: 3,
-                                            pl: { sm: 2 },
-                                            pr: { xs: 1, sm: 1 },
+                                            pl: {sm: 2},
+                                            pr: {xs: 1, sm: 1},
                                         }}
                                     >
                                         <Grid container spacing={4}>

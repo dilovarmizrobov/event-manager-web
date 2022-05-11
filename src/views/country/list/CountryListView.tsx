@@ -1,18 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import {useSnackbar} from "notistack";
 import useDebounce from "../../../hooks/useDebounce";
-import { ICountryResponse} from "../../../models/ICountry";
+import {ICountryResponse} from "../../../models/ICountry";
 import {styled} from "@mui/material/styles";
 import Page from "../../../components/Page";
 import {
     Box,
     Card,
     Container,
-    Grid, IconButton,
+    Grid,
+    IconButton,
     InputAdornment,
     SvgIcon,
-    Table, TableBody, TableCell,
-    TableContainer, TableHead, TablePagination, TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
     TextField,
 } from "@mui/material";
 import Header from "./Header";
@@ -47,21 +53,23 @@ const CountryListView = () => {
                 setLoading(true)
                 setRows([])
 
-                const data : any = await countryService.getListCountry(page + 1, size, debouncedSearchTerm)
+                const data: any = await countryService.getListCountry(page + 1, size, debouncedSearchTerm)
 
                 if (!cancel) {
                     setRows(data.content)
                     setRowsCount(data.totalPages)
                 }
 
-            } catch (error : any) {
+            } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
             } finally {
                 !cancel && setLoading(false)
             }
-        }) ()
+        })()
 
-        return () => {cancel = true}
+        return () => {
+            cancel = true
+        }
     }, [enqueueSnackbar, size, page, debouncedSearchTerm])
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -71,7 +79,7 @@ const CountryListView = () => {
     };
 
     const handleChangePage = (event: unknown, newPage: number) => {
-        setPage(newPage+1);
+        setPage(newPage + 1);
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,11 +92,11 @@ const CountryListView = () => {
             <Page title="Страна"/>
             <Root>
                 <Container maxWidth="xl">
-                    <Header />
+                    <Header/>
                     <Box mt={3}>
                         <Card>
                             <PerfectScrollbar>
-                                <Box minWidth={750} sx={{mb:2}}>
+                                <Box minWidth={750} sx={{mb: 2}}>
                                     <Box mx={2} my={3}>
                                         <Grid container spacing={4}>
                                             <Grid item>
@@ -142,23 +150,23 @@ const CountryListView = () => {
                                                                             width="45px"
                                                                         />
                                                                     </TableCell>
-                                                                    <TableCell style={{ width: 165 }}>
+                                                                    <TableCell style={{width: 165}}>
                                                                         <IconButton
                                                                             size="large"
                                                                             component={RouterLink}
                                                                             to={`/countries/${row.id}/edit`}
                                                                         >
-                                                                            <FiEdit size={20} />
+                                                                            <FiEdit size={20}/>
                                                                         </IconButton>
                                                                         <IconButton size="large">
-                                                                            <FiTrash size={20} />
+                                                                            <FiTrash size={20}/>
                                                                         </IconButton>
                                                                     </TableCell>
                                                                 </TableRow>
                                                             ))
                                                         }
                                                     </TableBody>
-                                                ) : <NoFoundTableBody loading={loading} />
+                                                ) : <NoFoundTableBody loading={loading}/>
                                             }
                                         </Table>
                                     </TableContainer>
