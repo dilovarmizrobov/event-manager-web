@@ -1,16 +1,17 @@
 import React, {useEffect} from "react";
 import authService from "../services/AuthService";
-import {logout} from "../store/reducers/authSlice";
-import {useAppDispatch} from "../store/hooks";
+import {logout, selectAuth} from "../store/reducers/authSlice";
+import {useAppDispatch, useAppSelector} from "../store/hooks";
 
-const Auth: React.FC<{children: JSX.Element}> = ({children}) => {
+const Auth: React.FC = () => {
     const dispatch = useAppDispatch()
+    const {user} = useAppSelector(selectAuth)
 
     useEffect(() => {
-        authService.setAxiosInterceptors(() => dispatch(logout()))
-    }, [dispatch])
+        authService.setAxiosInterceptors(user, () => dispatch(logout()))
+    }, [dispatch, user])
 
-    return children
+    return <></>
 }
 
 export default Auth

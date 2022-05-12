@@ -7,5 +7,5 @@ export default function hasPermission(permissions: string[]) {
 
     const user = JSON.parse(localUser) as IUser
 
-    return user.roles?.findIndex(r => permissions.indexOf(r) > -1) > -1;
+    return permissions.indexOf(user.role) > -1;
 }

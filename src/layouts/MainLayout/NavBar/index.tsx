@@ -87,7 +87,7 @@ const Index: React.FC<{openMobile: boolean, onMobileClose: VoidFunction}> = ({op
                             {user!.name}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                            {user!.roles.map(r => UserRolesMap.get(r)).join(', ')}
+                            {UserRolesMap.get(user!.role)}
                             <br/>
                             {user!.email}
                         </Typography>
