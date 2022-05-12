@@ -42,7 +42,7 @@ const navConfig = [
                 href: '/users',
             },
             {
-                title: 'Страна',
+                title: 'Страны',
                 icon: FaUsers,
                 href: '/countries',
             },

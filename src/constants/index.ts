@@ -1,3 +1,5 @@
+export const BASE_URL = '/event-manager'
+
 export enum ThemeModeEnum {
     LIGHT = "LIGHT",
     DARK = "DARK",

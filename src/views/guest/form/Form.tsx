@@ -15,14 +15,14 @@ import {
     TextField, Typography
 } from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import {ICountryResponse} from "../../../models/ICountry";
+import {ICountryOption} from "../../../models/ICountry";
 import {ILocation} from "../../../models/ILocation";
 import guestService from "../../../services/GuestService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import {FiCamera} from "react-icons/fi";
 
-const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountryResponse[]}> = (props) => {
+const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountryOption[]}> = (props) => {
     const {guest, locations: eventLocations, countries} = props
     const navigate = useNavigate();
     const {enqueueSnackbar} = useSnackbar();
@@ -60,6 +60,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountr
                 setLocationError(true)
                 return
             }
+
             await guestService.postNewGuest(values)
 
             enqueueSnackbar('Успешно создан', {variant: 'success'});

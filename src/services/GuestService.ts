@@ -14,8 +14,8 @@ class GuestService {
     postNewGuest = (guest: IGuest) => new Promise((resolve, reject) => {
         let formData = new FormData();
 
-        formData.append('photo', guest.photo!, 'photo.jpg');
-        formData.append('passportImage', guest.passportImage!, 'passportImage.jpg');
+        formData.append('photo', guest.photo!);
+        formData.append('passportImage', guest.passportImage!);
 
         const json = {
             fullName: guest.fullName,

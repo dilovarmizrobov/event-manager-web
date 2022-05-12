@@ -20,7 +20,7 @@ import {useSnackbar} from "notistack";
 import useDebounce from "../../../hooks/useDebounce";
 import {GuestTypeMap} from "../../../constants";
 import {NavLink as RouterLink, useNavigate} from "react-router-dom";
-import {ICountryResponse} from "../../../models/ICountry";
+import {ICountryOption} from "../../../models/ICountry";
 import countryService from "../../../services/CountryService";
 import LoadingLayout from "../../../components/LoadingLayout";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
@@ -47,7 +47,7 @@ const GuestListView = () => {
     const [error, setError] = useState(false)
     const [rows, setRows] = useState<IGuest[]>([])
     const [rowsCount, setRowsCount] = useState<number>(0);
-    const [countries, setCountries] = useState<ICountryResponse[]>([])
+    const [countries, setCountries] = useState<ICountryOption[]>([])
 
     useEffect(() => {
         let cancel = false;
@@ -60,7 +60,7 @@ const GuestListView = () => {
                 const data: any = await guestService.getListGuests(page + 1, size, debouncedSearchTerm, countryId)
 
                 if (countries.length === 0) {
-                    const dataCountries: any = await countryService.getCountries()
+                    const dataCountries: any = await countryService.getOptionCountries()
 
                     if (!cancel) {
                         if (dataCountries.length === 0) {
@@ -140,7 +140,7 @@ const GuestListView = () => {
         let index = newRows.findIndex(row => row.id! === rowId)
         newRows.splice(index, 1)
         setRows(newRows)
-    };
+    }
 
     const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
