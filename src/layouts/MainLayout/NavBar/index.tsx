@@ -2,53 +2,61 @@ import React, {useEffect} from 'react';
 import {Box, Divider, Drawer, Hidden, List, ListItem, ListSubheader, Typography} from "@mui/material";
 import { useLocation } from 'react-router';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Link as RouterLink } from 'react-router-dom';
 import {useAppSelector} from "../../../store/hooks";
 import {selectAuth} from "../../../store/reducers/authSlice";
-import {UserRolesMap} from "../../../constants";
+import {UserRolesEnum, UserRolesMap} from "../../../constants";
 import NavItem from "./NavItem";
-import {FiLayout} from "react-icons/fi";
 import {FaUsers} from "react-icons/fa";
-import {MdEventSeat} from "react-icons/md";
 import {IoLocationSharp} from "react-icons/io5";
+import PERMISSIONS from "../../../constants/permissions";
+import {IconType} from "react-icons";
+import hasPermission from "../../../utils/hasPermisson";
+import BrandTitle from "../BrandTitle";
 
-const navConfig = [
+interface INavItem {
+    title: string;
+    icon: IconType;
+    href: string;
+    perm?: UserRolesEnum[];
+}
+
+interface INavConfig {
+    subheader: string;
+    items: INavItem[]
+}
+
+const navConfig: INavConfig[] = [
     {
-        subheader: 'Home',
+        subheader: 'Главная',
         items: [
-            {
-                title: 'Home',
-                icon: FiLayout,
-                href: '/home',
-            },
-            {
-                title: 'Мероприятия',
-                icon: MdEventSeat,
-                href: '/events',
-            },
-            {
-                title: 'Места проведения',
-                icon: IoLocationSharp,
-                href: '/event-locations',
-            },
             {
                 title: 'Гости',
                 icon: FaUsers,
                 href: '/guests',
             },
             {
+                title: 'Места проведения',
+                icon: IoLocationSharp,
+                href: '/event-locations',
+                perm: PERMISSIONS.LIST.EVENT_LOCATION,
+            },
+            {
                 title: 'Пользователи',
                 icon: FaUsers,
                 href: '/users',
+                perm: PERMISSIONS.LIST.USER,
             },
             {
                 title: 'Страны',
                 icon: FaUsers,
                 href: '/countries',
+                perm: PERMISSIONS.LIST.COUNTRY,
             },
         ]
     },
 ]
+
+const filterNavItem = (items: INavItem[]) => items.filter(item => item.perm ? hasPermission(item.perm) : true)
 
 const Index: React.FC<{openMobile: boolean, onMobileClose: VoidFunction}> = ({openMobile, onMobileClose}) => {
     const location = useLocation();
@@ -74,11 +82,7 @@ const Index: React.FC<{openMobile: boolean, onMobileClose: VoidFunction}> = ({op
                         display="flex"
                         justifyContent="center"
                     >
-                        <RouterLink to="/" style={{ textDecoration: 'none' }}>
-                            <Typography variant="subtitle1" sx={{color: "black"}}>
-                                EVENT MANAGER
-                            </Typography>
-                        </RouterLink>
+                        <BrandTitle isTopBar={false} />
                     </Box>
                 </Hidden>
                 <Box p={3}>
@@ -96,27 +100,30 @@ const Index: React.FC<{openMobile: boolean, onMobileClose: VoidFunction}> = ({op
                 <Divider />
                 <Box p={2}>
                     {
-                        navConfig.map((config, index) => (
-                            <List
-                                key={index}
-                                subheader={(
-                                    <ListSubheader disableGutters disableSticky>{config.subheader}</ListSubheader>
-                                )}
-                            >
-                                {
-                                    config.items.map((item, index) => (
-                                        <ListItem disablePadding key={index}>
-                                            <NavItem
-                                                key={index}
-                                                href={item.href}
-                                                icon={item.icon}
-                                                title={item.title}
-                                            />
-                                        </ListItem>
-                                    ))
-                                }
-                            </List>
-                        ))
+                        navConfig.map((config, index) => {
+                            const items = filterNavItem(config.items)
+
+                            return items.length > 0 && (
+                                <List key={index}
+                                      subheader={(
+                                          <ListSubheader disableGutters disableSticky>{config.subheader}</ListSubheader>
+                                      )}
+                                >
+                                    {
+                                        items.map((item, index) => (
+                                            <ListItem disablePadding key={index}>
+                                                <NavItem
+                                                    key={index}
+                                                    href={item.href}
+                                                    icon={item.icon}
+                                                    title={item.title}
+                                                />
+                                            </ListItem>
+                                        ))
+                                    }
+                                </List>
+                            )
+                        })
                     }
                 </Box>
             </PerfectScrollbar>

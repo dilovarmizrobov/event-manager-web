@@ -47,7 +47,7 @@ const ScanBadgeModal: React.FC = () => {
                 setOpenModal(true)
                 setLoading(true)
 
-                let verifyGuest: any = await guestService.getVerifyGuest(2, barcode)
+                let verifyGuest: any = await guestService.getVerifyGuest(barcode)
                 setVerifyGuest(verifyGuest)
             } catch (error: any) {
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})

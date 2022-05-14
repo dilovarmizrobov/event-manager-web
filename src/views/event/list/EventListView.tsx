@@ -11,16 +11,18 @@ import {
 } from "@mui/material";
 import { styled} from "@mui/material/styles";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import {FiEdit, FiSearch as FiSearchIcon} from "react-icons/fi";
+import {FiArrowRight, FiEdit, FiSearch as FiSearchIcon} from "react-icons/fi";
 import {useSnackbar} from "notistack";
-import {NavLink as RouterLink} from "react-router-dom";
+import {NavLink as RouterLink, useNavigate} from "react-router-dom";
 import useDebounce from "../../../hooks/useDebounce";
 import moment from "moment";
-import {IEventResponse} from "../../../models/IEvent";
+import {IEventOption, IEventResponse} from "../../../models/IEvent";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import eventService from "../../../services/EventService";
 import DeleteButtonTable from "../../../components/DeleteButtonTable";
+import {useAppDispatch} from "../../../store/hooks";
+import {updateAuthEvent} from "../../../store/reducers/authSlice";
 
 const Root = styled('div')(({theme}) => ({
     minHeight: '100%',
@@ -29,6 +31,8 @@ const Root = styled('div')(({theme}) => ({
 }))
 
 const EventListView = () => {
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
     const {enqueueSnackbar} = useSnackbar()
     const [page, setPage] = useState<number>(0)
     const [size, setSize] = useState<number>(20)
@@ -96,6 +100,16 @@ const EventListView = () => {
         let index = newRows.findIndex(row => row.id! === rowId)
         newRows.splice(index, 1)
         setRows(newRows)
+    }
+
+    const handleSelectEvent = (eventResponse: IEventResponse) => {
+        const event: IEventOption = {
+            id: eventResponse.id,
+            name: eventResponse.name
+        }
+
+        dispatch(updateAuthEvent(event))
+        navigate('/guests')
     }
 
     return (
@@ -167,8 +181,8 @@ const EventListView = () => {
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell>№</TableCell>
-                                                    <TableCell>Период</TableCell>
                                                     <TableCell>Мероприятие</TableCell>
+                                                    <TableCell>Период</TableCell>
                                                     <TableCell>Статус</TableCell>
                                                     <TableCell>Зарегистрированно</TableCell>
                                                     <TableCell>Участвовали</TableCell>
@@ -182,8 +196,8 @@ const EventListView = () => {
                                                             rows.map((row, index) => (
                                                                 <TableRow hover key={row.id}>
                                                                     <TableCell>{index + 1}</TableCell>
-                                                                    <TableCell>{row.fromDate} - {row.toDate}</TableCell>
                                                                     <TableCell>{row.name}</TableCell>
+                                                                    <TableCell>{row.fromDate} - {row.toDate}</TableCell>
                                                                     <TableCell>
                                                                         {
                                                                             row.active ? (
@@ -208,6 +222,12 @@ const EventListView = () => {
                                                                             onDelete={eventService.deleteEvent}
                                                                             handleDelete={handleDeleteRow}
                                                                         />
+                                                                        <IconButton
+                                                                            size="large"
+                                                                            onClick={() => handleSelectEvent(row)}
+                                                                        >
+                                                                            <FiArrowRight size={20} />
+                                                                        </IconButton>
                                                                     </TableCell>
                                                                 </TableRow>
                                                             ))

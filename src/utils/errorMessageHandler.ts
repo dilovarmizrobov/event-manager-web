@@ -8,8 +8,11 @@ export default function errorMessageHandler(error: AxiosError): string {
             case 400:
                 message = 'Что-то пошло не так. Попробуйте снова.';
                 break;
-            case 403:
+            case 401:
                 message = 'Имя пользователя или пароль недействительны. Попробуйте еще раз!';
+                break;
+            case 403:
+                message = 'Доступ запрещён';
                 break;
             case 409:
             case 406:

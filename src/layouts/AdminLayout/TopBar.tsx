@@ -1,10 +1,9 @@
 import React from "react";
-import {AppBar, Box, Hidden, IconButton, Toolbar} from "@mui/material";
-import {FiMenu} from 'react-icons/fi';
+import {AppBar, Box, Toolbar, Typography} from "@mui/material";
+import {Link as RouterLink} from "react-router-dom";
 import {styled} from "@mui/material/styles";
-import Logout from "./Logout";
-import ThemeMode from "./ThemeMode";
-import BrandTitle from "../BrandTitle";
+import Logout from "../MainLayout/TopBar/Logout";
+import ThemeMode from "../MainLayout/TopBar/ThemeMode";
 
 const PREFIX = "TopBar"
 const classes = {
@@ -27,22 +26,16 @@ const Root = styled('div')(({ theme }) => ({
     },
 }))
 
-const TopBar: React.FC<{onMobileNavOpen: VoidFunction}> = ({onMobileNavOpen}) => {
+const TopBar: React.FC = () => {
     return (
         <Root>
             <AppBar className={classes.root}>
                 <Toolbar className={classes.toolbar}>
-                    <Hidden lgUp>
-                        <IconButton
-                            color="inherit"
-                            onClick={onMobileNavOpen}
-                        >
-                            <FiMenu/>
-                        </IconButton>
-                    </Hidden>
-                    <Hidden lgDown>
-                        <BrandTitle isTopBar={true} />
-                    </Hidden>
+                    <RouterLink to="/events" style={{ textDecoration: 'none' }}>
+                        <Typography variant="subtitle1" sx={{color: "white"}}>
+                            EVENT MANAGER
+                        </Typography>
+                    </RouterLink>
                     <Box ml={2} flexGrow={1}/>
                     <ThemeMode/>
                     <Logout/>

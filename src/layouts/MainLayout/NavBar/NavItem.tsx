@@ -3,7 +3,6 @@ import {ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
 import { NavLink as RouterLink, LinkProps as RouterLinkProps} from 'react-router-dom';
 import {IconType} from "react-icons";
 
-
 const NavItem: React.FC<{href: string, title: string, icon: IconType}> = ({title, href, icon: Icon}) => {
     const renderLink = React.useMemo(
         () =>
