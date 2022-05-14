@@ -24,6 +24,8 @@ import CountryEditView from "./views/country/form/CountryEditView";
 import UserCreateView from "./views/users/form/UserCreateView";
 import UserEditView from "./views/users/form/UserEditView";
 import BadgeListView from "./views/badge/list/BadgeListView";
+import AdminLayout from "./layouts/AdminLayout";
+import IndexRedirectGuard from "./components/IndexRedirectGuard"
 
 interface CustomRouteObject extends RouteObject {
     perm?: UserRolesEnum[],

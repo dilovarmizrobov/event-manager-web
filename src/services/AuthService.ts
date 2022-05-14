@@ -50,9 +50,9 @@ class AuthService {
                 const user: IUser = {name: data.name, email: data.email, role: data.role}
 
                 if (data.role === UserRolesEnum.ADMIN) {
-                    user.event = data.events[0]
+                    user.event = data.event
                 } else if(data.role === UserRolesEnum.GUARD) {
-                    user.location = data.locations[0]
+                    user.location = data.location
                 } else {
                     user.eventName = data.eventName
                 }

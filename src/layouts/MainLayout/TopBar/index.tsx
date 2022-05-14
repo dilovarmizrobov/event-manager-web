@@ -5,6 +5,7 @@ import {styled} from "@mui/material/styles";
 import Logout from "./Logout";
 import ThemeMode from "./ThemeMode";
 import BrandTitle from "../BrandTitle";
+import ChangePassword from "./ChangePassword";
 
 const PREFIX = "TopBar"
 const classes = {
@@ -45,6 +46,7 @@ const TopBar: React.FC<{onMobileNavOpen: VoidFunction}> = ({onMobileNavOpen}) =>
                     </Hidden>
                     <Box ml={2} flexGrow={1}/>
                     <ThemeMode/>
+                    <ChangePassword />
                     <Logout/>
                 </Toolbar>
             </AppBar>

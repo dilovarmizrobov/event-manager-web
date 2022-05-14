@@ -80,7 +80,7 @@ const ChooseModal: React.FC<{isTopBar: boolean}> = ({isTopBar}) => {
             if (isAdmin) {
                 data = await eventService.getOptionEvents()
             } else {
-                data = await eventLocationService.getLocations()
+                data = await eventLocationService.getGuardOptionLocations()
             }
 
             setOptions(data)

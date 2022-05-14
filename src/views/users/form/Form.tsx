@@ -24,9 +24,13 @@ import {
     Typography
 } from "@mui/material";
 import userService from "../../../services/UserService";
+import {useAppSelector} from "../../../store/hooks";
+import {selectAuth} from "../../../store/reducers/authSlice";
 
 const Form :React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) => {
     const {user, locations: eventLocations} = props;
+    const auth = useAppSelector(selectAuth)
+    const isAdmin = auth.user!.role === UserRolesEnum.ADMIN
     const {enqueueSnackbar} = useSnackbar();
     const navigate = useNavigate();
     const [locations, setLocations] = useState<number[]>(user?.locations?.map(item => item.id!) || [])
@@ -36,7 +40,7 @@ const Form :React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) 
         fullName: user?.fullName || '',
         email: user?.email || '',
         phoneNumber: user?.phoneNumber || '',
-        role: user?.role || UserRolesEnum.EMPLOYEE
+        role: user?.role || (isAdmin ? UserRolesEnum.ADMIN_EVENT : UserRolesEnum.EMPLOYEE)
     }
 
     const validationSchema = Yup.object().shape({
@@ -195,12 +199,20 @@ const Form :React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) 
                                                     }
                                                 }}
                                             >
-                                                {
-                                                    Object.keys(UserRolesEnum).map((item => (
+                                                {Object.keys(UserRolesEnum)
+                                                    .filter(item => {
+                                                        switch (item as UserRolesEnum) {
+                                                            case UserRolesEnum.ADMIN:
+                                                            case UserRolesEnum.ADMIN_EVENT:
+                                                                return isAdmin
+                                                            default: return true
+                                                        }
+                                                    })
+                                                    .map(item => (
                                                         <MenuItem key={item} value={item}>
                                                             {UserRolesMap.get(item as UserRolesEnum)}
                                                         </MenuItem>
-                                                    )))
+                                                    ))
                                                 }
                                             </TextField>
                                         </Grid>

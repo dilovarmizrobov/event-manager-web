@@ -131,6 +131,7 @@ const UsersListView = () => {
                                                     <TableCell>Место</TableCell>
                                                     <TableCell>Телефон</TableCell>
                                                     <TableCell>Email</TableCell>
+                                                    <TableCell />
                                                 </TableRow>
                                             </TableHead>
                                             {
@@ -142,7 +143,7 @@ const UsersListView = () => {
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell>{row.fullName}</TableCell>
                                                                     <TableCell>{UserRolesMap.get(row.role)}</TableCell>
-                                                                    <TableCell>{row.locations?.map(item => item.name).join(", ")}</TableCell>
+                                                                    <TableCell>{row.locations?.map(item => item.name).join(", ") || '-'}</TableCell>
                                                                     <TableCell>{row.phoneNumber}</TableCell>
                                                                     <TableCell>{row.email}</TableCell>
                                                                     <TableCell style={{ width: 165 }}>
