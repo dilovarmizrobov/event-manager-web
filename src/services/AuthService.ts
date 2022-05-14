@@ -16,20 +16,20 @@ class AuthService {
             }
         )
 
-        api.interceptors.request.use((config) => {
+        return api.interceptors.request.use((config) => {
             if (user && user.role === UserRolesEnum.ADMIN) {
                 if (config.params) {
-                    config.params.eventId = user.eventId
+                    config.params.eventId = user.event!.id
                 } else {
-                    config.params = {eventId: user.eventId}
+                    config.params = {eventId: user.event!.id}
                 }
             }
 
             if (user && user.role === UserRolesEnum.GUARD) {
                 if (config.params) {
-                    config.params.locationId = user.locationId
+                    config.params.locationId = user.location!.id
                 } else {
-                    config.params = {locationId: user.locationId}
+                    config.params = {locationId: user.location!.id}
                 }
             }
 
@@ -50,15 +50,11 @@ class AuthService {
                 const user: IUser = {name: data.name, email: data.email, role: data.role}
 
                 if (data.role === UserRolesEnum.ADMIN) {
-                    user.events = data.events
-                    user.eventId = data.events[0].id
+                    user.event = data.event
+                } else if(data.role === UserRolesEnum.GUARD) {
+                    user.location = data.location
                 } else {
                     user.eventName = data.eventName
-                }
-
-                if (data.role === UserRolesEnum.GUARD) {
-                    user.locations = data.locations
-                    user.locationId = data.locations[0].id
                 }
 
                 this.setUserAndJwtInSession(response.data.jwt, user)
@@ -84,6 +80,7 @@ class AuthService {
     getJwtFromSession = () => localStorage.getItem('jwt')
     getUserFromSession = () => JSON.parse(localStorage.getItem('user') as string) as IUser;
     isAuthenticated = () => Boolean(this.getJwtFromSession())
+    setUserInSession = (user: IUser) => localStorage.setItem('user', JSON.stringify(user))
 }
 
 const authService = new AuthService()

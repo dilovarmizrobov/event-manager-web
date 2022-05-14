@@ -4,6 +4,8 @@ import apiHelper from "./ApiHelper";
 class EventService {
     getEvent = (eventId: string) => apiHelper.get(`/events/${eventId}`)
 
+    getOptionEvents = () => apiHelper.get(`/events/option`)
+
     getListEvents = (page: number, size: number, search: string, startDate: string, endDate: string) =>
         apiHelper.get(`/events`, {search, startDate, endDate, size, page})
 

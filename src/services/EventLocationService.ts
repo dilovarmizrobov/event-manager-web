@@ -6,6 +6,8 @@ class EventLocationService {
 
     getLocations = () => apiHelper.get(`/locations`)
 
+    getGuardOptionLocations = () => apiHelper.get('/users/guard/locations')
+
     postNewLocation = (location: ILocation) => apiHelper.post<ILocation>(`/locations`, location)
 
     putUpdateLocation = (location: ILocation) => apiHelper.put<ILocation>(`/locations/${location.id!}`, location)

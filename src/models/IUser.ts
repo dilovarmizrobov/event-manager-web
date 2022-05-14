@@ -6,11 +6,9 @@ export interface IUser {
     name: string;
     email: string;
     role: UserRolesEnum;
-    events?: IEventOption[];
-    eventId?: number;
+    event?: IEventOption;
     eventName?: string;
-    locations?: ILocation[];
-    locationId?: number;
+    location?: ILocation;
 }
 
 export interface IUserResponse {

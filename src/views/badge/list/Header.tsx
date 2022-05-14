@@ -16,7 +16,7 @@ const Header = () => {
                     <Link underline="hover" color="inherit" to="/home" component={RouterLink}>
                         Главная
                     </Link>
-                    <Typography color="text.primary">Страны</Typography>
+                    <Typography color="text.primary">Оби Тоза</Typography>
                 </Breadcrumbs>
                 <Typography variant="h5" color="textPrimary">
                     Оби Тоза
@@ -27,7 +27,7 @@ const Header = () => {
                     color="secondary"
                     variant="contained"
                     component={RouterLink}
-                    to="/users/create"
+                    to="/badge-templates/create"
                 >
                     <SvgIcon sx={{marginRight: 1}}>
                         <PlusCircleIcon />

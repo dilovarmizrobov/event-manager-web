@@ -27,6 +27,8 @@ import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import PrintBadgeButton from "./PrintBadgeButton";
 import ScanBadgeModal from "./ScanBadgeModal";
 import DeleteButtonTable from "../../../components/DeleteButtonTable";
+import hasPermission from "../../../utils/hasPermisson";
+import PERMISSIONS from "../../../constants/permissions";
 
 const Root = styled('div')(({ theme }) => ({
     minHeight: '100%',
@@ -35,6 +37,9 @@ const Root = styled('div')(({ theme }) => ({
 }))
 
 const GuestListView = () => {
+    const canEdit = hasPermission(PERMISSIONS.EDIT.GUEST)
+    const canDelete = hasPermission(PERMISSIONS.DELETE.GUEST)
+    const canPrint = hasPermission(PERMISSIONS.PRINT.GUEST)
     const {enqueueSnackbar} = useSnackbar()
     const navigate = useNavigate()
     const [page, setPage] = useState<number>(0)
@@ -178,7 +183,7 @@ const GuestListView = () => {
                                                             >
                                                                 {selected.length} выбрано
                                                             </Typography>
-                                                            <PrintBadgeButton guestsId={selected} />
+                                                            {canPrint && <PrintBadgeButton guestsId={selected} />}
                                                         </>
                                                     ) : (
                                                         <>
@@ -244,7 +249,7 @@ const GuestListView = () => {
                                                             <TableCell>Email</TableCell>
                                                             <TableCell>Статус</TableCell>
                                                             <TableCell>Бейджик</TableCell>
-                                                            <TableCell/>
+                                                            {(canEdit || canDelete || canPrint) && <TableCell/>}
                                                         </TableRow>
                                                     </TableHead>
                                                     {
@@ -268,21 +273,29 @@ const GuestListView = () => {
                                                                                 <TableCell>{row.email}</TableCell>
                                                                                 <TableCell>{GuestTypeMap.get(row.type)}</TableCell>
                                                                                 <TableCell>Бейджик</TableCell>
-                                                                                <TableCell style={{ width: 165 }}>
-                                                                                    <PrintBadgeButton guestsId={[row.id!]} />
-                                                                                    <IconButton
-                                                                                        size="large"
-                                                                                        component={RouterLink}
-                                                                                        to={`/guests/${row.id}/edit`}
-                                                                                    >
-                                                                                        <FiEdit size={20} />
-                                                                                    </IconButton>
-                                                                                    <DeleteButtonTable
-                                                                                        rowId={row.id!}
-                                                                                        onDelete={guestService.deleteGuest}
-                                                                                        handleDelete={handleDeleteRow}
-                                                                                    />
-                                                                                </TableCell>
+                                                                                {
+                                                                                    (canEdit || canDelete || canPrint) && (
+                                                                                        <TableCell style={{ width: 165 }}>
+                                                                                            {canPrint && <PrintBadgeButton guestsId={[row.id!]} />}
+                                                                                            {canEdit && (
+                                                                                                <IconButton
+                                                                                                    size="large"
+                                                                                                    component={RouterLink}
+                                                                                                    to={`/guests/${row.id}/edit`}
+                                                                                                >
+                                                                                                    <FiEdit size={20} />
+                                                                                                </IconButton>
+                                                                                            )}
+                                                                                            {canDelete && (
+                                                                                                <DeleteButtonTable
+                                                                                                    rowId={row.id!}
+                                                                                                    onDelete={guestService.deleteGuest}
+                                                                                                    handleDelete={handleDeleteRow}
+                                                                                                />
+                                                                                            )}
+                                                                                        </TableCell>
+                                                                                    )
+                                                                                }
                                                                             </TableRow>
                                                                         )
                                                                     })

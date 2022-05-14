@@ -12,6 +12,10 @@ const PERMISSIONS = {
         USER: [
             UserRolesEnum.ADMIN,
             UserRolesEnum.ADMIN_EVENT,
+        ],
+        COUNTRY: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
         ]
     },
     CREATE: {
@@ -28,6 +32,10 @@ const PERMISSIONS = {
             UserRolesEnum.EMPLOYEE,
         ],
         USER: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+        ],
+        COUNTRY: [
             UserRolesEnum.ADMIN,
             UserRolesEnum.ADMIN_EVENT,
         ]
@@ -48,6 +56,10 @@ const PERMISSIONS = {
         USER: [
             UserRolesEnum.ADMIN,
             UserRolesEnum.ADMIN_EVENT,
+        ],
+        COUNTRY: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
         ]
     },
     DELETE: {
@@ -66,7 +78,18 @@ const PERMISSIONS = {
         USER: [
             UserRolesEnum.ADMIN,
             UserRolesEnum.ADMIN_EVENT,
+        ],
+        COUNTRY: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
         ]
+    },
+    PRINT: {
+        GUEST: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+            UserRolesEnum.EMPLOYEE,
+        ],
     }
 }
 

@@ -2,6 +2,8 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {IUser} from "../../models/IUser";
 import {RootState} from "../index";
 import authService from "../../services/AuthService";
+import {IEventOption} from "../../models/IEvent";
+import {ILocation} from "../../models/ILocation";
 
 interface initialStateInterface {
     user: IUser | null;
@@ -33,11 +35,19 @@ export const authSlice = createSlice({
             authService.logout()
             state.user = null
             state.isAuthenticated = false
-        }
+        },
+        updateAuthEvent: (state, action: PayloadAction<IEventOption>) => {
+            state.user!.event = action.payload
+            authService.setUserInSession(state.user!)
+        },
+        updateLocationEvent: (state, action: PayloadAction<ILocation>) => {
+            state.user!.location = action.payload
+            authService.setUserInSession(state.user!)
+        },
     }
 })
 
-export const {login, logout} = authSlice.actions
+export const {login, logout, updateAuthEvent, updateLocationEvent} = authSlice.actions
 
 export const selectAuth = (state: RootState) => state.auth
 

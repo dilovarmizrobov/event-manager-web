@@ -7,13 +7,16 @@ const Header: React.FC<{title?: string}> = ({title}) => (
     <Grid container justifyContent="space-between" spacing={3}>
         <Grid item>
             <Breadcrumbs separator={<NavigateNextIcon/>} aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" to="/events" component={RouterLink}>
-                    Мероприятия
+                <Link underline="hover" color="inherit" to="/home" component={RouterLink}>
+                    Главная
+                </Link>
+                <Link underline="hover" color="inherit" to="/badge-templates" component={RouterLink}>
+                    Добавление бейдж
                 </Link>
                 <Typography color="text.primary">{title ? 'Изменение' : 'Создание'}</Typography>
             </Breadcrumbs>
             <Typography variant="h5" color="textPrimary">
-                {title ? 'Изменение мероприятия' : 'Создание мероприятия'}
+                {title ? 'Изменение бейдж' : 'Создание бейдж'}
             </Typography>
         </Grid>
     </Grid>

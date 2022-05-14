@@ -1,5 +1,5 @@
 import React from "react";
-import {Navigate, RouteObject, useRoutes} from "react-router-dom";
+import {RouteObject, useRoutes} from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import HomePage from "./views/HomePage";
 import Error404 from "./views/Error404";
@@ -24,6 +24,10 @@ import CountryEditView from "./views/country/form/CountryEditView";
 import UserCreateView from "./views/users/form/UserCreateView";
 import UserEditView from "./views/users/form/UserEditView";
 import BadgeListView from "./views/badge/list/BadgeListView";
+import BadgeCreateView from "./views/badge/form/BadgeCreateView";
+import BadgeEditView from "./views/badge/form/BadgeEditView";
+import AdminLayout from "./layouts/AdminLayout";
+import IndexRedirectGuard from "./components/IndexRedirectGuard"
 
 interface CustomRouteObject extends RouteObject {
     perm?: UserRolesEnum[],
@@ -33,7 +37,7 @@ interface CustomRouteObject extends RouteObject {
 const routes: CustomRouteObject[] = [
     {
         path: '/',
-        element: <Navigate to="/home" replace />,
+        element: <IndexRedirectGuard />,
     },
     {
         path: '/login',
@@ -42,6 +46,26 @@ const routes: CustomRouteObject[] = [
     {
         element: <AuthGuard />,
         children: [
+            {
+              element: <AdminLayout />,
+              children: [
+                  {
+                      path: '/events',
+                      perm: PERMISSIONS.LIST.EVENT,
+                      element: <EventListView />
+                  },
+                  {
+                      path: '/events/create',
+                      perm: PERMISSIONS.CREATE.EVENT,
+                      element: <EventCreateView />
+                  },
+                  {
+                      path: '/events/:eventId/edit',
+                      perm: PERMISSIONS.EDIT.EVENT,
+                      element: <EventEditView />
+                  },
+              ]
+            },
             {
                 element: <MainLayout />,
                 children: [
@@ -75,21 +99,6 @@ const routes: CustomRouteObject[] = [
                         element: <EventLocationEditView />
                     },
                     {
-                        path: '/events',
-                        perm: PERMISSIONS.LIST.EVENT,
-                        element: <EventListView />
-                    },
-                    {
-                        path: '/events/create',
-                        perm: PERMISSIONS.CREATE.EVENT,
-                        element: <EventCreateView />
-                    },
-                    {
-                        path: '/events/:eventId/edit',
-                        perm: PERMISSIONS.EDIT.EVENT,
-                        element: <EventEditView />
-                    },
-                    {
                         path: '/users',
                         element: <UsersListView />
                     },
@@ -118,6 +127,14 @@ const routes: CustomRouteObject[] = [
                         element: <BadgeListView />
                     },
                     {
+                        path: '/badge-templates/create',
+                        element: <BadgeCreateView />
+                    },
+                    {
+                        path: '/badge-templates/:badgeId/edit',
+                        element: <BadgeEditView />
+                    },
+                    {
                         path: '/home',
                         element: <HomePage />
                     },
@@ -144,7 +161,7 @@ const filterRoutes = (routes: CustomRouteObject[]) => {
 }
 
 const Routes: React.FC = () => {
-    return useRoutes(routes)
+    return useRoutes(filterRoutes(routes))
 }
 
 export default Routes;

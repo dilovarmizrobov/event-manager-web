@@ -3,8 +3,12 @@ import {Breadcrumbs, Button, Grid, Link, SvgIcon, Typography} from "@mui/materia
 import {Link as RouterLink} from "react-router-dom";
 import {MdNavigateNext as NavigateNextIcon} from "react-icons/md";
 import {FiPlusCircle as PlusCircleIcon} from "react-icons/fi";
+import hasPermission from "../../../utils/hasPermisson";
+import PERMISSIONS from "../../../constants/permissions";
 
 const Header = () => {
+    const canAdd = hasPermission(PERMISSIONS.CREATE.GUEST)
+
     return (
         <Grid
             container
@@ -22,19 +26,23 @@ const Header = () => {
                     Гости
                 </Typography>
             </Grid>
-            <Grid item>
-                <Button
-                    color="secondary"
-                    variant="contained"
-                    component={RouterLink}
-                    to="/guests/create"
-                >
-                    <SvgIcon sx={{marginRight: 1}}>
-                        <PlusCircleIcon />
-                    </SvgIcon>
-                        Добавить
-                </Button>
-            </Grid>
+            {
+                canAdd && (
+                    <Grid item>
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            component={RouterLink}
+                            to="/guests/create"
+                        >
+                            <SvgIcon sx={{marginRight: 1}}>
+                                <PlusCircleIcon />
+                            </SvgIcon>
+                            Добавить
+                        </Button>
+                    </Grid>
+                )
+            }
         </Grid>
     );
 };
