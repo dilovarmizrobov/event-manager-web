@@ -21,8 +21,9 @@ import UsersListView from "./views/users/list/UsersListView";
 import CountryListView from "./views/country/list/CountryListView";
 import CountryCreateView from "./views/country/form/CountryCreateView";
 import CountryEditView from "./views/country/form/CountryEditView";
-import AdminLayout from "./layouts/AdminLayout";
-import IndexRedirectGuard from "./components/IndexRedirectGuard";
+import UserCreateView from "./views/users/form/UserCreateView";
+import UserEditView from "./views/users/form/UserEditView";
+import BadgeListView from "./views/badge/list/BadgeListView";
 
 interface CustomRouteObject extends RouteObject {
     perm?: UserRolesEnum[],
@@ -98,6 +99,14 @@ const routes: CustomRouteObject[] = [
                         element: <UsersListView />
                     },
                     {
+                        path: '/users/create',
+                        element: <UserCreateView />
+                    },
+                    {
+                        path: '/users/:userId/edit',
+                        element: <UserEditView />
+                    },
+                    {
                         path: '/countries',
                         element: <CountryListView />
                     },
@@ -108,6 +117,10 @@ const routes: CustomRouteObject[] = [
                     {
                         path: '/countries/:countryId/edit',
                         element: <CountryEditView />
+                    },
+                    {
+                        path: '/badge-templates',
+                        element: <BadgeListView />
                     },
                     {
                         path: '/home',

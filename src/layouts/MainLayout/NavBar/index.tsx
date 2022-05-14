@@ -52,6 +52,11 @@ const navConfig: INavConfig[] = [
                 href: '/countries',
                 perm: PERMISSIONS.LIST.COUNTRY,
             },
+            {
+                title: 'Шаблоны бейджов',
+                icon: FaUsers,
+                href: '/badge-templates',
+            },
         ]
     },
 ]

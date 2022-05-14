@@ -19,7 +19,7 @@ const Header = () => {
                     <Typography color="text.primary">Страны</Typography>
                 </Breadcrumbs>
                 <Typography variant="h5" color="textPrimary">
-                    Пользователи
+                    Оби Тоза
                 </Typography>
             </Grid>
             <Grid item>

@@ -190,7 +190,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountr
                                                 InputLabelProps={{shrink: true}}
                                             />
                                         </Grid>
-                                        <Grid item xs={12}>
+                                        <Grid item xs={12} md={6}>
                                             <TextField
                                                 select
                                                 error={Boolean(props.touched.countryId && props.errors.countryId)}
