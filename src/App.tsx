@@ -40,11 +40,10 @@ function App() {
             <GlobalStyles styles={{ h1: { color: 'grey' } }} />
             <CssBaseline />
             <SnackbarProvider maxSnack={3} autoHideDuration={5000}>
-                <Auth>
-                    <BrowserRouter>
-                        <Routes />
-                    </BrowserRouter>
-                </Auth>
+                <Auth/>
+                <BrowserRouter>
+                    <Routes />
+                </BrowserRouter>
             </SnackbarProvider>
         </ThemeProvider>
     );

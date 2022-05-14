@@ -1,5 +1,5 @@
 import React from 'react';
-import {IEventRequest} from "../../../models/IEvent";
+import {IEventRequest, IEventResponse} from "../../../models/IEvent";
 import {useSnackbar} from "notistack";
 import {useNavigate} from "react-router-dom";
 import * as Yup from "yup";
@@ -8,14 +8,14 @@ import eventService from "../../../services/EventService";
 import {Formik, FormikProps} from "formik";
 import {Box, Button, Card, CardContent, Grid, TextField} from "@mui/material";
 
-const Form:React.FC<{eventRequest?: IEventRequest}> = ({eventRequest}) => {
+const Form: React.FC<{event?: IEventResponse}> = ({event}) => {
     const {enqueueSnackbar} = useSnackbar();
     const navigate = useNavigate();
 
     const initialValues: IEventRequest = {
-        name: eventRequest?.name || '',
-        fromDate: eventRequest?.fromDate || '',
-        toDate: eventRequest?.toDate || '',
+        name: event?.name || '',
+        fromDate: event?.fromDate || '',
+        toDate: event?.toDate || '',
     }
 
     const validationSchema = Yup.object().shape({
@@ -40,7 +40,7 @@ const Form:React.FC<{eventRequest?: IEventRequest}> = ({eventRequest}) => {
     }
 
     const handleUpdate = async (values: IEventRequest, formActions: { [key: string]: any }) => {
-        values.id = eventRequest?.id!
+        values.id = event?.id!
 
         try {
             await eventService.putUpdateEvent(values)
@@ -67,7 +67,7 @@ const Form:React.FC<{eventRequest?: IEventRequest}> = ({eventRequest}) => {
                 setSubmitting
             }) => {
                 setSubmitting(true)
-                eventRequest ? await handleUpdate(values, {
+                event ? await handleUpdate(values, {
                     resetForm,
                     setErrors,
                     setStatus,
@@ -84,62 +84,63 @@ const Form:React.FC<{eventRequest?: IEventRequest}> = ({eventRequest}) => {
                 <form onSubmit={props.handleSubmit}>
                     <Card>
                         <CardContent sx={{p:3}}>
-                            <TextField
-                                error={Boolean(props.touched.name && props.errors.name)}
-                                fullWidth
-                                autoFocus
-                                helperText={props.touched.name && props.errors.name}
-                                label="Введите название"
-                                placeholder="Введите название"
-                                name="name"
-                                onBlur={props.handleBlur}
-                                onChange={props.handleChange}
-                                required
-                                value={props.values.name}
-                                variant="outlined"
-                                InputLabelProps={{shrink: true}}
-                            />
-                            <Grid container spacing={4} sx={{mt: 3}}>
-                                <Grid item>
-                                    <TextField
-                                        error={Boolean(props.touched.fromDate && props.errors.fromDate)}
-                                        fullWidth
-                                        autoFocus
-                                        helperText={props.touched.fromDate && props.errors.fromDate}
-                                        label="Выберите дату"
-                                        placeholder="Выберите дату"
-                                        name="fromDate"
-                                        type="date"
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        required
-                                        value={props.values.fromDate}
-                                        variant="outlined"
-                                        InputLabelProps={{shrink: true}}
-                                    />
+                            <Grid container>
+                                <Grid item xs={12} md={6}>
+                                    <Grid container spacing={4}>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                error={Boolean(props.touched.name && props.errors.name)}
+                                                fullWidth
+                                                autoFocus
+                                                helperText={props.touched.name && props.errors.name}
+                                                label="Введите название"
+                                                placeholder="Введите название"
+                                                name="name"
+                                                onBlur={props.handleBlur}
+                                                onChange={props.handleChange}
+                                                required
+                                                value={props.values.name}
+                                                variant="outlined"
+                                                InputLabelProps={{shrink: true}}
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <TextField
+                                                error={Boolean(props.touched.fromDate && props.errors.fromDate)}
+                                                fullWidth
+                                                helperText={props.touched.fromDate && props.errors.fromDate}
+                                                label="Выберите дату"
+                                                placeholder="Выберите дату"
+                                                name="fromDate"
+                                                type="date"
+                                                onBlur={props.handleBlur}
+                                                onChange={props.handleChange}
+                                                required
+                                                value={props.values.fromDate}
+                                                variant="outlined"
+                                                InputLabelProps={{shrink: true}}
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <TextField
+                                                error={Boolean(props.touched.toDate && props.errors.toDate)}
+                                                fullWidth
+                                                helperText={props.touched.toDate && props.errors.toDate}
+                                                label="Выберите дату"
+                                                placeholder="Выберите дату"
+                                                name="toDate"
+                                                type="date"
+                                                onBlur={props.handleBlur}
+                                                onChange={props.handleChange}
+                                                required
+                                                value={props.values.toDate}
+                                                variant="outlined"
+                                                InputLabelProps={{shrink: true}}
+                                            />
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
-                                <Grid item>
-                                    <TextField
-                                        error={Boolean(props.touched.toDate && props.errors.toDate)}
-                                        fullWidth
-                                        autoFocus
-                                        helperText={props.touched.toDate && props.errors.toDate}
-                                        label="Выберите дату"
-                                        placeholder="Выберите дату"
-                                        name="toDate"
-                                        type="date"
-                                        onBlur={props.handleBlur}
-                                        onChange={props.handleChange}
-                                        required
-                                        value={props.values.toDate}
-                                        variant="outlined"
-                                        InputLabelProps={{shrink: true}}
-                                    />
-                                </Grid>
-
                             </Grid>
-
-
                             <Box sx={{mb: 3, mt: 4, float: 'right'}}>
                                 <Button
                                     variant="outlined"
@@ -158,7 +159,7 @@ const Form:React.FC<{eventRequest?: IEventRequest}> = ({eventRequest}) => {
                                     disabled={props.isSubmitting}
                                     sx={{width: 177}}
                                 >
-                                    {eventRequest ? 'Сохранить' : 'Создать'}
+                                    {event ? 'Сохранить' : 'Создать'}
                                 </Button>
                             </Box>
                         </CardContent>

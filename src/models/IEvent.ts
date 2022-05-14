@@ -14,3 +14,8 @@ export interface IEventRequest{
     fromDate: string;
     toDate: string;
 }
+
+export interface IEventOption {
+    id: number;
+    name: string;
+}

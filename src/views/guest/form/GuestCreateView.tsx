@@ -10,7 +10,7 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import {useNavigate} from "react-router-dom";
 import LoadingLayout from "../../../components/LoadingLayout";
-import {ICountryResponse} from "../../../models/ICountry";
+import {ICountryOption} from "../../../models/ICountry";
 import countryService from "../../../services/CountryService";
 
 const Root = styled('div')(({ theme }) => ({
@@ -24,7 +24,7 @@ const GuestCreateView = () => {
     const {enqueueSnackbar} = useSnackbar()
     const navigate = useNavigate()
     const [locations, setLocations] = useState<ILocation[]>([])
-    const [countries, setCountries] = useState<ICountryResponse[]>([])
+    const [countries, setCountries] = useState<ICountryOption[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
 
@@ -36,7 +36,7 @@ const GuestCreateView = () => {
                 setLoading(true)
 
                 const data: any = await eventLocationService.getLocations()
-                const dataCountries: any = await countryService.getCountries()
+                const dataCountries: any = await countryService.getOptionCountries()
 
                 if (!cancel) {
                     if (data.length === 0 || dataCountries.length === 0) {
@@ -60,7 +60,7 @@ const GuestCreateView = () => {
 
     return (
         <>
-            <Page title="Гости"/>
+            <Page title="Создание гостя"/>
             {
                 locations.length > 0 && countries.length > 0 ? (
                     <Root>

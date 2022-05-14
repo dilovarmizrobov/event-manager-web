@@ -16,7 +16,7 @@ const Header = () => {
                     <Link underline="hover" color="inherit" to="/home" component={RouterLink}>
                         Главная
                     </Link>
-                    <Typography color="text.primary">Пользователи</Typography>
+                    <Typography color="text.primary">Страны</Typography>
                 </Breadcrumbs>
                 <Typography variant="h5" color="textPrimary">
                     Пользователи
@@ -32,7 +32,7 @@ const Header = () => {
                     <SvgIcon sx={{marginRight: 1}}>
                         <PlusCircleIcon />
                     </SvgIcon>
-                        Добавить
+                    Добавить
                 </Button>
             </Grid>
         </Grid>

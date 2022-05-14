@@ -19,7 +19,7 @@ const Header = () => {
                     <Typography color="text.primary">Страны</Typography>
                 </Breadcrumbs>
                 <Typography variant="h5" color="textPrimary">
-                    Страны
+                    Оби Тоза
                 </Typography>
             </Grid>
             <Grid item>
@@ -27,12 +27,12 @@ const Header = () => {
                     color="secondary"
                     variant="contained"
                     component={RouterLink}
-                    to="/countries/create"
+                    to="/users/create"
                 >
                     <SvgIcon sx={{marginRight: 1}}>
                         <PlusCircleIcon />
                     </SvgIcon>
-                        Добавить
+                    Добавить
                 </Button>
             </Grid>
         </Grid>

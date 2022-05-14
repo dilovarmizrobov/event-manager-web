@@ -49,7 +49,7 @@ const EventLocationEditView = () => {
 
     return (
         <>
-            <Page title="Добавление место проведения"/>
+            <Page title="Изменение место проведения"/>
             {
                 location ? (
                     <Root>

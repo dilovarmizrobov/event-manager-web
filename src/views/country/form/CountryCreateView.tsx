@@ -16,7 +16,7 @@ const Root = styled('div')(({ theme }) => ({
 const CountryCreateView = () => {
     return (
         <>
-            <Page title="Добавить страну"/>
+            <Page title="Создание страны"/>
             <Root>
                 <Container maxWidth="xl">
                     <Header />

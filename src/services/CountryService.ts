@@ -1,36 +1,26 @@
 import api from "../utils/api";
 import {ICountryRequest} from "../models/ICountry";
-
+import apiHelper from "./ApiHelper";
 
 class CountryService {
+    getCountry = (countryId: string) => apiHelper.get(`/countries/${countryId}`)
 
-    getCountry = (countryId: string) => new Promise((resolve, reject)  => {
-        api.get(`/countries/${countryId}`)
-            .then(response => resolve(response.data))
-            .catch(error => reject(error))
-    })
+    getOptionCountries = () => apiHelper.get(`/countries/option`)
 
-    getCountries = () => new Promise((resolve, reject)  => {
-        api.get(`/countries`)
-            .then(response => resolve(response.data))
-            .catch(error => reject(error))
-    })
+    getListCountry = (page: number, size: number, search: string) =>
+        apiHelper.get(`/countries`, {search, size, page})
 
-    getListCountry = (page: number, size: number, search: string) => new Promise((resolve, reject)  => {
-        api.get(`/countries`, {params : {search, size, page}})
-            .then(response => resolve(response.data))
-            .catch(error => reject(error))
-    })
-
-    postNewCountry = (countryRequest: ICountryRequest) => new Promise((resolve, reject) => {
+    postNewCountry = (country: ICountryRequest) => new Promise((resolve, reject) => {
         let formData = new FormData();
 
-        formData.append('flag', countryRequest.flag!, 'flag.jpg');
+        formData.append('flag', country.flag!);
 
-        delete countryRequest.flag
+        const json = {
+            name: country.name,
+            abbr: country.abbr,
+        };
 
-        const json = JSON.stringify(countryRequest);
-        const blob = new Blob([json], {type: 'application/json'});
+        const blob = new Blob([JSON.stringify(json)], {type: 'application/json'});
 
         formData.append('info', blob);
 
@@ -39,23 +29,27 @@ class CountryService {
             .catch(error => reject(error))
     })
 
-    putUpdateCountry = (countryRequest: ICountryRequest) => new Promise((resolve, reject) => {
+    putUpdateCountry = (country: ICountryRequest) => new Promise((resolve, reject) => {
         let formData = new FormData();
 
-        formData.append('flag', countryRequest.flag!, 'flag.jpg');
+        formData.append('flag', country.flag || "");
 
-        delete countryRequest.flag
+        const json = {
+            id: country.id,
+            name: country.name,
+            abbr: country.abbr,
+        };
 
-        const json = JSON.stringify(countryRequest);
-        const blob = new Blob([json], {type: 'application/json'});
+        const blob = new Blob([JSON.stringify(json)], {type: 'application/json'});
 
         formData.append('info', blob);
 
-        api.put(`/countries/${countryRequest.id!}`, formData)
+        api.put(`/countries/${country.id!}`, formData)
             .then(response => resolve(response.data))
             .catch(error => reject(error))
     })
 
+    deleteCountry = (countryId: number) => apiHelper.delete(`/countries/${countryId}`)
 }
 
 const countryService = new CountryService()

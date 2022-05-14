@@ -1,19 +1,73 @@
-export const ADMIN = 'ADMIN';
-export const MANAGER = 'MANAGER';
+import {UserRolesEnum} from "./index";
 
 const PERMISSIONS = {
     LIST: {
-        ADMIN: [
-            ADMIN,
+        EVENT: [
+            UserRolesEnum.ADMIN,
         ],
-        MANAGER: [
-            ADMIN,
-            MANAGER,
+        EVENT_LOCATION: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+        ],
+        USER: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
         ]
     },
-    CREATE: {},
-    EDIT: {},
-    DELETE: {},
+    CREATE: {
+        EVENT: [
+            UserRolesEnum.ADMIN,
+        ],
+        EVENT_LOCATION: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+        ],
+        GUEST: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+            UserRolesEnum.EMPLOYEE,
+        ],
+        USER: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+        ]
+    },
+    EDIT: {
+        EVENT: [
+            UserRolesEnum.ADMIN,
+        ],
+        EVENT_LOCATION: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+        ],
+        GUEST: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+            UserRolesEnum.EMPLOYEE,
+        ],
+        USER: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+        ]
+    },
+    DELETE: {
+        EVENT: [
+            UserRolesEnum.ADMIN,
+        ],
+        EVENT_LOCATION: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+        ],
+        GUEST: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+            UserRolesEnum.EMPLOYEE,
+        ],
+        USER: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+        ]
+    }
 }
 
 export default PERMISSIONS

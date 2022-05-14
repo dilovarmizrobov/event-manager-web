@@ -10,13 +10,13 @@ const Header: React.FC<{title?: string}> = ({title}) => (
                 <Link underline="hover" color="inherit" to="/home" component={RouterLink}>
                     Главная
                 </Link>
-                <Link underline="hover" color="inherit" to="/events" component={RouterLink}>
-                    Мероприятия
+                <Link underline="hover" color="inherit" to="/users" component={RouterLink}>
+                    Добавление пользователя
                 </Link>
                 <Typography color="text.primary">{title ? 'Изменение' : 'Создание'}</Typography>
             </Breadcrumbs>
             <Typography variant="h5" color="textPrimary">
-                {title ? 'Изменение мероприятия' : 'Создание мероприятия'}
+                {title ? 'Изменение пользователя' : 'Создание пользователя'}
             </Typography>
         </Grid>
     </Grid>

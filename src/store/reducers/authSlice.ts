@@ -14,7 +14,7 @@ const initialState: initialStateInterface = {
 }
 
 if (authService.isAuthenticated()) {
-    const user = authService.getUserFromSession() as IUser
+    const user = authService.getUserFromSession()
     authService.setAxiosAuthorization()
 
     initialState.user = user

@@ -13,10 +13,10 @@ const Header: React.FC<{title?: string}> = ({title}) => (
                 <Link underline="hover" color="inherit" to="/countries" component={RouterLink}>
                     Страна
                 </Link>
-                <Typography color="text.primary">{title ? title : 'Создание'}</Typography>
+                <Typography color="text.primary">{title ? 'Изменение' : 'Создание'}</Typography>
             </Breadcrumbs>
             <Typography variant="h5" color="textPrimary">
-                {title ? title : 'Создание'}
+                {title ? 'Изменение страны' : 'Создание страны'}
             </Typography>
         </Grid>
     </Grid>

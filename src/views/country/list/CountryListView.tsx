@@ -8,7 +8,6 @@ import {
     Box,
     Card,
     Container,
-    Grid,
     IconButton,
     InputAdornment,
     SvgIcon,
@@ -23,11 +22,13 @@ import {
 } from "@mui/material";
 import Header from "./Header";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import {FiEdit, FiSearch as FiSearchIcon, FiTrash} from "react-icons/fi";
+import {FiEdit, FiSearch as FiSearchIcon} from "react-icons/fi";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import {NavLink as RouterLink} from "react-router-dom";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import countryService from "../../../services/CountryService";
+import DeleteButtonTable from "../../../components/DeleteButtonTable";
+import {pathCountryImage} from "../../../utils/pathImages";
 
 const Root = styled('div')(({theme}) => ({
     minHeight: '100%',
@@ -87,9 +88,16 @@ const CountryListView = () => {
         setPage(0);
     };
 
+    const handleDeleteRow = (rowId: number) => {
+        let newRows = [...rows]
+        let index = newRows.findIndex(row => row.id! === rowId)
+        newRows.splice(index, 1)
+        setRows(newRows)
+    }
+
     return (
         <>
-            <Page title="Страна"/>
+            <Page title="Страны"/>
             <Root>
                 <Container maxWidth="xl">
                     <Header/>
@@ -98,30 +106,26 @@ const CountryListView = () => {
                             <PerfectScrollbar>
                                 <Box minWidth={750} sx={{mb: 2}}>
                                     <Box mx={2} my={3}>
-                                        <Grid container spacing={4}>
-                                            <Grid item>
-                                                <TextField
-                                                    sx={{width: 400}}
-                                                    size="small"
-                                                    InputProps={{
-                                                        startAdornment: (
-                                                            <InputAdornment position="start">
-                                                                <SvgIcon
-                                                                    fontSize="small"
-                                                                    color="action"
-                                                                >
-                                                                    <FiSearchIcon/>
-                                                                </SvgIcon>
-                                                            </InputAdornment>
-                                                        )
-                                                    }}
-                                                    onChange={handleQueryChange}
-                                                    placeholder="Поиск"
-                                                    value={query}
-                                                    variant="outlined"
-                                                />
-                                            </Grid>
-                                        </Grid>
+                                        <TextField
+                                            sx={{width: 400}}
+                                            size="small"
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <SvgIcon
+                                                            fontSize="small"
+                                                            color="action"
+                                                        >
+                                                            <FiSearchIcon/>
+                                                        </SvgIcon>
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                            onChange={handleQueryChange}
+                                            placeholder="Поиск"
+                                            value={query}
+                                            variant="outlined"
+                                        />
                                     </Box>
                                     <TableContainer>
                                         <Table>
@@ -145,7 +149,7 @@ const CountryListView = () => {
                                                                     <TableCell>{row.abbr}</TableCell>
                                                                     <TableCell>
                                                                         <img
-                                                                            src={`/event-manager/countries/load-image/${row.flag}`}
+                                                                            src={pathCountryImage(row.flag)}
                                                                             alt="..."
                                                                             width="45px"
                                                                         />
@@ -158,9 +162,11 @@ const CountryListView = () => {
                                                                         >
                                                                             <FiEdit size={20}/>
                                                                         </IconButton>
-                                                                        <IconButton size="large">
-                                                                            <FiTrash size={20}/>
-                                                                        </IconButton>
+                                                                        <DeleteButtonTable
+                                                                            rowId={row.id}
+                                                                            onDelete={countryService.deleteCountry}
+                                                                            handleDelete={handleDeleteRow}
+                                                                        />
                                                                     </TableCell>
                                                                 </TableRow>
                                                             ))

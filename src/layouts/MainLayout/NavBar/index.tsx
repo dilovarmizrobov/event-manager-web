@@ -9,6 +9,8 @@ import {UserRolesMap} from "../../../constants";
 import NavItem from "./NavItem";
 import {FiLayout} from "react-icons/fi";
 import {FaUsers} from "react-icons/fa";
+import {MdEventSeat} from "react-icons/md";
+import {IoLocationSharp} from "react-icons/io5";
 
 const navConfig = [
     {
@@ -21,12 +23,12 @@ const navConfig = [
             },
             {
                 title: 'Мероприятия',
-                icon: FiLayout,
+                icon: MdEventSeat,
                 href: '/events',
             },
             {
                 title: 'Места проведения',
-                icon: FiLayout,
+                icon: IoLocationSharp,
                 href: '/event-locations',
             },
             {
@@ -40,9 +42,14 @@ const navConfig = [
                 href: '/users',
             },
             {
-                title: 'Страна',
+                title: 'Страны',
                 icon: FaUsers,
                 href: '/countries',
+            },
+            {
+                title: 'Шаблоны бейджов',
+                icon: FaUsers,
+                href: '/badge-templates',
             },
         ]
     },
@@ -85,7 +92,7 @@ const Index: React.FC<{openMobile: boolean, onMobileClose: VoidFunction}> = ({op
                             {user!.name}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                            {user!.roles.map(r => UserRolesMap.get(r)).join(', ')}
+                            {UserRolesMap.get(user!.role)}
                             <br/>
                             {user!.email}
                         </Typography>

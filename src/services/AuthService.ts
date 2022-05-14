@@ -1,8 +1,9 @@
 import {IUser} from "../models/IUser";
 import api from "../utils/api";
+import {UserRolesEnum} from "../constants";
 
 class AuthService {
-    setAxiosInterceptors = (onLogout: VoidFunction) => {
+    setAxiosInterceptors = (user: IUser | null, onLogout: VoidFunction) => {
         api.interceptors.response.use(
             (response) => response,
             (error) => {
@@ -14,6 +15,28 @@ class AuthService {
                 return Promise.reject(error);
             }
         )
+
+        api.interceptors.request.use((config) => {
+            if (user && user.role === UserRolesEnum.ADMIN) {
+                if (config.params) {
+                    config.params.eventId = user.eventId
+                } else {
+                    config.params = {eventId: user.eventId}
+                }
+            }
+
+            if (user && user.role === UserRolesEnum.GUARD) {
+                if (config.params) {
+                    config.params.locationId = user.locationId
+                } else {
+                    config.params = {locationId: user.locationId}
+                }
+            }
+
+            return config;
+        }, (error) => {
+            return Promise.reject(error);
+        })
     }
 
     login = (username: string, password: string) => new Promise((resolve, reject) => {
@@ -23,10 +46,24 @@ class AuthService {
 
         api.post('authenticate', params)
             .then((response) => {
-                const user = {name: response.data.name, roles: response.data.roles, email: response.data.email}
-                this.setUserAndJwtInSession(response.data.jwt, user as IUser)
+                let data = response.data
+                const user: IUser = {name: data.name, email: data.email, role: data.role}
 
-                resolve(user as IUser)
+                if (data.role === UserRolesEnum.ADMIN) {
+                    user.events = data.events
+                    user.eventId = data.events[0].id
+                } else {
+                    user.eventName = data.eventName
+                }
+
+                if (data.role === UserRolesEnum.GUARD) {
+                    user.locations = data.locations
+                    user.locationId = data.locations[0].id
+                }
+
+                this.setUserAndJwtInSession(response.data.jwt, user)
+
+                resolve(user)
             })
             .catch(error => reject(error))
     })
@@ -45,7 +82,7 @@ class AuthService {
 
     setAxiosAuthorization = () => api.defaults.headers.common.Authorization = `Bearer ${this.getJwtFromSession()}`
     getJwtFromSession = () => localStorage.getItem('jwt')
-    getUserFromSession = () => JSON.parse(localStorage.getItem('user') as string);
+    getUserFromSession = () => JSON.parse(localStorage.getItem('user') as string) as IUser;
     isAuthenticated = () => Boolean(this.getJwtFromSession())
 }
 

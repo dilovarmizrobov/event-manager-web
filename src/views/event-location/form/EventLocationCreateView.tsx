@@ -15,7 +15,7 @@ const Root = styled('div')(({ theme }) => ({
 const EventLocationCreateView = () => {
     return (
         <>
-            <Page title="Добавление место проведения"/>
+            <Page title="Создание место проведения"/>
             <Root>
                 <Container maxWidth="xl">
                     <Header />

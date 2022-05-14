@@ -11,3 +11,8 @@ export interface ICountryRequest {
     name: string;
     abbr: string;
 }
+
+export interface ICountryOption {
+    id: number;
+    name: string;
+}

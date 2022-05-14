@@ -8,11 +8,12 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import countryService from "../../../services/CountryService";
 import {Avatar, Box, Button, Card, CardContent, Grid, TextField, Typography} from "@mui/material";
 import {FiCamera} from "react-icons/fi";
+import {pathCountryImage} from "../../../utils/pathImages";
 
 const Form : React.FC<{country?: ICountryResponse}> = ({country}) => {
     const {enqueueSnackbar} = useSnackbar();
     const navigate = useNavigate();
-    const [photoPreview, setPhotoPreview] = useState<string>(country?.flag || "")
+    const [photoPreview, setPhotoPreview] = useState<string>(country?.flag ? pathCountryImage(country.flag) : "")
     const [uploadError, setUploadError] = useState<boolean>(false)
 
     const initialValues: ICountryRequest = {

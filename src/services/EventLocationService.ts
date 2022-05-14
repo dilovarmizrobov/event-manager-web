@@ -1,30 +1,16 @@
-import api from "../utils/api";
 import {ILocation} from "../models/ILocation";
+import apiHelper from "./ApiHelper";
 
 class EventLocationService {
-    getLocation = (locationId: string) => new Promise((resolve, reject)  => {
-        api.get(`/locations/${locationId}`)
-            .then(response => resolve(response.data))
-            .catch(error => reject(error))
-    })
+    getLocation = (locationId: string) => apiHelper.get(`/locations/${locationId}`)
 
-    getLocations = () => new Promise((resolve, reject)  => {
-        api.get(`/locations`)
-            .then(response => resolve(response.data))
-            .catch(error => reject(error))
-    })
+    getLocations = () => apiHelper.get(`/locations`)
 
-    postNewLocation = (location: ILocation) => new Promise((resolve, reject) => {
-        api.post(`/locations`, location)
-            .then(response => resolve(response.data))
-            .catch(error => reject(error))
-    })
+    postNewLocation = (location: ILocation) => apiHelper.post<ILocation>(`/locations`, location)
 
-    putUpdateLocation = (location: ILocation) => new Promise((resolve, reject) => {
-        api.put(`/locations/${location.id!}`, location)
-            .then(response => resolve(response.data))
-            .catch(error => reject(error))
-    })
+    putUpdateLocation = (location: ILocation) => apiHelper.put<ILocation>(`/locations/${location.id!}`, location)
+
+    deleteLocation = (locationId: number) => apiHelper.delete(`/locations/${locationId}`)
 }
 
 const eventLocationService = new EventLocationService()

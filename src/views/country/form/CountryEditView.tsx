@@ -33,7 +33,7 @@ const CountryEditView = () => {
             try {
                 setLoading(true)
 
-                const data: any = await countryService.getCountry(countryId || '')
+                const data = await countryService.getCountry(countryId || '') as ICountryResponse
 
                 if (!cancel) setCountry(data)
             } catch (error: any) {
@@ -49,19 +49,18 @@ const CountryEditView = () => {
 
     return (
         <>
-            <Page title="Изменение страна"/>
+            <Page title="Изменение страны"/>
             {
                 country ? (
-                        <Root>
-                            <Container maxWidth="xl">
-                                <Header title={country?.name} />
-                                <Box>
-                                    <Form country={country} />
-                                </Box>
-                            </Container>
-                        </Root>
-                    )
-                    : <LoadingLayout loading={loading} error={error} />
+                    <Root>
+                        <Container maxWidth="xl">
+                            <Header title={country.name} />
+                            <Box mt={3}>
+                                <Form country={country} />
+                            </Box>
+                        </Container>
+                    </Root>
+                ) : <LoadingLayout loading={loading} error={error} />
             }
         </>
     );

@@ -6,11 +6,11 @@ import {
     Container, FormControl, IconButton,
     InputAdornment, InputLabel, MenuItem, Select, SelectChangeEvent,
     SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
-    TextField, Toolbar, Tooltip, Typography
+    TextField, Toolbar, Typography
 } from "@mui/material";
 import Page from "../../../components/Page";
 import {styled} from "@mui/material/styles";
-import {FiSearch as FiSearchIcon, FiPrinter, FiEdit, FiTrash} from "react-icons/fi";
+import {FiSearch as FiSearchIcon, FiEdit} from "react-icons/fi";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { alpha } from '@mui/material/styles';
 import {IGuest} from "../../../models/IGuest";
@@ -20,10 +20,13 @@ import {useSnackbar} from "notistack";
 import useDebounce from "../../../hooks/useDebounce";
 import {GuestTypeMap} from "../../../constants";
 import {NavLink as RouterLink, useNavigate} from "react-router-dom";
-import {ICountryResponse} from "../../../models/ICountry";
+import {ICountryOption} from "../../../models/ICountry";
 import countryService from "../../../services/CountryService";
 import LoadingLayout from "../../../components/LoadingLayout";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
+import PrintBadgeButton from "./PrintBadgeButton";
+import ScanBadgeModal from "./ScanBadgeModal";
+import DeleteButtonTable from "../../../components/DeleteButtonTable";
 
 const Root = styled('div')(({ theme }) => ({
     minHeight: '100%',
@@ -39,11 +42,12 @@ const GuestListView = () => {
     const [query, setQuery] = useState('')
     const debouncedSearchTerm = useDebounce(query, 500)
     const [countryId, setCountryId] = useState<number>(0)
-    const [selected, setSelected] = useState<readonly number[]>([])
+    const [selected, setSelected] = useState<number[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
     const [rows, setRows] = useState<IGuest[]>([])
-    const [countries, setCountries] = useState<ICountryResponse[]>([])
+    const [rowsCount, setRowsCount] = useState<number>(0);
+    const [countries, setCountries] = useState<ICountryOption[]>([])
 
     useEffect(() => {
         let cancel = false;
@@ -53,10 +57,10 @@ const GuestListView = () => {
                 setLoading(true)
                 setRows([])
 
-                const data: any = await guestService.getListGuests(page, size, debouncedSearchTerm, countryId)
+                const data: any = await guestService.getListGuests(page + 1, size, debouncedSearchTerm, countryId)
 
                 if (countries.length === 0) {
-                    const dataCountries: any = await countryService.getCountries()
+                    const dataCountries: any = await countryService.getOptionCountries()
 
                     if (!cancel) {
                         if (dataCountries.length === 0) {
@@ -68,7 +72,10 @@ const GuestListView = () => {
                     }
                 }
 
-                if (!cancel) setRows(data.content)
+                if (!cancel) {
+                    setRows(data.content)
+                    setRowsCount(data.totalElements)
+                }
             } catch (error: any) {
                 !cancel && setError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -78,7 +85,7 @@ const GuestListView = () => {
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar, page, size, debouncedSearchTerm, countryId, navigate, countries.length])
+    }, [enqueueSnackbar, page, size, debouncedSearchTerm, countryId, navigate])
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setQuery(event.target.value);
@@ -110,7 +117,7 @@ const GuestListView = () => {
 
     const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
         const selectedIndex = selected.indexOf(id);
-        let newSelected: readonly number[] = [];
+        let newSelected: number[] = [];
 
         if (selectedIndex === -1) {
             newSelected = newSelected.concat(selected, id);
@@ -128,9 +135,14 @@ const GuestListView = () => {
         setSelected(newSelected);
     };
 
-    const isSelected = (id: number) => selected.indexOf(id) !== -1;
+    const handleDeleteRow = (rowId: number) => {
+        let newRows = [...rows]
+        let index = newRows.findIndex(row => row.id! === rowId)
+        newRows.splice(index, 1)
+        setRows(newRows)
+    }
 
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * size - rows.length) : 0;
+    const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
     return (
         <>
@@ -166,11 +178,7 @@ const GuestListView = () => {
                                                             >
                                                                 {selected.length} выбрано
                                                             </Typography>
-                                                            <Tooltip title="Печать">
-                                                                <IconButton>
-                                                                    <FiPrinter />
-                                                                </IconButton>
-                                                            </Tooltip>
+                                                            <PrintBadgeButton guestsId={selected} />
                                                         </>
                                                     ) : (
                                                         <>
@@ -202,10 +210,11 @@ const GuestListView = () => {
                                                                     <Select
                                                                         labelId="country-select-label"
                                                                         id="country-select"
-                                                                        value={countryId || ''}
+                                                                        value={countryId}
                                                                         label="Страна"
                                                                         onChange={handleChangeCountry}
                                                                     >
+                                                                        <MenuItem value={0}>Все</MenuItem>
                                                                         {countries.map((item, index) => (
                                                                             <MenuItem key={index} value={item.id}>{item.name}</MenuItem>
                                                                         ))}
@@ -260,9 +269,7 @@ const GuestListView = () => {
                                                                                 <TableCell>{GuestTypeMap.get(row.type)}</TableCell>
                                                                                 <TableCell>Бейджик</TableCell>
                                                                                 <TableCell style={{ width: 165 }}>
-                                                                                    <IconButton size="large">
-                                                                                        <FiPrinter size={20}/>
-                                                                                    </IconButton>
+                                                                                    <PrintBadgeButton guestsId={[row.id!]} />
                                                                                     <IconButton
                                                                                         size="large"
                                                                                         component={RouterLink}
@@ -270,23 +277,16 @@ const GuestListView = () => {
                                                                                     >
                                                                                         <FiEdit size={20} />
                                                                                     </IconButton>
-                                                                                    <IconButton size="large">
-                                                                                        <FiTrash size={20} />
-                                                                                    </IconButton>
+                                                                                    <DeleteButtonTable
+                                                                                        rowId={row.id!}
+                                                                                        onDelete={guestService.deleteGuest}
+                                                                                        handleDelete={handleDeleteRow}
+                                                                                    />
                                                                                 </TableCell>
                                                                             </TableRow>
                                                                         )
                                                                     })
                                                                 }
-                                                                {emptyRows > 0 && (
-                                                                    <TableRow
-                                                                        style={{
-                                                                            height: 53 * emptyRows,
-                                                                        }}
-                                                                    >
-                                                                        <TableCell colSpan={6} />
-                                                                    </TableRow>
-                                                                )}
                                                             </TableBody>
                                                         ) : <NoFoundTableBody loading={loading}/>
                                                     }
@@ -296,7 +296,7 @@ const GuestListView = () => {
                                     </PerfectScrollbar>
                                     <TablePagination
                                         component="div"
-                                        count={rows.length}
+                                        count={rowsCount}
                                         labelRowsPerPage={'Строк на странице:'}
                                         page={page}
                                         onPageChange={handleChangePage}
@@ -311,6 +311,7 @@ const GuestListView = () => {
                     </Root>
                 ) : <LoadingLayout loading={loading} error={error} />
             }
+            <ScanBadgeModal />
         </>
     );
 };
