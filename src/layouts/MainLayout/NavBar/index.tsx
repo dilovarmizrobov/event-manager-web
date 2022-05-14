@@ -56,6 +56,7 @@ const navConfig: INavConfig[] = [
                 title: 'Шаблоны бейджов',
                 icon: FaUsers,
                 href: '/badge-templates',
+                perm: PERMISSIONS.LIST.BADGE,
             },
         ]
     },

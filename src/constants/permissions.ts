@@ -16,6 +16,10 @@ const PERMISSIONS = {
         COUNTRY: [
             UserRolesEnum.ADMIN,
             UserRolesEnum.ADMIN_EVENT,
+        ],
+        BADGE: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT
         ]
     },
     CREATE: {
@@ -38,6 +42,10 @@ const PERMISSIONS = {
         COUNTRY: [
             UserRolesEnum.ADMIN,
             UserRolesEnum.ADMIN_EVENT,
+        ],
+        BADGE: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT
         ]
     },
     EDIT: {
@@ -60,6 +68,10 @@ const PERMISSIONS = {
         COUNTRY: [
             UserRolesEnum.ADMIN,
             UserRolesEnum.ADMIN_EVENT,
+        ],
+        BADGE: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT
         ]
     },
     DELETE: {
@@ -82,6 +94,10 @@ const PERMISSIONS = {
         COUNTRY: [
             UserRolesEnum.ADMIN,
             UserRolesEnum.ADMIN_EVENT,
+        ],
+        BADGE: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT
         ]
     },
     PRINT: {

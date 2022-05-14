@@ -1,7 +1,6 @@
 import React from "react";
 import {RouteObject, useRoutes} from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
-import HomePage from "./views/HomePage";
 import Error404 from "./views/Error404";
 import LoginView from "./views/auth/LoginView";
 import AuthGuard from "./components/AuthGuard";
@@ -100,43 +99,48 @@ const routes: CustomRouteObject[] = [
                     },
                     {
                         path: '/users',
+                        perm: PERMISSIONS.LIST.USER,
                         element: <UsersListView />
                     },
                     {
                         path: '/users/create',
+                        perm: PERMISSIONS.CREATE.USER,
                         element: <UserCreateView />
                     },
                     {
                         path: '/users/:userId/edit',
+                        perm: PERMISSIONS.EDIT.USER,
                         element: <UserEditView />
                     },
                     {
                         path: '/countries',
+                        perm: PERMISSIONS.LIST.COUNTRY,
                         element: <CountryListView />
                     },
                     {
                         path: '/countries/create',
+                        perm: PERMISSIONS.CREATE.COUNTRY,
                         element: <CountryCreateView />
                     },
                     {
                         path: '/countries/:countryId/edit',
+                        perm: PERMISSIONS.EDIT.COUNTRY,
                         element: <CountryEditView />
                     },
                     {
                         path: '/badge-templates',
+                        perm: PERMISSIONS.LIST.BADGE,
                         element: <BadgeListView />
                     },
                     {
                         path: '/badge-templates/create',
+                        perm: PERMISSIONS.CREATE.BADGE,
                         element: <BadgeCreateView />
                     },
                     {
                         path: '/badge-templates/:badgeId/edit',
+                        perm: PERMISSIONS.EDIT.BADGE,
                         element: <BadgeEditView />
-                    },
-                    {
-                        path: '/home',
-                        element: <HomePage />
                     },
                 ]
             }
