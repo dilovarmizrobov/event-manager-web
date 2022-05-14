@@ -7,14 +7,13 @@ import * as Yup from "yup";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {Formik, FormikProps} from "formik";
 import {Avatar, Box, Button, Card, CardContent, Grid, TextField, Typography} from "@mui/material";
-import {FiCamera} from "react-icons/fi";
 import badgeService from "../../../services/BadgeService";
-import { BsFileWord} from "react-icons/bs";
+import {AiOutlineFileWord} from "react-icons/ai";
 
 const Form :React.FC<{badge? : IBadgeResponse}> = ({badge}) => {
     const {enqueueSnackbar} = useSnackbar();
     const navigate = useNavigate();
-    const [photoPreview, setPhotoPreview] = useState<string>(badge?.fileName ? pathBadgeImage(badge.fileName) : "")
+    const [fileName, setFileName] = useState<string>(badge?.fileName || "")
     const [uploadError, setUploadError] = useState<boolean>(false)
 
     const initialValues: IBadgeRequest = {
@@ -26,14 +25,14 @@ const Form :React.FC<{badge? : IBadgeResponse}> = ({badge}) => {
     })
 
     const handleAdd = async (values: IBadgeRequest, formActions: { [key: string]: any }) => {
-        try {
-            if (!photoPreview) {
-                setUploadError(true)
-                return
-            }
+        if (!fileName) {
+            setUploadError(true)
+            return
+        }
 
-           // await countryService.postNewCountry(values)
-                await badgeService.postNewBadge(values)
+        try {
+            await badgeService.postNewBadge(values)
+
             enqueueSnackbar('Успешно создан', {variant: 'success'});
             navigate(-1)
         } catch (error: any) {
@@ -48,13 +47,12 @@ const Form :React.FC<{badge? : IBadgeResponse}> = ({badge}) => {
     const handleUpdate = async (values: IBadgeRequest, formActions: { [key: string]: any }) => {
         values.id = badge?.id!
 
-        if (!photoPreview) {
+        if (!fileName) {
             setUploadError(true)
             return
         }
 
         try {
-            //await countryService.putUpdateCountry(values)
             await badgeService.putUpdateBadge(values)
 
             enqueueSnackbar('Успешно обновлен', {variant: 'success'});
@@ -123,24 +121,28 @@ const Form :React.FC<{badge? : IBadgeResponse}> = ({badge}) => {
                                             </Typography>
                                             <label>
                                                 <Avatar
-                                                    src={photoPreview}
-                                                    sx={{minWidth: "400px", minHeight: "250px", cursor: "pointer"}}
+                                                    sx={{minWidth: 300, minHeight: 150, cursor: "pointer"}}
                                                     variant="rounded"
                                                 >
-                                                    <BsFileWord size={40}/>
+                                                    <AiOutlineFileWord size={40}/>
                                                 </Avatar>
                                                 <input
-                                                    accept="application/msword"
+                                                    accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                                     type="file"
                                                     style={{display: "none"}}
                                                     onChange={(e) => {
                                                         let file = (e.target as HTMLInputElement).files![0];
-                                                        setPhotoPreview(URL.createObjectURL(file))
+                                                        setFileName(file.name)
                                                         setUploadError(false)
                                                         props.setFieldValue("fileName", file);
                                                     }}
                                                 />
                                             </label>
+                                            {fileName && (
+                                                <Typography variant="subtitle2" sx={{mt: 1}}>
+                                                    {fileName}
+                                                </Typography>
+                                            )}
                                             {uploadError && (
                                                 <Typography variant="subtitle2" sx={{color: "red", mt: 1}}>
                                                     Выберите файл

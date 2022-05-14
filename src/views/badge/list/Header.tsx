@@ -16,10 +16,10 @@ const Header = () => {
                     <Link underline="hover" color="inherit" to="/home" component={RouterLink}>
                         Главная
                     </Link>
-                    <Typography color="text.primary">Оби Тоза</Typography>
+                    <Typography color="text.primary">Шаблоны бейджов</Typography>
                 </Breadcrumbs>
                 <Typography variant="h5" color="textPrimary">
-                    Оби Тоза
+                    Шаблоны бейджов
                 </Typography>
             </Grid>
             <Grid item>

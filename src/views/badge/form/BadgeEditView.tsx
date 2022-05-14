@@ -48,7 +48,7 @@ const BadgeEditView = () => {
     }, [enqueueSnackbar, badgeId, navigate])
     return (
         <>
-            <Page title="Изменение Бейдж"/>
+            <Page title="Изменение бейджа"/>
             {
                 badge ? (
                     <Root>

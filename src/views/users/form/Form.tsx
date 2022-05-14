@@ -203,7 +203,6 @@ const Form :React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) 
                                                     .filter(item => {
                                                         switch (item as UserRolesEnum) {
                                                             case UserRolesEnum.ADMIN:
-                                                            case UserRolesEnum.ADMIN_EVENT:
                                                                 return isAdmin
                                                             default: return true
                                                         }

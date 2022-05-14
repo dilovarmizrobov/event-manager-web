@@ -30,6 +30,11 @@ const navConfig: INavConfig[] = [
         subheader: 'Главная',
         items: [
             {
+              title: 'Home',
+              icon: FaUsers,
+              href: '/home'
+            },
+            {
                 title: 'Гости',
                 icon: FaUsers,
                 href: '/guests',

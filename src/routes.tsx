@@ -27,6 +27,7 @@ import BadgeCreateView from "./views/badge/form/BadgeCreateView";
 import BadgeEditView from "./views/badge/form/BadgeEditView";
 import AdminLayout from "./layouts/AdminLayout";
 import IndexRedirectGuard from "./components/IndexRedirectGuard"
+import Home from "./views/Home";
 
 interface CustomRouteObject extends RouteObject {
     perm?: UserRolesEnum[],
@@ -68,6 +69,10 @@ const routes: CustomRouteObject[] = [
             {
                 element: <MainLayout />,
                 children: [
+                    {
+                      path: '/home',
+                      element: <Home />
+                    },
                     {
                         path: '/guests',
                         element: <GuestListView />

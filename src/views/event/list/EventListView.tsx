@@ -109,7 +109,7 @@ const EventListView = () => {
         }
 
         dispatch(updateAuthEvent(event))
-        navigate('/guests')
+        navigate('/home')
     }
 
     return (

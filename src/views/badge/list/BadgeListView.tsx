@@ -20,7 +20,7 @@ import {IBadgeResponse} from "../../../models/IBadge";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import badgeService from "../../../services/BadgeService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
-import {FiEdit, FiTrash} from "react-icons/fi";
+import {FiDownload, FiEdit} from "react-icons/fi";
 import {NavLink as RouterLink} from "react-router-dom";
 import DeleteButtonTable from "../../../components/DeleteButtonTable";
 
@@ -73,7 +73,7 @@ const BadgeListView = () => {
 
     return (
         <>
-            <Page title="Пользователи"/>
+            <Page title="Шаблоны бейджов"/>
             <Root>
                 <Container maxWidth="xl">
                     <Header />
@@ -87,7 +87,6 @@ const BadgeListView = () => {
                                                 <TableRow>
                                                     <TableCell>№</TableCell>
                                                     <TableCell>Название</TableCell>
-                                                    <TableCell>Файлы</TableCell>
                                                     <TableCell />
                                                 </TableRow>
                                             </TableHead>
@@ -99,11 +98,13 @@ const BadgeListView = () => {
                                                                 <TableRow hover key={row.id}>
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell>{row.name}</TableCell>
-                                                                    <TableCell>
-                                                                        {/*<a href={`/badge-templates/load-badge/${row.fileName}`} download>{row.fileName}</a>*/}
-                                                                        <a onClick={() => downloadButton(row.fileName)}>{row.fileName}</a>
-                                                                    </TableCell>
                                                                     <TableCell style={{ width: 165 }}>
+                                                                        <IconButton
+                                                                            size="large"
+                                                                            onClick={() => downloadButton(row.fileName)}
+                                                                        >
+                                                                            <FiDownload size={20} />
+                                                                        </IconButton>
                                                                         <IconButton
                                                                             size="large"
                                                                             component={RouterLink}

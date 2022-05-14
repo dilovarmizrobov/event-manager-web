@@ -16,7 +16,7 @@ const Header = () => {
                     <Link underline="hover" color="inherit" to="/home" component={RouterLink}>
                         Главная
                     </Link>
-                    <Typography color="text.primary">Страны</Typography>
+                    <Typography color="text.primary">Пользователи</Typography>
                 </Breadcrumbs>
                 <Typography variant="h5" color="textPrimary">
                     Пользователи

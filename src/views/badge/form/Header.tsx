@@ -11,12 +11,12 @@ const Header: React.FC<{title?: string}> = ({title}) => (
                     Главная
                 </Link>
                 <Link underline="hover" color="inherit" to="/badge-templates" component={RouterLink}>
-                    Добавление бейдж
+                    Шаблоны бейджов
                 </Link>
                 <Typography color="text.primary">{title ? 'Изменение' : 'Создание'}</Typography>
             </Breadcrumbs>
             <Typography variant="h5" color="textPrimary">
-                {title ? 'Изменение бейдж' : 'Создание бейдж'}
+                {title ? 'Изменение бейджа' : 'Создание бейджа'}
             </Typography>
         </Grid>
     </Grid>

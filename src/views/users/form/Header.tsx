@@ -11,7 +11,7 @@ const Header: React.FC<{title?: string}> = ({title}) => (
                     Главная
                 </Link>
                 <Link underline="hover" color="inherit" to="/users" component={RouterLink}>
-                    Добавление пользователя
+                    Пользователи
                 </Link>
                 <Typography color="text.primary">{title ? 'Изменение' : 'Создание'}</Typography>
             </Breadcrumbs>

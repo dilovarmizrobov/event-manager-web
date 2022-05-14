@@ -15,7 +15,7 @@ const Root = styled('div')(({ theme }) => ({
 const BadgeCreateView = () => {
     return (
         <>
-            <Page title="Создание Бейджа"/>
+            <Page title="Создание бейджа"/>
             <Root>
               <Container>
                   <Header />
