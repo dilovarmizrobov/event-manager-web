@@ -46,6 +46,11 @@ const navConfig = [
                 icon: FaUsers,
                 href: '/countries',
             },
+            {
+                title: 'Шаблоны бейджов',
+                icon: FaUsers,
+                href: '/badge-templates',
+            },
         ]
     },
 ]

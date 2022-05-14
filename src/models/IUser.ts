@@ -12,3 +12,21 @@ export interface IUser {
     locations?: ILocation[];
     locationId?: number;
 }
+
+export interface IUserResponse {
+    id: number;
+    fullName: string;
+    role: UserRolesEnum;
+    locations?:  ILocation[];
+    phoneNumber: string;
+    email: string;
+}
+
+export interface IUserRequest {
+    id?: number;
+    fullName: string;
+    phoneNumber: string;
+    email: string;
+    role: UserRolesEnum;
+    locations?: number[];
+}
