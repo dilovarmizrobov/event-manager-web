@@ -24,6 +24,8 @@ import CountryEditView from "./views/country/form/CountryEditView";
 import UserCreateView from "./views/users/form/UserCreateView";
 import UserEditView from "./views/users/form/UserEditView";
 import BadgeListView from "./views/badge/list/BadgeListView";
+import BadgeCreateView from "./views/badge/form/BadgeCreateView";
+import BadgeEditView from "./views/badge/form/BadgeEditView";
 import AdminLayout from "./layouts/AdminLayout";
 import IndexRedirectGuard from "./components/IndexRedirectGuard"
 
@@ -123,6 +125,14 @@ const routes: CustomRouteObject[] = [
                     {
                         path: '/badge-templates',
                         element: <BadgeListView />
+                    },
+                    {
+                        path: '/badge-templates/create',
+                        element: <BadgeCreateView />
+                    },
+                    {
+                        path: '/badge-templates/:badgeId/edit',
+                        element: <BadgeEditView />
                     },
                     {
                         path: '/home',
