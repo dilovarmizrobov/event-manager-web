@@ -12,6 +12,8 @@ import {useNavigate} from "react-router-dom";
 import LoadingLayout from "../../../components/LoadingLayout";
 import {ICountryOption} from "../../../models/ICountry";
 import countryService from "../../../services/CountryService";
+import {IBadgeOption} from "../../../models/IBadge";
+import badgeService from "../../../services/BadgeService";
 
 const Root = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
@@ -25,6 +27,7 @@ const GuestCreateView = () => {
     const navigate = useNavigate()
     const [locations, setLocations] = useState<ILocation[]>([])
     const [countries, setCountries] = useState<ICountryOption[]>([])
+    const [badges, setBadges] = useState<IBadgeOption[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
 
@@ -37,14 +40,16 @@ const GuestCreateView = () => {
 
                 const data: any = await eventLocationService.getLocations()
                 const dataCountries: any = await countryService.getOptionCountries()
+                const dataBadges: any = await badgeService.getOptionBadges()
 
                 if (!cancel) {
-                    if (data.length === 0 || dataCountries.length === 0) {
+                    if (data.length === 0 || dataCountries.length === 0 || dataBadges.length === 0) {
                         navigate(-1)
-                        enqueueSnackbar('Добавьте с начала места проведения и страны', {variant: 'info'})
+                        enqueueSnackbar('Добавьте с начала места проведения, шаблоны бейджиков и страны', {variant: 'info'})
                     } else {
                         setLocations(data)
                         setCountries(dataCountries)
+                        setBadges(dataBadges)
                     }
                 }
             } catch (error: any) {
@@ -62,12 +67,12 @@ const GuestCreateView = () => {
         <>
             <Page title="Создание гостя"/>
             {
-                locations.length > 0 && countries.length > 0 ? (
+                locations.length > 0 && countries.length > 0 && badges.length > 0 ? (
                     <Root>
                         <Container maxWidth="xl">
                             <Header />
                             <Box mt={3}>
-                                <Form locations={locations} countries={countries} />
+                                <Form locations={locations} countries={countries} badges={badges} />
                             </Box>
                         </Container>
                     </Root>

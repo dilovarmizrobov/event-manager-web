@@ -6,6 +6,8 @@ class BadgeService {
 
     getBadge = (badgeId: string) => apiHelper.get(`/badge-templates/${badgeId}`)
 
+    getOptionBadges = () => apiHelper.get(`/badge-templates/option`)
+
     getBadges = () => apiHelper.get(`/badge-templates`)
 
     getDownloadBadge = (fileName: string) =>

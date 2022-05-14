@@ -18,7 +18,6 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import guestService from "../../../services/GuestService";
 import {useSnackbar} from "notistack";
 import useDebounce from "../../../hooks/useDebounce";
-import {GuestTypeMap} from "../../../constants";
 import {NavLink as RouterLink, useNavigate} from "react-router-dom";
 import {ICountryOption} from "../../../models/ICountry";
 import countryService from "../../../services/CountryService";
@@ -29,6 +28,7 @@ import ScanBadgeModal from "./ScanBadgeModal";
 import DeleteButtonTable from "../../../components/DeleteButtonTable";
 import hasPermission from "../../../utils/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
+import {IBadgeOption} from "../../../models/IBadge";
 
 const Root = styled('div')(({ theme }) => ({
     minHeight: '100%',
@@ -271,7 +271,7 @@ const GuestListView = () => {
                                                                                 <TableCell>{row.passport}</TableCell>
                                                                                 <TableCell>{row.country!.name}</TableCell>
                                                                                 <TableCell>{row.email}</TableCell>
-                                                                                <TableCell>{GuestTypeMap.get(row.type)}</TableCell>
+                                                                                <TableCell>{(row.type as IBadgeOption).name}</TableCell>
                                                                                 <TableCell>Бейджик</TableCell>
                                                                                 {
                                                                                     (canEdit || canDelete || canPrint) && (

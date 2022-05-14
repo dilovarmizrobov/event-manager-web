@@ -36,6 +36,7 @@ const DeleteButtonTable: React.FC<DeleteButtonTableProps> = ({rowId, onDelete, h
             handleDelete(rowId)
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+        } finally {
             setLoading(false)
         }
     }

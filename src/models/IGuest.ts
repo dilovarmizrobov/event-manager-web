@@ -1,6 +1,6 @@
-import {GuestTypeEnum} from "../constants";
 import {ILocation} from "./ILocation";
 import {ICountryResponse} from "./ICountry";
+import {IBadgeOption} from "./IBadge";
 
 export interface IGuest {
     [key: string]: any;
@@ -10,7 +10,7 @@ export interface IGuest {
     passportImage?: string | File;
     photo?: string | File;
     email: string;
-    type: GuestTypeEnum;
+    type: number | IBadgeOption;
     countryId: number;
     country?: ICountryResponse;
     locations: number[] | ILocation[];

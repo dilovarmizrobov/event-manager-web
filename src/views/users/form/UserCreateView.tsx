@@ -37,7 +37,7 @@ const UserCreateView = () => {
                 if (!cancel) {
                     if (data.length === 0) {
                         navigate(-1)
-                        enqueueSnackbar('Добавьте с начала места проведения и страны', {variant: 'info'})
+                        enqueueSnackbar('Добавьте с начала места проведения', {variant: 'info'})
                     } else {
                         setLocations(data)
                     }

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {IGuest} from "../../../models/IGuest";
 import * as Yup from 'yup';
-import {GuestTypeEnum, GuestTypeMap} from "../../../constants";
 import {Formik, FormikProps} from 'formik';
 import {
     Avatar,
@@ -21,9 +20,10 @@ import guestService from "../../../services/GuestService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import {FiCamera} from "react-icons/fi";
+import {IBadgeOption} from "../../../models/IBadge";
 
-const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountryOption[]}> = (props) => {
-    const {guest, locations: eventLocations, countries} = props
+const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountryOption[], badges: IBadgeOption[]}> = (props) => {
+    const {guest, locations: eventLocations, countries, badges} = props
     const navigate = useNavigate();
     const {enqueueSnackbar} = useSnackbar();
     const [locations, setLocations] = useState<number[]>((guest?.locations as number[]) || []);
@@ -36,7 +36,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountr
         fullName: guest?.fullName || '',
         passport: guest?.passport || '',
         email: guest?.email || '',
-        type: guest?.type || GuestTypeEnum.COMMON,
+        type: guest ? (guest.type as IBadgeOption).id : badges[0].id,
         countryId: guest?.countryId || countries[0].id,
         locations: locations,
     }
@@ -274,9 +274,9 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountr
                                                 }}
                                             >
                                                 {
-                                                    Object.keys(GuestTypeEnum).map(item => (
-                                                        <MenuItem key={item} value={item}>
-                                                            {GuestTypeMap.get(item as GuestTypeEnum)}
+                                                    badges.map(badge => (
+                                                        <MenuItem key={badge.id} value={badge.id}>
+                                                            {badge.name}
                                                         </MenuItem>
                                                     ))
                                                 }

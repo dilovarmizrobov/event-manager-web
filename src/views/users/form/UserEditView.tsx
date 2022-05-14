@@ -40,14 +40,13 @@ const UserEditView = () => {
                 const data: any = await userService.getUser(userId || '') as IUserResponse
 
                 if (!cancel) {
-                    if(data.length === 0 || dataLocation.length === 0){
+                    if (data.length === 0 || dataLocation.length === 0) {
                         navigate(-1)
                         enqueueSnackbar('Добавьте с начала места проведения', {variant: 'info'})
-                    }else {
+                    } else {
                         setUser(data)
                         setLocations(dataLocation)
                     }
-
                 }
             } catch (error: any) {
                 !cancel && setError(true)
@@ -62,19 +61,18 @@ const UserEditView = () => {
 
     return (
         <>
-          <Page title="Изменение пользователя" />
+            <Page title="Изменение пользователя" />
             {
-               locations.length > 0 &&  user ? (
-                       <Root>
-                           <Container maxWidth="xl">
-                               <Header title={user.fullName} />
-                               <Box mt={3}>
-                                   <Form locations={locations} user={user} />
-                               </Box>
-                           </Container>
-                       </Root>
-                    )
-                    : <LoadingLayout loading={loading} error={error} />
+                locations.length > 0 &&  user ? (
+                    <Root>
+                        <Container maxWidth="xl">
+                            <Header title={user.fullName} />
+                            <Box mt={3}>
+                               <Form locations={locations} user={user} />
+                            </Box>
+                        </Container>
+                    </Root>
+                ) : <LoadingLayout loading={loading} error={error} />
             }
         </>
     );
