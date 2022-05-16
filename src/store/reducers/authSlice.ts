@@ -40,14 +40,24 @@ export const authSlice = createSlice({
             state.user!.event = action.payload
             authService.setUserInSession(state.user!)
         },
+        deleteAuthEvent: (state) => {
+            delete state.user!.event
+
+            console.log(state.user)
+            authService.setUserInSession(state.user!)
+        },
         updateLocationEvent: (state, action: PayloadAction<ILocation>) => {
             state.user!.location = action.payload
             authService.setUserInSession(state.user!)
         },
+        updateVerify: (state, action: PayloadAction<boolean>) => {
+            state.user!.verify = action.payload
+            authService.setUserInSession(state.user!)
+        }
     }
 })
 
-export const {login, logout, updateAuthEvent, updateLocationEvent} = authSlice.actions
+export const {login, logout, updateAuthEvent, updateLocationEvent, updateVerify, deleteAuthEvent} = authSlice.actions
 
 export const selectAuth = (state: RootState) => state.auth
 

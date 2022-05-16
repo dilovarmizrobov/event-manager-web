@@ -28,6 +28,9 @@ import BadgeEditView from "./views/badge/form/BadgeEditView";
 import AdminLayout from "./layouts/AdminLayout";
 import IndexRedirectGuard from "./components/IndexRedirectGuard"
 import Home from "./views/Home";
+import MainGuard from "./components/MainGuard";
+import VerifyGuard from "./components/VerifyGuard";
+import VerifyView from "./views/verify/VerifyView";
 
 interface CustomRouteObject extends RouteObject {
     perm?: UserRolesEnum[],
@@ -47,106 +50,120 @@ const routes: CustomRouteObject[] = [
         element: <AuthGuard />,
         children: [
             {
-              element: <AdminLayout />,
-              children: [
-                  {
-                      path: '/events',
-                      perm: PERMISSIONS.LIST.EVENT,
-                      element: <EventListView />
-                  },
-                  {
-                      path: '/events/create',
-                      perm: PERMISSIONS.CREATE.EVENT,
-                      element: <EventCreateView />
-                  },
-                  {
-                      path: '/events/:eventId/edit',
-                      perm: PERMISSIONS.EDIT.EVENT,
-                      element: <EventEditView />
-                  },
-              ]
+              path: '/verify',
+              element: <VerifyView/>
             },
             {
-                element: <MainLayout />,
+                element: <VerifyGuard/>,
                 children: [
                     {
-                      path: '/home',
-                      element: <Home />
+                        element: <AdminLayout />,
+                        children: [
+                            {
+                                path: '/events',
+                                perm: PERMISSIONS.LIST.EVENT,
+                                element: <EventListView />
+                            },
+                            {
+                                path: '/events/create',
+                                perm: PERMISSIONS.CREATE.EVENT,
+                                element: <EventCreateView />
+                            },
+                            {
+                                path: '/events/:eventId/edit',
+                                perm: PERMISSIONS.EDIT.EVENT,
+                                element: <EventEditView />
+                            },
+                        ]
                     },
                     {
-                        path: '/guests',
-                        element: <GuestListView />
-                    },
-                    {
-                        path: '/guests/create',
-                        perm: PERMISSIONS.CREATE.GUEST,
-                        element: <GuestCreateView />
-                    },
-                    {
-                        path: '/guests/:guestId/edit',
-                        perm: PERMISSIONS.EDIT.GUEST,
-                        element: <GuestEditView />
-                    },
-                    {
-                        path: '/event-locations',
-                        perm: PERMISSIONS.LIST.EVENT_LOCATION,
-                        element: <EventLocationListView />
-                    },
-                    {
-                        path: '/event-locations/create',
-                        perm: PERMISSIONS.CREATE.EVENT_LOCATION,
-                        element: <EventLocationCreateView />
-                    },
-                    {
-                        path: '/event-locations/:locationId/edit',
-                        perm: PERMISSIONS.EDIT.EVENT_LOCATION,
-                        element: <EventLocationEditView />
-                    },
-                    {
-                        path: '/users',
-                        perm: PERMISSIONS.LIST.USER,
-                        element: <UsersListView />
-                    },
-                    {
-                        path: '/users/create',
-                        perm: PERMISSIONS.CREATE.USER,
-                        element: <UserCreateView />
-                    },
-                    {
-                        path: '/users/:userId/edit',
-                        perm: PERMISSIONS.EDIT.USER,
-                        element: <UserEditView />
-                    },
-                    {
-                        path: '/countries',
-                        perm: PERMISSIONS.LIST.COUNTRY,
-                        element: <CountryListView />
-                    },
-                    {
-                        path: '/countries/create',
-                        perm: PERMISSIONS.CREATE.COUNTRY,
-                        element: <CountryCreateView />
-                    },
-                    {
-                        path: '/countries/:countryId/edit',
-                        perm: PERMISSIONS.EDIT.COUNTRY,
-                        element: <CountryEditView />
-                    },
-                    {
-                        path: '/badge-templates',
-                        perm: PERMISSIONS.LIST.BADGE,
-                        element: <BadgeListView />
-                    },
-                    {
-                        path: '/badge-templates/create',
-                        perm: PERMISSIONS.CREATE.BADGE,
-                        element: <BadgeCreateView />
-                    },
-                    {
-                        path: '/badge-templates/:badgeId/edit',
-                        perm: PERMISSIONS.EDIT.BADGE,
-                        element: <BadgeEditView />
-                    },
+                        element: <MainGuard />,
+                        children: [
+                            {
+                                element: <MainLayout />,
+                                children: [
+                                    {
+                                        path: '/home',
+                                        element: <Home />
+                                    },
+                                    {
+                                        path: '/guests',
+                                        element: <GuestListView />
+                                    },
+                                    {
+                                        path: '/guests/create',
+                                        perm: PERMISSIONS.CREATE.GUEST,
+                                        element: <GuestCreateView />
+                                    },
+                                    {
+                                        path: '/guests/:guestId/edit',
+                                        perm: PERMISSIONS.EDIT.GUEST,
+                                        element: <GuestEditView />
+                                    },
+                                    {
+                                        path: '/event-locations',
+                                        perm: PERMISSIONS.LIST.EVENT_LOCATION,
+                                        element: <EventLocationListView />
+                                    },
+                                    {
+                                        path: '/event-locations/create',
+                                        perm: PERMISSIONS.CREATE.EVENT_LOCATION,
+                                        element: <EventLocationCreateView />
+                                    },
+                                    {
+                                        path: '/event-locations/:locationId/edit',
+                                        perm: PERMISSIONS.EDIT.EVENT_LOCATION,
+                                        element: <EventLocationEditView />
+                                    },
+                                    {
+                                        path: '/users',
+                                        perm: PERMISSIONS.LIST.USER,
+                                        element: <UsersListView />
+                                    },
+                                    {
+                                        path: '/users/create',
+                                        perm: PERMISSIONS.CREATE.USER,
+                                        element: <UserCreateView />
+                                    },
+                                    {
+                                        path: '/users/:userId/edit',
+                                        perm: PERMISSIONS.EDIT.USER,
+                                        element: <UserEditView />
+                                    },
+                                    {
+                                        path: '/countries',
+                                        perm: PERMISSIONS.LIST.COUNTRY,
+                                        element: <CountryListView />
+                                    },
+                                    {
+                                        path: '/countries/create',
+                                        perm: PERMISSIONS.CREATE.COUNTRY,
+                                        element: <CountryCreateView />
+                                    },
+                                    {
+                                        path: '/countries/:countryId/edit',
+                                        perm: PERMISSIONS.EDIT.COUNTRY,
+                                        element: <CountryEditView />
+                                    },
+                                    {
+                                        path: '/badge-templates',
+                                        perm: PERMISSIONS.LIST.BADGE,
+                                        element: <BadgeListView />
+                                    },
+                                    {
+                                        path: '/badge-templates/create',
+                                        perm: PERMISSIONS.CREATE.BADGE,
+                                        element: <BadgeCreateView />
+                                    },
+                                    {
+                                        path: '/badge-templates/:badgeId/edit',
+                                        perm: PERMISSIONS.EDIT.BADGE,
+                                        element: <BadgeEditView />
+                                    },
+                                ]
+                            }
+                        ]
+                    }
                 ]
             }
         ]

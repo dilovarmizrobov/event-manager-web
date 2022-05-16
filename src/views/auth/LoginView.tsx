@@ -69,7 +69,7 @@ const LoginView: React.FC = () => {
 
     return (
         <>
-            <Page title="Login" />
+            <Page title="Логин" />
             <Root>
                 <Container maxWidth="md">
                     <StyledCard>

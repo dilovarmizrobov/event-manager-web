@@ -7,11 +7,14 @@ import {selectAuth} from "../../../store/reducers/authSlice";
 import {UserRolesEnum, UserRolesMap} from "../../../constants";
 import NavItem from "./NavItem";
 import {FaUsers} from "react-icons/fa";
-import {IoLocationSharp} from "react-icons/io5";
+import {IoFlag, IoLocationSharp} from "react-icons/io5";
 import PERMISSIONS from "../../../constants/permissions";
 import {IconType} from "react-icons";
 import hasPermission from "../../../utils/hasPermisson";
 import BrandTitle from "../BrandTitle";
+import {FaUserFriends} from "react-icons/fa";
+import {BsPersonBadge} from "react-icons/bs"
+import {FiGrid} from "react-icons/fi";
 
 interface INavItem {
     title: string;
@@ -31,7 +34,7 @@ const navConfig: INavConfig[] = [
         items: [
             {
               title: 'Home',
-              icon: FaUsers,
+              icon: FiGrid,
               href: '/home'
             },
             {
@@ -47,19 +50,19 @@ const navConfig: INavConfig[] = [
             },
             {
                 title: 'Пользователи',
-                icon: FaUsers,
+                icon: FaUserFriends,
                 href: '/users',
                 perm: PERMISSIONS.LIST.USER,
             },
             {
                 title: 'Страны',
-                icon: FaUsers,
+                icon: IoFlag,
                 href: '/countries',
                 perm: PERMISSIONS.LIST.COUNTRY,
             },
             {
                 title: 'Шаблоны бейджов',
-                icon: FaUsers,
+                icon: BsPersonBadge,
                 href: '/badge-templates',
                 perm: PERMISSIONS.LIST.BADGE,
             },

@@ -9,6 +9,7 @@ export interface IUser {
     event?: IEventOption;
     eventName?: string;
     location?: ILocation;
+    verify: boolean;
 }
 
 export interface IUserResponse {
@@ -25,6 +26,7 @@ export interface IUserRequest {
     fullName: string;
     phoneNumber: string;
     email: string;
+    password: string;
     role: UserRolesEnum;
     locations?: number[];
 }

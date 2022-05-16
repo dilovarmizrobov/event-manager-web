@@ -46,7 +46,7 @@ const TopBar: React.FC<{onMobileNavOpen: VoidFunction}> = ({onMobileNavOpen}) =>
                     </Hidden>
                     <Box ml={2} flexGrow={1}/>
                     <ThemeMode/>
-                    <ChangePassword />
+                    {/*<ChangePassword />*/}
                     <Logout/>
                 </Toolbar>
             </AppBar>

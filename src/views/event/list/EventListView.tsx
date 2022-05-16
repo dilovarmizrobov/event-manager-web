@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Page from "../../../components/Page";
 import Header from "./Header";
 import {
-    Box,
+    Box, Button,
     Card,
     Container, Grid, IconButton,
     InputAdornment,
@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { styled} from "@mui/material/styles";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import {FiArrowRight, FiEdit, FiSearch as FiSearchIcon} from "react-icons/fi";
+import {FiEdit, FiSearch as FiSearchIcon} from "react-icons/fi";
 import {useSnackbar} from "notistack";
 import {NavLink as RouterLink, useNavigate} from "react-router-dom";
 import useDebounce from "../../../hooks/useDebounce";
@@ -21,8 +21,8 @@ import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import eventService from "../../../services/EventService";
 import DeleteButtonTable from "../../../components/DeleteButtonTable";
-import {useAppDispatch} from "../../../store/hooks";
-import {updateAuthEvent} from "../../../store/reducers/authSlice";
+import {useAppDispatch, useAppSelector} from "../../../store/hooks";
+import {deleteAuthEvent, selectAuth, updateAuthEvent} from "../../../store/reducers/authSlice";
 
 const Root = styled('div')(({theme}) => ({
     minHeight: '100%',
@@ -31,6 +31,7 @@ const Root = styled('div')(({theme}) => ({
 }))
 
 const EventListView = () => {
+    const {user} = useAppSelector(selectAuth)
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const {enqueueSnackbar} = useSnackbar()
@@ -100,6 +101,7 @@ const EventListView = () => {
         let index = newRows.findIndex(row => row.id! === rowId)
         newRows.splice(index, 1)
         setRows(newRows)
+        if (user!.event?.id === rowId) dispatch(deleteAuthEvent())
     }
 
     const handleSelectEvent = (eventResponse: IEventResponse) => {
@@ -196,7 +198,14 @@ const EventListView = () => {
                                                             rows.map((row, index) => (
                                                                 <TableRow hover key={row.id}>
                                                                     <TableCell>{index + 1}</TableCell>
-                                                                    <TableCell>{row.name}</TableCell>
+                                                                    <TableCell>
+                                                                        <Button
+                                                                            onClick={() => handleSelectEvent(row)}
+                                                                            variant="text"
+                                                                        >
+                                                                            {row.name}
+                                                                        </Button>
+                                                                    </TableCell>
                                                                     <TableCell>{row.fromDate} - {row.toDate}</TableCell>
                                                                     <TableCell>
                                                                         {
@@ -222,12 +231,6 @@ const EventListView = () => {
                                                                             onDelete={eventService.deleteEvent}
                                                                             handleDelete={handleDeleteRow}
                                                                         />
-                                                                        <IconButton
-                                                                            size="large"
-                                                                            onClick={() => handleSelectEvent(row)}
-                                                                        >
-                                                                            <FiArrowRight size={20} />
-                                                                        </IconButton>
                                                                     </TableCell>
                                                                 </TableRow>
                                                             ))

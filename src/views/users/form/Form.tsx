@@ -40,13 +40,15 @@ const Form :React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) 
         fullName: user?.fullName || '',
         email: user?.email || '',
         phoneNumber: user?.phoneNumber || '',
-        role: user?.role || (isAdmin ? UserRolesEnum.ADMIN_EVENT : UserRolesEnum.EMPLOYEE)
+        role: user?.role || (isAdmin ? UserRolesEnum.ADMIN_EVENT : UserRolesEnum.EMPLOYEE),
+        password: ''
     }
 
     const validationSchema = Yup.object().shape({
         fullName: Yup.string().max(255),
         email: Yup.string().max(255),
         phoneNumber: Yup.string().max(255),
+        password: Yup.string().max(255),
     })
 
     const handleAdd = async (values: IUserRequest, formActions: { [key: string]: any }) => {
@@ -220,7 +222,7 @@ const Form :React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) 
                                                 error={Boolean(props.touched.phoneNumber && props.errors.phoneNumber)}
                                                 fullWidth
                                                 helperText={props.touched.phoneNumber && props.errors.phoneNumber}
-                                                label="Телефон (логин)"
+                                                label="Телефон"
                                                 placeholder="Введите телефон"
                                                 name="phoneNumber"
                                                 onBlur={props.handleBlur}
@@ -236,7 +238,7 @@ const Form :React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) 
                                                 error={Boolean(props.touched.email && props.errors.email)}
                                                 fullWidth
                                                 helperText={props.touched.email && props.errors.email}
-                                                label="Email"
+                                                label="Email (логин)"
                                                 placeholder="Введите Email"
                                                 name="email"
                                                 onBlur={props.handleBlur}
@@ -245,6 +247,23 @@ const Form :React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) 
                                                 value={props.values.email}
                                                 variant="outlined"
                                                 InputLabelProps={{shrink: true}}
+                                                type="email"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                error={Boolean(props.touched.password && props.errors.password)}
+                                                fullWidth
+                                                helperText={props.touched.password && props.errors.password}
+                                                label="Пароль"
+                                                placeholder="Введите пароль"
+                                                name="password"
+                                                onBlur={props.handleBlur}
+                                                onChange={props.handleChange}
+                                                value={props.values.password}
+                                                variant="outlined"
+                                                InputLabelProps={{shrink: true}}
+                                                type="password"
                                             />
                                         </Grid>
                                         {

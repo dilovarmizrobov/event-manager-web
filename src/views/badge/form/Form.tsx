@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import { IBadgeRequest, IBadgeResponse} from "../../../models/IBadge";
 import {useSnackbar} from "notistack";
 import {useNavigate} from "react-router-dom";
-import {pathBadgeImage} from "../../../utils/pathImages";
 import * as Yup from "yup";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {Formik, FormikProps} from "formik";

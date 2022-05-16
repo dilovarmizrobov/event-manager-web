@@ -17,7 +17,7 @@ class AuthService {
         )
 
         return api.interceptors.request.use((config) => {
-            if (user && user.role === UserRolesEnum.ADMIN) {
+            if (user && (user.role === UserRolesEnum.ADMIN) && user.event) {
                 if (config.params) {
                     config.params.eventId = user.event!.id
                 } else {
@@ -47,7 +47,7 @@ class AuthService {
         api.post('authenticate', params)
             .then((response) => {
                 let data = response.data
-                const user: IUser = {name: data.name, email: data.email, role: data.role}
+                const user: IUser = {name: data.name, email: data.email, role: data.role, verify: data.verify}
 
                 if (data.role === UserRolesEnum.ADMIN) {
                     user.event = data.event
@@ -69,6 +69,12 @@ class AuthService {
         localStorage.removeItem('user');
         delete api.defaults.headers.common.Authorization;
     }
+
+    verify = (password: string, passwordConfirmation: string) => new Promise((resolve, reject) => {
+        api.put('/users/verify-password', {password, passwordConfirmation})
+            .then(response => resolve(response))
+            .catch(error => reject(error))
+    })
 
     setUserAndJwtInSession = (jwt: string, user: IUser) => {
         localStorage.setItem('jwt', jwt)
