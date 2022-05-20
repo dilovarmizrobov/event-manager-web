@@ -1,46 +1,30 @@
-import React, {useState} from 'react';
-import {IUserRequest, IUserResponse} from "../../../models/IUser";
-import {ILocation} from "../../../models/ILocation";
+import React from 'react';
+import {IUserRequest, IUserResponse} from "../../../../models/IUser";
 import {useSnackbar} from "notistack";
 import {useNavigate} from "react-router-dom";
-import {UserRolesEnum, UserRolesMap} from "../../../constants";
+import {UserRolesEnum, UserRolesMap} from "../../../../constants";
 import * as Yup from "yup";
-import errorMessageHandler from "../../../utils/errorMessageHandler";
+import errorMessageHandler from "../../../../utils/errorMessageHandler";
 import {Formik, FormikProps} from "formik";
 import {
     Box,
     Button,
     Card,
     CardContent,
-    Checkbox,
     Grid, MenuItem,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TextField,
-    Typography
+    TextField
 } from "@mui/material";
-import userService from "../../../services/UserService";
-import {useAppSelector} from "../../../store/hooks";
-import {selectAuth} from "../../../store/reducers/authSlice";
+import userService from "../../../../services/UserService";
 
-const Form: React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) => {
-    const {user, locations: eventLocations} = props;
-    const auth = useAppSelector(selectAuth)
-    const isAdmin = auth.user!.role === UserRolesEnum.ADMIN
+const Form: React.FC<{user?: IUserResponse}> = ({user}) => {
     const {enqueueSnackbar} = useSnackbar();
     const navigate = useNavigate();
-    const [locations, setLocations] = useState<number[]>(user?.locations?.map(item => item.id!) || [])
-    const [locationError, setLocationError] = useState<boolean>(false);
 
     const initialValues: IUserRequest = {
         fullName: user?.fullName || '',
         email: user?.email || '',
         phoneNumber: user?.phoneNumber || '',
-        role: user?.role || (isAdmin ? UserRolesEnum.ADMIN_EVENT : UserRolesEnum.EMPLOYEE),
+        role: user?.role || UserRolesEnum.ADMIN,
         password: ''
     }
 
@@ -53,15 +37,6 @@ const Form: React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) 
 
     const handleAdd = async (values: IUserRequest, formActions: { [key: string]: any }) => {
         try {
-            if (values.role === UserRolesEnum.GUARD) {
-                if (locations.length === 0) {
-                    setLocationError(true)
-                    return
-                }
-
-                values.locations = locations
-            }
-
             await userService.postNewUser(values)
 
             enqueueSnackbar('Успешно создан', {variant: 'success'});
@@ -77,15 +52,6 @@ const Form: React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) 
 
     const handleUpdate = async (values: IUserRequest, formActions: { [key: string]: any }) => {
         try {
-            if (values.role === UserRolesEnum.GUARD) {
-                if (locations.length === 0) {
-                    setLocationError(true)
-                    return
-                }
-
-                values.locations = locations
-            }
-
             values.id = user?.id
 
             await userService.putUpdateUser(values)
@@ -100,30 +66,6 @@ const Form: React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) 
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         }
     }
-
-    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.checked) {
-            let newState = eventLocations.map((n) => n.id!);
-            setLocations(newState);
-            setLocationError(newState.length === 0)
-            return;
-        }
-
-        setLocationError(true)
-        setLocations([]);
-    };
-
-    const handleChangeLocation = (id: number) => {
-        let newState = [...locations]
-        let index = newState.findIndex(item => item === id)
-
-        index > -1 ? newState.splice(index, 1) : newState.push(id)
-
-        setLocationError(newState.length === 0)
-        setLocations(newState);
-    };
-
-    const isLocations = (id: number) => locations.indexOf(id) !== -1;
 
     return (
         <Formik
@@ -201,14 +143,9 @@ const Form: React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) 
                                                     }
                                                 }}
                                             >
-                                                {Object.keys(UserRolesEnum)
-                                                    .filter(item => (item as UserRolesEnum) === UserRolesEnum.ADMIN ? false : true)
-                                                    .map(item => (
-                                                        <MenuItem key={item} value={item}>
-                                                            {UserRolesMap.get(item as UserRolesEnum)}
-                                                        </MenuItem>
-                                                    ))
-                                                }
+                                                <MenuItem value={UserRolesEnum.ADMIN}>
+                                                    {UserRolesMap.get(UserRolesEnum.ADMIN)}
+                                                </MenuItem>
                                             </TextField>
                                         </Grid>
                                         <Grid item xs={12}>
@@ -260,55 +197,6 @@ const Form: React.FC<{user?: IUserResponse, locations : ILocation[]}> = (props) 
                                                 type="password"
                                             />
                                         </Grid>
-                                        {
-                                            props.values.role === UserRolesEnum.GUARD && (
-                                                <Grid item xs={12}>
-                                                    <TableContainer>
-                                                        <Table>
-                                                            <TableHead>
-                                                                <TableRow>
-                                                                    <TableCell padding="checkbox">
-                                                                        <Checkbox
-                                                                            color="primary"
-                                                                            indeterminate={locations.length > 0 && locations.length < eventLocations.length}
-                                                                            checked={locations.length > 0 && locations.length === eventLocations.length}
-                                                                            onChange={handleSelectAllClick}
-                                                                        />
-                                                                    </TableCell>
-                                                                    <TableCell>Все</TableCell>
-                                                                </TableRow>
-                                                            </TableHead>
-                                                            <TableBody>
-                                                                {
-                                                                    eventLocations.map((item) =>{
-                                                                        const isPlaced = isLocations(item.id!);
-
-                                                                        return(
-                                                                            <TableRow hover key={item.id} onClick={() => handleChangeLocation(item.id!)}>
-                                                                                <TableCell padding="checkbox">
-                                                                                    <Checkbox
-                                                                                        color="primary"
-                                                                                        checked={isPlaced}
-                                                                                    />
-                                                                                </TableCell>
-                                                                                <TableCell component="th" scope="row">
-                                                                                    {item.name}
-                                                                                </TableCell>
-                                                                            </TableRow>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </TableBody>
-                                                        </Table>
-                                                    </TableContainer>
-                                                    {locationError && (
-                                                        <Typography variant="subtitle2" sx={{mt: 2, ml: 2, color: "red"}}>
-                                                            {locations.length === 0 ? 'Добавьте с начала места проведения' : 'Выберите место проведения'}
-                                                        </Typography>
-                                                    )}
-                                                </Grid>
-                                            )
-                                        }
                                     </Grid>
                                 </Grid>
                             </Grid>

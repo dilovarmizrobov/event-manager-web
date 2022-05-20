@@ -48,7 +48,7 @@ const GuestListView = () => {
     const debouncedSearchTerm = useDebounce(query, 500)
     const [countryId, setCountryId] = useState<number>(0)
     const [selected, setSelected] = useState<number[]>([])
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [rows, setRows] = useState<IGuest[]>([])
     const [rowsCount, setRowsCount] = useState<number>(0);
@@ -59,27 +59,15 @@ const GuestListView = () => {
 
         (async () => {
             try {
-                setLoading(true)
                 setRows([])
 
                 const data: any = await guestService.getListGuests(page + 1, size, debouncedSearchTerm, countryId)
-
-                if (countries.length === 0) {
-                    const dataCountries: any = await countryService.getOptionCountries()
-
-                    if (!cancel) {
-                        if (dataCountries.length === 0) {
-                            navigate(-1)
-                            enqueueSnackbar('Добавьте с начала страны', {variant: 'info'})
-                        } else {
-                            setCountries(dataCountries)
-                        }
-                    }
-                }
+                const dataCountries: any = await countryService.getOptionCountries()
 
                 if (!cancel) {
                     setRows(data.content)
                     setRowsCount(data.totalElements)
+                    setCountries(dataCountries)
                 }
             } catch (error: any) {
                 !cancel && setError(true)
@@ -153,7 +141,7 @@ const GuestListView = () => {
         <>
             <Page title="Гости" />
             {
-                countries.length > 0 ? (
+                !loading && !error ? (
                     <Root>
                         <Container maxWidth="xl">
                             <Header />

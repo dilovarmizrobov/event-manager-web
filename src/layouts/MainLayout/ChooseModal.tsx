@@ -8,7 +8,7 @@ import {
     DialogTitle,
     FormControlLabel, IconButton,
     Radio,
-    RadioGroup, SvgIcon, Tooltip
+    RadioGroup, SvgIcon
 } from "@mui/material";
 import {UserRolesEnum} from "../../constants";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
@@ -138,17 +138,15 @@ const ChooseModal: React.FC<{isTopBar: boolean}> = ({isTopBar}) => {
                 }
             </Dialog>
             {isAdmin && (
-                <Tooltip title="Мероприятия">
-                    <IconButton
-                        color="inherit"
-                        component={RouterLink}
-                        to={`/events`}
-                    >
-                        <SvgIcon>
-                            <MdHome />
-                        </SvgIcon>
-                    </IconButton>
-                </Tooltip>
+                <IconButton
+                    color="inherit"
+                    component={RouterLink}
+                    to={`/events`}
+                >
+                    <SvgIcon>
+                        <MdHome />
+                    </SvgIcon>
+                </IconButton>
             )}
             <Button sx={{color: isTopBar ? "white" : "black", ml: 2}} variant="outlined" color="inherit" onClick={handleChooseButton}>
                 {isTopBar ? choseOption.name : (choseOption.name.slice(0, 13) + (choseOption.name.length > 16 ? '...' : ''))}

@@ -30,7 +30,7 @@ const PrintBadgeButton: React.FC<{guestsId: number[]}> = ({guestsId}) => {
             const url = window.URL.createObjectURL(new Blob([response]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `Бейдж № ${guestsId.join(',')}.docx`);
+            link.setAttribute('download', `Бейдж № ${guestsId.join(',')}.pdf`);
             document.body.appendChild(link);
             link.click();
 

@@ -6,73 +6,15 @@ import {useAppSelector} from "../../../store/hooks";
 import {selectAuth} from "../../../store/reducers/authSlice";
 import {UserRolesEnum, UserRolesMap} from "../../../constants";
 import NavItem from "./NavItem";
-import {FaUsers} from "react-icons/fa";
-import {IoFlag, IoLocationSharp} from "react-icons/io5";
-import PERMISSIONS from "../../../constants/permissions";
-import {IconType} from "react-icons";
 import hasPermission from "../../../utils/hasPermisson";
 import BrandTitle from "../BrandTitle";
-import {FaUserFriends} from "react-icons/fa";
-import {BsPersonBadge} from "react-icons/bs"
-import {FiGrid} from "react-icons/fi";
-
-interface INavItem {
-    title: string;
-    icon: IconType;
-    href: string;
-    perm?: UserRolesEnum[];
-}
-
-interface INavConfig {
-    subheader: string;
-    items: INavItem[]
-}
-
-const navConfig: INavConfig[] = [
-    {
-        subheader: 'Главная',
-        items: [
-            {
-              title: 'Home',
-              icon: FiGrid,
-              href: '/home'
-            },
-            {
-                title: 'Гости',
-                icon: FaUsers,
-                href: '/guests',
-            },
-            {
-                title: 'Места проведения',
-                icon: IoLocationSharp,
-                href: '/event-locations',
-                perm: PERMISSIONS.LIST.EVENT_LOCATION,
-            },
-            {
-                title: 'Пользователи',
-                icon: FaUserFriends,
-                href: '/users',
-                perm: PERMISSIONS.LIST.USER,
-            },
-            {
-                title: 'Страны',
-                icon: IoFlag,
-                href: '/countries',
-                perm: PERMISSIONS.LIST.COUNTRY,
-            },
-            {
-                title: 'Шаблоны бейджов',
-                icon: BsPersonBadge,
-                href: '/badge-templates',
-                perm: PERMISSIONS.LIST.BADGE,
-            },
-        ]
-    },
-]
+import {INavConfig, INavItem} from "../../navConfig";
+import AutocompleteInput from "../AutocompleteInput";
 
 const filterNavItem = (items: INavItem[]) => items.filter(item => item.perm ? hasPermission(item.perm) : true)
 
-const Index: React.FC<{openMobile: boolean, onMobileClose: VoidFunction}> = ({openMobile, onMobileClose}) => {
+const Index: React.FC<{openMobile: boolean, onMobileClose: VoidFunction, navConfig: INavConfig[]}> = (props) => {
+    const {openMobile, onMobileClose, navConfig} = props
     const location = useLocation();
     const {user} = useAppSelector(selectAuth)
 
@@ -92,14 +34,14 @@ const Index: React.FC<{openMobile: boolean, onMobileClose: VoidFunction}> = ({op
             <PerfectScrollbar options={{ suppressScrollX: true }}>
                 <Hidden lgUp>
                     <Box
-                        p={2}
+                        m={2}
                         display="flex"
                         justifyContent="center"
                     >
                         <BrandTitle isTopBar={false} />
                     </Box>
                 </Hidden>
-                <Box p={3}>
+                <Box m={3}>
                     <Box textAlign="center">
                         <Typography variant="h6">
                             {user!.name}
@@ -111,6 +53,13 @@ const Index: React.FC<{openMobile: boolean, onMobileClose: VoidFunction}> = ({op
                         </Typography>
                     </Box>
                 </Box>
+                {
+                    (user!.role === UserRolesEnum.ADMIN || user!.role === UserRolesEnum.GUARD) && (
+                        <Box px={2} my={3}>
+                            <AutocompleteInput />
+                        </Box>
+                    )
+                }
                 <Divider />
                 <Box p={2}>
                     {
@@ -143,6 +92,7 @@ const Index: React.FC<{openMobile: boolean, onMobileClose: VoidFunction}> = ({op
             </PerfectScrollbar>
         </Box>
     )
+
     return (
         <>
             <Drawer
@@ -154,9 +104,7 @@ const Index: React.FC<{openMobile: boolean, onMobileClose: VoidFunction}> = ({op
                 onClose={onMobileClose}
                 open={openMobile}
                 variant="temporary"
-                ModalProps={{
-                    keepMounted: true, // Better open performance on mobile.
-                }}
+                ModalProps={{keepMounted: true}}
             >
                 {content}
             </Drawer>

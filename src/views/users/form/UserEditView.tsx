@@ -24,7 +24,7 @@ const UserEditView = () => {
     const {enqueueSnackbar} = useSnackbar()
     const navigate = useNavigate()
     const { userId } = useParams()
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [user, setUser] = useState<IUserResponse>();
     const [locations, setLocations] = useState<ILocation[]>([])
@@ -34,19 +34,12 @@ const UserEditView = () => {
 
         (async () => {
             try {
-                setLoading(true)
-
                 const dataLocation: any = await eventLocationService.getLocations()
                 const data: any = await userService.getUser(userId || '') as IUserResponse
 
                 if (!cancel) {
-                    if (data.length === 0 || dataLocation.length === 0) {
-                        navigate(-1)
-                        enqueueSnackbar('Добавьте с начала места проведения', {variant: 'info'})
-                    } else {
-                        setUser(data)
-                        setLocations(dataLocation)
-                    }
+                    setUser(data)
+                    setLocations(dataLocation)
                 }
             } catch (error: any) {
                 !cancel && setError(true)
@@ -63,7 +56,7 @@ const UserEditView = () => {
         <>
             <Page title="Изменение пользователя" />
             {
-                locations.length > 0 &&  user ? (
+                !loading && !error && user ? (
                     <Root>
                         <Container maxWidth="xl">
                             <Header title={user.fullName} />

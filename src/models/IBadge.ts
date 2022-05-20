@@ -7,7 +7,7 @@ export interface IBadgeResponse {
 export interface IBadgeRequest {
     id?: number;
     name: string;
-    fileName?: File;
+    files?: File[];
 }
 
 export interface IBadgeOption {

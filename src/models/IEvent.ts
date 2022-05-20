@@ -6,6 +6,8 @@ export interface IEventResponse{
     fromDate: string;
     toDate: string;
     active: boolean;
+    registered: number;
+    attended: number;
 }
 
 export interface IEventRequest{

@@ -1,11 +1,15 @@
 import React from "react";
-import {AppBar, Box, Hidden, IconButton, Toolbar} from "@mui/material";
+import {AppBar, Box, Hidden, IconButton, SvgIcon, Toolbar} from "@mui/material";
 import {FiMenu} from 'react-icons/fi';
 import {styled} from "@mui/material/styles";
 import Logout from "./Logout";
 import ThemeMode from "./ThemeMode";
 import BrandTitle from "../BrandTitle";
-import ChangePassword from "./ChangePassword";
+import {UserRolesEnum} from "../../../constants";
+import {NavLink as RouterLink} from "react-router-dom";
+import {useAppSelector} from "../../../store/hooks";
+import {selectAuth} from "../../../store/reducers/authSlice";
+import {GoHome} from "react-icons/go";
 
 const PREFIX = "TopBar"
 const classes = {
@@ -29,6 +33,8 @@ const Root = styled('div')(({ theme }) => ({
 }))
 
 const TopBar: React.FC<{onMobileNavOpen: VoidFunction}> = ({onMobileNavOpen}) => {
+    const {user} = useAppSelector(selectAuth)
+
     return (
         <Root>
             <AppBar className={classes.root}>
@@ -45,8 +51,18 @@ const TopBar: React.FC<{onMobileNavOpen: VoidFunction}> = ({onMobileNavOpen}) =>
                         <BrandTitle isTopBar={true} />
                     </Hidden>
                     <Box ml={2} flexGrow={1}/>
+                    {user!.role === UserRolesEnum.ADMIN && (
+                        <IconButton
+                            color="inherit"
+                            component={RouterLink}
+                            to={`/events`}
+                        >
+                            <SvgIcon>
+                                <GoHome />
+                            </SvgIcon>
+                        </IconButton>
+                    )}
                     <ThemeMode/>
-                    {/*<ChangePassword />*/}
                     <Logout/>
                 </Toolbar>
             </AppBar>

@@ -16,7 +16,11 @@ class BadgeService {
     postNewBadge = (badge: IBadgeRequest) => new Promise((resolve, reject) => {
         let formData = new FormData();
 
-        formData.append('badgeFile', badge.fileName!);
+        let length = badge.files?.length || 0;
+
+        for (let i = 0; i < length; i++) {
+            formData.append('files', badge.files![i]);
+        }
 
         const json = {
             name: badge.name,
@@ -34,7 +38,11 @@ class BadgeService {
     putUpdateBadge = (badge: IBadgeRequest) => new Promise((resolve, reject) => {
         let formData = new FormData();
 
-        formData.append('badgeFile', badge.fileName || "");
+        let length = badge.files?.length || 0;
+
+        for (let i = 0; i < length; i++) {
+            formData.append('files', badge.files![i]);
+        }
 
         const json = {
             id: badge.id,

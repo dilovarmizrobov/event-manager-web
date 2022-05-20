@@ -27,10 +27,14 @@ import BadgeCreateView from "./views/badge/form/BadgeCreateView";
 import BadgeEditView from "./views/badge/form/BadgeEditView";
 import AdminLayout from "./layouts/AdminLayout";
 import IndexRedirectGuard from "./components/IndexRedirectGuard"
-import Home from "./views/Home";
 import MainGuard from "./components/MainGuard";
 import VerifyGuard from "./components/VerifyGuard";
 import VerifyView from "./views/verify/VerifyView";
+import AdminUserListView from "./views/admin/user/list/UsersListView";
+import AdminUserCreateView from "./views/admin/user/form/UserCreateView";
+import AdminUserEditView from "./views/admin/user/form/UserEditView";
+import Pdf from "./views/Pdf";
+import Badge from "./views/Badge";
 
 interface CustomRouteObject extends RouteObject {
     perm?: UserRolesEnum[],
@@ -38,6 +42,10 @@ interface CustomRouteObject extends RouteObject {
 }
 
 const routes: CustomRouteObject[] = [
+    {
+        path: '/pdf',
+        element: <Badge />,
+    },
     {
         path: '/',
         element: <IndexRedirectGuard />,
@@ -74,6 +82,21 @@ const routes: CustomRouteObject[] = [
                                 perm: PERMISSIONS.EDIT.EVENT,
                                 element: <EventEditView />
                             },
+                            {
+                                path: '/admin/users',
+                                perm: PERMISSIONS.LIST.USER,
+                                element: <AdminUserListView />
+                            },
+                            {
+                                path: '/admin/users/create',
+                                perm: PERMISSIONS.CREATE.USER,
+                                element: <AdminUserCreateView />
+                            },
+                            {
+                                path: '/admin/users/:userId/edit',
+                                perm: PERMISSIONS.EDIT.USER,
+                                element: <AdminUserEditView />
+                            },
                         ]
                     },
                     {
@@ -82,10 +105,6 @@ const routes: CustomRouteObject[] = [
                             {
                                 element: <MainLayout />,
                                 children: [
-                                    {
-                                        path: '/home',
-                                        element: <Home />
-                                    },
                                     {
                                         path: '/guests',
                                         element: <GuestListView />

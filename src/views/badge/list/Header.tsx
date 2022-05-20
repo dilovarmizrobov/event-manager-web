@@ -1,7 +1,6 @@
 import React from 'react';
-import {Breadcrumbs, Button, Grid, Link, SvgIcon, Typography} from "@mui/material";
+import {Button, Grid, SvgIcon, Typography} from "@mui/material";
 import {Link as RouterLink} from "react-router-dom";
-import {MdNavigateNext as NavigateNextIcon} from "react-icons/md";
 import {FiPlusCircle as PlusCircleIcon} from "react-icons/fi";
 
 const Header = () => {
@@ -9,15 +8,10 @@ const Header = () => {
         <Grid
             container
             justifyContent="space-between"
+            alignItems="center"
             spacing={3}
         >
             <Grid item>
-                <Breadcrumbs separator={<NavigateNextIcon/>} aria-label="breadcrumb">
-                    <Link underline="hover" color="inherit" to="/home" component={RouterLink}>
-                        Главная
-                    </Link>
-                    <Typography color="text.primary">Шаблоны бейджов</Typography>
-                </Breadcrumbs>
                 <Typography variant="h5" color="textPrimary">
                     Шаблоны бейджов
                 </Typography>

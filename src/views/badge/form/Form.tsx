@@ -5,15 +5,25 @@ import {useNavigate} from "react-router-dom";
 import * as Yup from "yup";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {Formik, FormikProps} from "formik";
-import {Avatar, Box, Button, Card, CardContent, Grid, TextField, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Grid,
+    IconButton,
+    Table, TableBody, TableCell, TableContainer, TableRow,
+    TextField,
+    Typography
+} from "@mui/material";
 import badgeService from "../../../services/BadgeService";
-import {AiOutlineFileWord} from "react-icons/ai";
+import {VscFiles} from "react-icons/vsc";
+import {FiTrash} from "react-icons/fi";
 
 const Form :React.FC<{badge? : IBadgeResponse}> = ({badge}) => {
     const {enqueueSnackbar} = useSnackbar();
     const navigate = useNavigate();
-    const [fileName, setFileName] = useState<string>(badge?.fileName || "")
-    const [uploadError, setUploadError] = useState<boolean>(false)
+    const [uploadError, setUploadError] = useState(false)
 
     const initialValues: IBadgeRequest = {
         name: badge?.name || "",
@@ -24,7 +34,7 @@ const Form :React.FC<{badge? : IBadgeResponse}> = ({badge}) => {
     })
 
     const handleAdd = async (values: IBadgeRequest, formActions: { [key: string]: any }) => {
-        if (!fileName) {
+        if (!values.files) {
             setUploadError(true)
             return
         }
@@ -46,7 +56,7 @@ const Form :React.FC<{badge? : IBadgeResponse}> = ({badge}) => {
     const handleUpdate = async (values: IBadgeRequest, formActions: { [key: string]: any }) => {
         values.id = badge?.id!
 
-        if (!fileName) {
+        if (values.files) {
             setUploadError(true)
             return
         }
@@ -113,38 +123,60 @@ const Form :React.FC<{badge? : IBadgeResponse}> = ({badge}) => {
                                                 InputLabelProps={{shrink: true}}
                                             />
                                         </Grid>
-
                                         <Grid item xs={12}>
                                             <Typography variant="subtitle1" sx={{mb: 1}}>
-                                                Выберите файл
+                                                Выберите файлы
                                             </Typography>
-                                            <label>
-                                                <Avatar
-                                                    sx={{minWidth: 300, minHeight: 150, cursor: "pointer"}}
-                                                    variant="rounded"
-                                                >
-                                                    <AiOutlineFileWord size={40}/>
-                                                </Avatar>
-                                                <input
-                                                    accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                                    type="file"
-                                                    style={{display: "none"}}
-                                                    onChange={(e) => {
-                                                        let file = (e.target as HTMLInputElement).files![0];
-                                                        setFileName(file.name)
-                                                        setUploadError(false)
-                                                        props.setFieldValue("fileName", file);
-                                                    }}
-                                                />
-                                            </label>
-                                            {fileName && (
-                                                <Typography variant="subtitle2" sx={{mt: 1}}>
-                                                    {fileName}
-                                                </Typography>
-                                            )}
+                                            <Box sx={{border: '1px solid black', borderRadius: 1, borderColor: '#0000003b'}} p={2}>
+                                                <TableContainer>
+                                                    <Table size="small">
+                                                        <TableBody>
+                                                            {
+                                                                props.values.files && props.values.files.map((file, index) => (
+                                                                    <TableRow hover key={index}>
+                                                                        <TableCell>{file.name}</TableCell>
+                                                                        <TableCell align="right">
+                                                                            <IconButton onClick={() => {
+                                                                                let newFiles = [...props.values.files!]
+
+                                                                                newFiles.splice(index, 1)
+
+                                                                                props.setFieldValue("files", newFiles);
+                                                                            }}>
+                                                                                <FiTrash size={20}/>
+                                                                            </IconButton>
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                ))
+                                                            }
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
+                                                <Grid container justifyContent="flex-end" mt={3}>
+                                                    <label style={{display: 'inline-block'}}>
+                                                        <input
+                                                            type="file"
+                                                            multiple
+                                                            style={{display: "none"}}
+                                                            onChange={(e) => {
+                                                                let uploadFiles = Array.from((e.target as HTMLInputElement).files!);
+                                                                let newFiles = [...(props.values.files || [])]
+                                                                uploadFiles = uploadFiles.filter(file => !newFiles.find(item=> item.name === file.name))
+                                                                setUploadError(false)
+                                                                props.setFieldValue("files", [...newFiles, ...uploadFiles]);
+
+                                                                (e.target as HTMLInputElement).value = ''
+                                                            }}
+                                                        />
+                                                        <Button variant="outlined" startIcon={<VscFiles />} component="span">
+                                                            Выбрать
+                                                        </Button>
+                                                    </label>
+                                                </Grid>
+                                            </Box>
                                             {uploadError && (
                                                 <Typography variant="subtitle2" sx={{color: "red", mt: 1}}>
-                                                    Выберите файл
+                                                    Выберите файлы
                                                 </Typography>
                                             )}
                                         </Grid>

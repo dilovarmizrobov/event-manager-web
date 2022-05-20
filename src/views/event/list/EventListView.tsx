@@ -23,6 +23,7 @@ import eventService from "../../../services/EventService";
 import DeleteButtonTable from "../../../components/DeleteButtonTable";
 import {useAppDispatch, useAppSelector} from "../../../store/hooks";
 import {deleteAuthEvent, selectAuth, updateAuthEvent} from "../../../store/reducers/authSlice";
+import CompletedButton from "./CompletedButton";
 
 const Root = styled('div')(({theme}) => ({
     minHeight: '100%',
@@ -111,7 +112,14 @@ const EventListView = () => {
         }
 
         dispatch(updateAuthEvent(event))
-        navigate('/home')
+        navigate('/guests')
+    }
+
+    const handleComplete = (event: IEventResponse) => {
+        const index = rows.findIndex(item => item.id === event.id)
+        const newRows = [...rows]
+        newRows[index] = event
+        setRows(newRows)
     }
 
     return (
@@ -216,13 +224,19 @@ const EventListView = () => {
                                                                             )
                                                                         }
                                                                     </TableCell>
-                                                                    <TableCell>1234</TableCell>
-                                                                    <TableCell>123</TableCell>
+                                                                    <TableCell>{row.registered}</TableCell>
+                                                                    <TableCell>{row.attended}</TableCell>
                                                                     <TableCell style={{ width: 165 }}>
+                                                                        <CompletedButton
+                                                                            rowId={row.id}
+                                                                            completed={!row.active}
+                                                                            handleComplete={handleComplete}
+                                                                        />
                                                                         <IconButton
                                                                             size="large"
                                                                             component={RouterLink}
                                                                             to={`/events/${row.id}/edit`}
+                                                                            disabled={!row.active}
                                                                         >
                                                                             <FiEdit size={20} />
                                                                         </IconButton>
@@ -230,6 +244,7 @@ const EventListView = () => {
                                                                             rowId={row.id}
                                                                             onDelete={eventService.deleteEvent}
                                                                             handleDelete={handleDeleteRow}
+                                                                            disabled={!row.active}
                                                                         />
                                                                     </TableCell>
                                                                 </TableRow>

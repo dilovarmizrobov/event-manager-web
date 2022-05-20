@@ -3,18 +3,20 @@ import {Typography} from "@mui/material";
 import {useAppSelector} from "../../store/hooks";
 import {selectAuth} from "../../store/reducers/authSlice";
 import {UserRolesEnum} from "../../constants";
-import ChooseModal from "./ChooseModal";
 
 const BrandTitle: React.FC<{isTopBar: boolean}> = ({isTopBar}) => {
     const {user} = useAppSelector(selectAuth)
 
-    return (user!.role === UserRolesEnum.ADMIN || user!.role === UserRolesEnum.GUARD) ? (
-            <ChooseModal isTopBar={isTopBar} />
-        ) : (
-            <Typography variant="subtitle1" sx={{color: isTopBar ? "white" : "black"}}>
-                {user!.eventName}
+    return (
+        <>
+            <Typography variant="h6" sx={{color: isTopBar ? "white" : "black", }}>
+                {
+                    user!.role === UserRolesEnum.ADMIN ? user!.event!.name
+                        : (user!.role === UserRolesEnum.GUARD ? user!.location!.name : user!.eventName)
+                }
             </Typography>
-        )
+        </>
+    )
 };
 
 export default BrandTitle;

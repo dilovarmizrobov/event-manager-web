@@ -3,6 +3,7 @@ import {Outlet} from "react-router-dom";
 import {styled} from "@mui/material/styles";
 import TopBar from "./TopBar";
 import NavBar from './NavBar';
+import {navConfigMain} from "../navConfig";
 
 const PREFIX = 'MainLayout';
 
@@ -48,7 +49,7 @@ const MainLayout: React.FC = () => {
     return (
         <Root className={classes.root}>
             <TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
-            <NavBar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen}/>
+            <NavBar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} navConfig={navConfigMain}/>
             <div className={classes.wrapper}>
                 <div className={classes.contentContainer}>
                     <div className={classes.content}>

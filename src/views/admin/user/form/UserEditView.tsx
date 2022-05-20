@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react';
+import {useSnackbar} from "notistack";
+import {useParams} from "react-router-dom";
+import {IUserResponse} from "../../../../models/IUser";
+import errorMessageHandler from "../../../../utils/errorMessageHandler";
+import userService from "../../../../services/UserService";
+import Page from "../../../../components/Page";
+import LoadingLayout from "../../../../components/LoadingLayout";
 import {styled} from "@mui/material/styles";
-import Page from "../../../components/Page";
 import {Box, Container} from "@mui/material";
 import Header from "./Header";
 import Form from "./Form";
-import {useSnackbar} from "notistack";
-import {useNavigate} from "react-router-dom";
-import {ILocation} from "../../../models/ILocation";
-import eventLocationService from "../../../services/EventLocationService";
-import errorMessageHandler from "../../../utils/errorMessageHandler";
-import LoadingLayout from "../../../components/LoadingLayout";
 
 const Root = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
@@ -18,21 +18,21 @@ const Root = styled('div')(({ theme }) => ({
     paddingBottom: theme.spacing(3)
 }))
 
-const UserCreateView = () => {
+const UserEditView = () => {
     const {enqueueSnackbar} = useSnackbar()
-    const navigate = useNavigate()
-    const [locations, setLocations] = useState<ILocation[]>([])
+    const { userId } = useParams()
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
+    const [user, setUser] = useState<IUserResponse>();
 
     useEffect(() => {
         let cancel = false;
 
         (async () => {
             try {
-                const data: any = await eventLocationService.getLocations()
+                const data: any = await userService.getUser(userId || '') as IUserResponse
 
-                if (!cancel) setLocations(data)
+                if (!cancel) setUser(data)
             } catch (error: any) {
                 !cancel && setError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -42,18 +42,18 @@ const UserCreateView = () => {
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar, navigate])
+    }, [enqueueSnackbar, userId])
 
     return (
         <>
-            <Page title="Создание пользователя"/>
+            <Page title="Изменение пользователя" />
             {
-                !loading && !error ? (
+                !loading && !error && user ? (
                     <Root>
                         <Container maxWidth="xl">
-                            <Header />
+                            <Header title={user.fullName} />
                             <Box mt={3}>
-                                <Form locations={locations} />
+                               <Form user={user} />
                             </Box>
                         </Container>
                     </Root>
@@ -63,4 +63,4 @@ const UserCreateView = () => {
     );
 };
 
-export default UserCreateView;
+export default UserEditView;

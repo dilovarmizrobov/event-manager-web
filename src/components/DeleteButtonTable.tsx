@@ -18,9 +18,10 @@ type DeleteButtonTableProps = {
     rowId: number;
     onDelete: Function;
     handleDelete: Function;
+    disabled?: boolean;
 }
 
-const DeleteButtonTable: React.FC<DeleteButtonTableProps> = ({rowId, onDelete, handleDelete}) => {
+const DeleteButtonTable: React.FC<DeleteButtonTableProps> = ({rowId, onDelete, handleDelete, disabled}) => {
     const {enqueueSnackbar} = useSnackbar()
     const [loading, setLoading] = useState(false)
     const [openModal, setOpenModal] = useState(false)
@@ -47,7 +48,7 @@ const DeleteButtonTable: React.FC<DeleteButtonTableProps> = ({rowId, onDelete, h
                 <IconButton
                     size="large"
                     onClick={() => setOpenModal(true)}
-                    disabled={loading}
+                    disabled={loading || disabled}
                 >
                     <FiTrash size={20} />
                 </IconButton>

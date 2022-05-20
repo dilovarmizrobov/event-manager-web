@@ -4,6 +4,8 @@ import {IUserRequest} from "../models/IUser";
 class UserService {
     getUsers = (page: number, size: number, search: string) => apiHelper.get(`/users`, {search, size, page})
 
+    getAdmins = (page: number, size: number, search: string) => apiHelper.get(`/users/admin`, {search, size, page})
+
     getUser = (userId: string) => apiHelper.get(`/users/${userId}`)
 
     postNewUser = (user: IUserRequest) => apiHelper.post<IUserRequest>(`/users`, user)

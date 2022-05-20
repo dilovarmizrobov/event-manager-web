@@ -15,7 +15,7 @@ const IndexRedirectGuard: React.FC = () => {
     if (user?.role === UserRolesEnum.ADMIN) {
         return <Navigate to="/events" state={{ from: location }} replace />;
     } else {
-        return <Navigate to="/home" state={{ from: location }} replace />;
+        return <Navigate to="/guests" state={{ from: location }} replace />;
     }
 }
 

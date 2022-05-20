@@ -7,9 +7,6 @@ const Header: React.FC<{title?: string}> = ({title}) => (
     <Grid container justifyContent="space-between" spacing={3}>
         <Grid item>
             <Breadcrumbs separator={<NavigateNextIcon/>} aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" to="/home" component={RouterLink}>
-                    Главная
-                </Link>
                 <Link underline="hover" color="inherit" to="/event-locations" component={RouterLink}>
                     Места проведения
                 </Link>
