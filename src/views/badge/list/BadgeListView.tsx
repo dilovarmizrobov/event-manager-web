@@ -20,7 +20,7 @@ import {IBadgeResponse} from "../../../models/IBadge";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
 import badgeService from "../../../services/BadgeService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
-import {FiDownload, FiEdit} from "react-icons/fi";
+import {FiEdit} from "react-icons/fi";
 import {NavLink as RouterLink} from "react-router-dom";
 import DeleteButtonTable from "../../../components/DeleteButtonTable";
 
@@ -52,17 +52,6 @@ const BadgeListView = () => {
             }
         })()
     }, [enqueueSnackbar])
-
-    const downloadButton = async (fileName: string) => {
-        let response = await badgeService.getDownloadBadge(fileName) as Blob
-
-        const url = window.URL.createObjectURL(new Blob([response]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', fileName)
-        document.body.appendChild(link);
-        link.click()
-    }
 
     const handleDeleteRow = (rowId: number) => {
         let newRows = [...rows]
@@ -98,13 +87,7 @@ const BadgeListView = () => {
                                                                 <TableRow hover key={row.id}>
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell>{row.name}</TableCell>
-                                                                    <TableCell style={{ width: 165 }}>
-                                                                        <IconButton
-                                                                            size="large"
-                                                                            onClick={() => downloadButton(row.fileName)}
-                                                                        >
-                                                                            <FiDownload size={20} />
-                                                                        </IconButton>
+                                                                    <TableCell style={{ width: 140 }}>
                                                                         <IconButton
                                                                             size="large"
                                                                             component={RouterLink}

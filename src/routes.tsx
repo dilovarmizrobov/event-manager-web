@@ -33,8 +33,6 @@ import VerifyView from "./views/verify/VerifyView";
 import AdminUserListView from "./views/admin/user/list/UsersListView";
 import AdminUserCreateView from "./views/admin/user/form/UserCreateView";
 import AdminUserEditView from "./views/admin/user/form/UserEditView";
-import Pdf from "./views/Pdf";
-import Badge from "./views/Badge";
 
 interface CustomRouteObject extends RouteObject {
     perm?: UserRolesEnum[],
@@ -42,10 +40,6 @@ interface CustomRouteObject extends RouteObject {
 }
 
 const routes: CustomRouteObject[] = [
-    {
-        path: '/pdf',
-        element: <Badge />,
-    },
     {
         path: '/',
         element: <IndexRedirectGuard />,

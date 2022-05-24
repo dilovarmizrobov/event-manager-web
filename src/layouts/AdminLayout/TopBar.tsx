@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import {
     AppBar,
     Box,
-    Button,
     IconButton,
     List,
     ListItem,
@@ -12,7 +11,7 @@ import {
     Toolbar,
     Typography
 } from "@mui/material";
-import {Link as RouterLink, useMatch} from "react-router-dom";
+import {Link as RouterLink} from "react-router-dom";
 import {styled} from "@mui/material/styles";
 import Logout from "../MainLayout/TopBar/Logout";
 import ThemeMode from "../MainLayout/TopBar/ThemeMode";

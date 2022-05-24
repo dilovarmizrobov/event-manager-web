@@ -24,6 +24,10 @@ import DeleteButtonTable from "../../../components/DeleteButtonTable";
 import {useAppDispatch, useAppSelector} from "../../../store/hooks";
 import {deleteAuthEvent, selectAuth, updateAuthEvent} from "../../../store/reducers/authSlice";
 import CompletedButton from "./CompletedButton";
+import {DatePicker} from "@mui/x-date-pickers";
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import ruLocale from 'date-fns/locale/ru';
 
 const Root = styled('div')(({theme}) => ({
     minHeight: '100%',
@@ -41,8 +45,10 @@ const EventListView = () => {
     const [loading, setLoading] = useState(false)
     const [query, setQuery] = useState('')
     const debouncedSearchTerm = useDebounce(query, 500)
-    const [startDate, setStartDate] = useState(moment().subtract(30, 'days').format('YYYY-MM-DD'))
-    const [endDate, setEndDate] = useState(moment().format('YYYY-MM-DD'))
+    const [startDate, setStartDate] = React.useState<string>();
+    const [startDateInput, setStartDateInput] = React.useState<Date | null>(null);
+    const [endDate, setEndDate] = React.useState<string>();
+    const [endDateInput, setEndDateInput] = React.useState<Date | null>(null);
     const [rows, setRows] = useState<IEventResponse[]>([])
     const [rowsCount, setRowsCount] = useState<number>(0);
 
@@ -80,16 +86,32 @@ const EventListView = () => {
         setPage(newPage+1);
     };
 
-    const handleStartDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist()
-        setStartDate(event.target.value)
-        setPage(0)
+    const handleStartDateChange = (newValue: Date | null) => {
+        if (newValue === null) {
+            setStartDate(undefined)
+            setPage(0)
+        }
+
+        if (moment(newValue).isValid()) {
+            setStartDate(moment(newValue).format('YYYY-MM-DD'))
+            setPage(0)
+        }
+
+        setStartDateInput(newValue)
     }
 
-    const handleEndDateChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        event.persist()
-        setEndDate(event.target.value)
-        setPage(0)
+    const handleEndDateChange = (newValue: Date | null) => {
+        if (newValue === null) {
+            setEndDate(undefined)
+            setPage(0)
+        }
+
+        if (moment(newValue).isValid()) {
+            setEndDate(moment(newValue).format('YYYY-MM-DD'))
+            setPage(0)
+        }
+
+        setEndDateInput(newValue)
     }
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,32 +179,26 @@ const EventListView = () => {
                                                 />
                                             </Grid>
                                             <Grid item>
-                                                <TextField
-                                                    fullWidth
-                                                    type="date"
-                                                    label="От"
-                                                    onChange={handleStartDateChange}
-                                                    value={startDate}
-                                                    variant="outlined"
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    size="small"
-                                                />
+                                                <LocalizationProvider dateAdapter={AdapterDateFns} locale={ruLocale}>
+                                                    <DatePicker
+                                                        label="От"
+                                                        mask={'__.__.____'}
+                                                        value={startDateInput}
+                                                        onChange={handleStartDateChange}
+                                                        renderInput={(params) => <TextField size="small" {...params} />}
+                                                    />
+                                                </LocalizationProvider>
                                             </Grid>
                                             <Grid item>
-                                                <TextField
-                                                    fullWidth
-                                                    type="date"
-                                                    label="До"
-                                                    onChange={handleEndDateChange}
-                                                    value={endDate}
-                                                    variant="outlined"
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    size="small"
-                                                />
+                                                <LocalizationProvider dateAdapter={AdapterDateFns} locale={ruLocale}>
+                                                    <DatePicker
+                                                        label="До"
+                                                        mask={'__.__.____'}
+                                                        value={endDateInput}
+                                                        onChange={handleEndDateChange}
+                                                        renderInput={(params) => <TextField size="small" {...params} />}
+                                                    />
+                                                </LocalizationProvider>
                                             </Grid>
                                         </Grid>
                                     </Box>

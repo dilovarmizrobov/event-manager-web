@@ -260,7 +260,7 @@ const GuestListView = () => {
                                                                                 <TableCell>{row.country!.name}</TableCell>
                                                                                 <TableCell>{row.email}</TableCell>
                                                                                 <TableCell>{(row.type as IBadgeOption).name}</TableCell>
-                                                                                <TableCell>Бейджик</TableCell>
+                                                                                <TableCell>{row.qty}</TableCell>
                                                                                 {
                                                                                     (canEdit || canDelete || canPrint) && (
                                                                                         <TableCell style={{ width: 165 }}>

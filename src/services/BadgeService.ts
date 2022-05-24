@@ -10,9 +10,6 @@ class BadgeService {
 
     getBadges = () => apiHelper.get(`/badge-templates`)
 
-    getDownloadBadge = (fileName: string) =>
-        apiHelper.get(`/badge-templates/load-badge/${fileName}`, {responseType: "blob"})
-
     postNewBadge = (badge: IBadgeRequest) => new Promise((resolve, reject) => {
         let formData = new FormData();
 

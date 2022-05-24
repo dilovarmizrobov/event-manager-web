@@ -56,11 +56,6 @@ const Form :React.FC<{badge? : IBadgeResponse}> = ({badge}) => {
     const handleUpdate = async (values: IBadgeRequest, formActions: { [key: string]: any }) => {
         values.id = badge?.id!
 
-        if (values.files) {
-            setUploadError(true)
-            return
-        }
-
         try {
             await badgeService.putUpdateBadge(values)
 

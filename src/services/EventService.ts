@@ -6,7 +6,7 @@ class EventService {
 
     getOptionEvents = () => apiHelper.get(`/events/option`)
 
-    getListEvents = (page: number, size: number, search: string, startDate: string, endDate: string) =>
+    getListEvents = (page: number, size: number, search: string, startDate?: string, endDate?: string) =>
         apiHelper.get(`/events`, {search, startDate, endDate, size, page})
 
     postNewEvent = (event: IEventRequest) => apiHelper.post<IEventRequest>(`/events`, event)

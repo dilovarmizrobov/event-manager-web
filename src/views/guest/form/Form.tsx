@@ -37,7 +37,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountr
         passport: guest?.passport || '',
         email: guest?.email || '',
         type: guest ? (guest.type as IBadgeOption).id : badges[0].id,
-        countryId: guest?.countryId || countries[0].id,
+        countryId: guest?.country?.id || countries[0].id,
         locations: locations,
     }
 

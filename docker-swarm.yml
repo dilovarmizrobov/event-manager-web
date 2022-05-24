@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  event-manager-service:
+    image: 127.0.0.1:5000/event-manager-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=${profile}
+    ports:
+      - 8085:8080
+    volumes:
+      - type: bind
+        source: /home/event-manager/documents/
+        target: /documents/
+
+    #    healthcheck:
+    #      test: curl --fail -s http://37.98.153.57:8085/event-manager/health-check || exit 1
+    #      interval: 1m30s
+    #      timeout: 10s
+    #      retries: 3
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+  event-manager-web:
+    image: 127.0.0.1:5000/event-manager-web
+    depends_on:
+      - event-manager-service
+    ports:
+      - 80:80
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure

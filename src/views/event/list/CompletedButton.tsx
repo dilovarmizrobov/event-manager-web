@@ -59,7 +59,7 @@ const CompletedButton: React.FC<{rowId: number, completed: boolean, handleComple
             <ConfirmationModal
                 isOpen={openModal}
                 title={'Вы уверены, что хотите завершить мероприятие?'}
-                description={'При завершение мероприятие, его нельзя будет отменить. Пожалуйста, убедитесь, что вы хотите завершить именно этот мероприятии.'}
+                description={'При завершение мероприятия, его нельзя будет отменить. Пожалуйста, убедитесь, что вы хотите завершить именно этот мероприятия.'}
                 onClose={() => setOpenModal(false)}
                 onAccept={handleAccept}
             />

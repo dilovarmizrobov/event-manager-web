@@ -14,4 +14,5 @@ export interface IGuest {
     countryId: number;
     country?: ICountryResponse;
     locations: number[] | ILocation[];
+    qty?: number;
 }
