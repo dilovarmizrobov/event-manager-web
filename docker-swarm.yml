@@ -6,16 +6,18 @@ services:
       - SPRING_PROFILES_ACTIVE=${profile}
     ports:
       - 8085:8080
+    networks:
+      - event-network
     volumes:
       - type: bind
         source: /home/event-manager/documents/
         target: /documents/
 
-    #    healthcheck:
-    #      test: curl --fail -s http://37.98.153.57:8085/event-manager/health-check || exit 1
-    #      interval: 1m30s
-    #      timeout: 10s
-    #      retries: 3
+#    healthcheck:
+#      test: curl --fail -s http://37.98.153.57:8085/event-manager/health-check || exit 1
+#      interval: 1m30s
+#      timeout: 10s
+#      retries: 3
     deploy:
       replicas: 1
       restart_policy:
@@ -26,7 +28,11 @@ services:
       - event-manager-service
     ports:
       - 80:80
+    networks:
+      - event-network
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
+networks:
+  event-network:
