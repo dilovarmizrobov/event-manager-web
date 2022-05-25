@@ -7,8 +7,6 @@ import {
 } from "@mui/material";
 import guestService from "../../../services/GuestService";
 import {GuestTypeEnum} from "../../../constants";
-import errorMessageHandler from "../../../utils/errorMessageHandler";
-import {useSnackbar} from "notistack";
 import {styled} from "@mui/material/styles";
 
 const StyledBox = styled(Box)(() => ({
@@ -36,22 +34,22 @@ interface IVerifyGuest {
 }
 
 const ScanBadgeModal: React.FC = () => {
-    const {enqueueSnackbar} = useSnackbar()
     const [verifyGuest, setVerifyGuest] = useState<IVerifyGuest>()
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
     const [openModal, setOpenModal] = useState(false)
 
     const verifyGuestHandle = (barcode: string) => {
         (async () => {
             try {
+                setError(false)
                 setOpenModal(true)
                 setLoading(true)
 
                 let verifyGuest: any = await guestService.getVerifyGuest(barcode)
                 setVerifyGuest(verifyGuest)
             } catch (error: any) {
-                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-                setOpenModal(false)
+                setError(true)
             } finally {
                 setLoading(false)
             }
@@ -100,56 +98,62 @@ const ScanBadgeModal: React.FC = () => {
                                 <CircularProgress size={48} />
                             </StyledLoadingRoot>
                         ) : (
-                            <>
-                                <StyledBox sx={{ backgroundColor: verifyGuest?.passed ? "#48e574" : "#eb4234" }} />
-                                <Grid container alignItems="center" spacing={3} sx={{p: 3}}>
-                                    <Grid item xs={5}>
-                                        <img src={`/event-manager/guests/load-image/${verifyGuest?.photo}`} alt="..." style={{width: "100%"}}/>
+                            error ? (
+                                <StyledLoadingRoot>
+                                    <h3>Не зарегистрирован в системе</h3>
+                                </StyledLoadingRoot>
+                            ) : (
+                                <>
+                                    <StyledBox sx={{ backgroundColor: verifyGuest?.passed ? "#48e574" : "#eb4234" }} />
+                                    <Grid container alignItems="center" spacing={3} sx={{p: 3}}>
+                                        <Grid item xs={5}>
+                                            <img src={`/event-manager/guests/load-image/${verifyGuest?.photo}`} alt="..." style={{width: "100%"}}/>
+                                        </Grid>
+                                        <Grid item xs={7}>
+                                            <Grid container spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6">ФИО:</Typography>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.fullName}</Typography>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6">Серия паспорта:</Typography>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.passport}</Typography>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6">Страна:</Typography>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.country}</Typography>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6">Статус:</Typography>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.type}</Typography>
+                                                </Grid>
+                                            </Grid>
+                                            {/*<Grid container spacing={1} alignItems="center">*/}
+                                            {/*    <Grid item xs={6}>*/}
+                                            {/*        <Typography variant="h6">Номер пригласительного:</Typography>*/}
+                                            {/*    </Grid>*/}
+                                            {/*    <Grid item xs={6}>*/}
+                                            {/*        <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.barcode}</Typography>*/}
+                                            {/*    </Grid>*/}
+                                            {/*</Grid>*/}
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs={7}>
-                                        <Grid container spacing={1} alignItems="center" sx={{ mb: 2 }}>
-                                            <Grid item xs={6}>
-                                                <Typography variant="h6">ФИО:</Typography>
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.fullName}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid container spacing={1} alignItems="center" sx={{ mb: 2 }}>
-                                            <Grid item xs={6}>
-                                                <Typography variant="h6">Серия паспорта:</Typography>
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.passport}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid container spacing={1} alignItems="center" sx={{ mb: 2 }}>
-                                            <Grid item xs={6}>
-                                                <Typography variant="h6">Страна:</Typography>
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.country}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid container spacing={1} alignItems="center" sx={{ mb: 2 }}>
-                                            <Grid item xs={6}>
-                                                <Typography variant="h6">Статус:</Typography>
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.type}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid container spacing={1} alignItems="center">
-                                            <Grid item xs={6}>
-                                                <Typography variant="h6">Номер пригласительного:</Typography>
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.barcode}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            </>
+                                </>
+                            )
                         )
                     }
                 </Box>
