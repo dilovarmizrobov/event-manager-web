@@ -43,7 +43,7 @@ const GuestListView = () => {
     const {enqueueSnackbar} = useSnackbar()
     const navigate = useNavigate()
     const [page, setPage] = useState<number>(0)
-    const [size, setSize] = useState<number>(20)
+    const [size, setSize] = useState<number>(30)
     const [query, setQuery] = useState('')
     const debouncedSearchTerm = useDebounce(query, 500)
     const [countryId, setCountryId] = useState<number>(0)
@@ -83,20 +83,24 @@ const GuestListView = () => {
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setQuery(event.target.value);
         setPage(0);
+        setSelected([]);
     };
 
     const handleChangeCountry = (event: SelectChangeEvent<string | number>) => {
         setCountryId(Number(event.target.value));
         setPage(0);
+        setSelected([]);
     }
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
+        setSelected([]);
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSize(parseInt(event.target.value, 10));
         setPage(0);
+        setSelected([]);
     };
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -302,7 +306,7 @@ const GuestListView = () => {
                                         page={page}
                                         onPageChange={handleChangePage}
                                         rowsPerPage={size}
-                                        rowsPerPageOptions={[20, 30, 50]}
+                                        rowsPerPageOptions={[30, 50, 100]}
                                         onRowsPerPageChange={handleChangeRowsPerPage}
                                         labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
                                     />
