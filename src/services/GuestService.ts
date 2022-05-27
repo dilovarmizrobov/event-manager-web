@@ -60,6 +60,12 @@ class GuestService {
             .catch(error => reject(error))
     })
 
+    putUploadFromExcel = (formDate: FormData) => new Promise((resolve, reject) => {
+        api.put(`/events/load-guests`, formDate, {responseType: "arraybuffer"})
+            .then(response => resolve(response.data))
+            .catch(error => reject(error))
+    })
+
     getPrintBadgeGuests = (guestIds: number[]) =>
         apiHelper.get(`/guests/badge?guestIds=${guestIds.join(',')}`, {responseType: "blob"})
 

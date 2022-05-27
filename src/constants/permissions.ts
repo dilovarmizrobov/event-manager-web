@@ -106,6 +106,12 @@ const PERMISSIONS = {
             UserRolesEnum.ADMIN_EVENT,
             UserRolesEnum.EMPLOYEE,
         ],
+    },
+    IMPORT: {
+        GUEST: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+        ],
     }
 }
 

@@ -4,6 +4,7 @@ import {Link as RouterLink} from "react-router-dom";
 import {FiPlusCircle as PlusCircleIcon} from "react-icons/fi";
 import hasPermission from "../../../utils/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
+import ImportFromExcelButton from "./ImportFromExcelButton";
 
 const Header = () => {
     const canAdd = hasPermission(PERMISSIONS.CREATE.GUEST)
@@ -22,6 +23,7 @@ const Header = () => {
             {
                 canAdd && (
                     <Grid item>
+                        <ImportFromExcelButton/>
                         <Button
                             color="secondary"
                             variant="contained"

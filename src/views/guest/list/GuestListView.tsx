@@ -256,7 +256,7 @@ const GuestListView = () => {
                                                                                 <TableCell padding="checkbox">
                                                                                     <Checkbox color="primary" checked={isItemSelected} onClick={(event) => handleClick(event, row.id!)}/>
                                                                                 </TableCell>
-                                                                                <TableCell>{index + 1}</TableCell>
+                                                                                <TableCell>{row.id}</TableCell>
                                                                                 <TableCell component="th" scope="row" padding="none">
                                                                                     {row.fullName}
                                                                                 </TableCell>
