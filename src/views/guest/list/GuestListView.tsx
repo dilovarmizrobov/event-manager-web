@@ -328,7 +328,7 @@ const GuestListView = () => {
                                         page={page}
                                         onPageChange={handleChangePage}
                                         rowsPerPage={size}
-                                        rowsPerPageOptions={[30, 50, 100]}
+                                        rowsPerPageOptions={[50, 100, 500, 1000]}
                                         onRowsPerPageChange={handleChangeRowsPerPage}
                                         labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
                                     />
