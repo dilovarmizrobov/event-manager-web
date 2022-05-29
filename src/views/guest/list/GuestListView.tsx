@@ -175,7 +175,7 @@ const GuestListView = () => {
                                                             >
                                                                 {selected.length} выбрано
                                                             </Typography>
-                                                            {canPrint && <PrintBadgeButton guestsId={selected} />}
+                                                            {canPrint && <PrintBadgeButton guestsId={selected} page={page + 1} />}
                                                         </>
                                                     ) : (
                                                         <>
@@ -268,7 +268,7 @@ const GuestListView = () => {
                                                                                 {
                                                                                     (canEdit || canDelete || canPrint) && (
                                                                                         <TableCell style={{ width: 165 }}>
-                                                                                            {canPrint && <PrintBadgeButton guestsId={[row.id!]} />}
+                                                                                            {canPrint && <PrintBadgeButton guestsId={[row.id!]} page={page + 1} />}
                                                                                             {canEdit && (
                                                                                                 <IconButton
                                                                                                     size="large"

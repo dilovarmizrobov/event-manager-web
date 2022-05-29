@@ -15,7 +15,7 @@ const StyledCircularProgress = styled(CircularProgress)(() => ({
     marginLeft: '-22px',
 }))
 
-const PrintBadgeButton: React.FC<{guestsId: number[]}> = ({guestsId}) => {
+const PrintBadgeButton: React.FC<{guestsId: number[], page: number}> = ({guestsId, page}) => {
     const {enqueueSnackbar} = useSnackbar()
     const [loading, setLoading] = useState(false)
     const [isOpen, setOpen] = useState(false)
@@ -30,7 +30,7 @@ const PrintBadgeButton: React.FC<{guestsId: number[]}> = ({guestsId}) => {
             const url = window.URL.createObjectURL(new Blob([response]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `Badges.pdf`);
+            link.setAttribute('download', `badges_${page}_${guestsId.length}.pdf`);
             document.body.appendChild(link);
             link.click();
 

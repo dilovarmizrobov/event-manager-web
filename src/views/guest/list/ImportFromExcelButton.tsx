@@ -5,7 +5,6 @@ import guestService from "../../../services/GuestService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import PERMISSIONS from "../../../constants/permissions";
-import * as fileSaver from "file-saver";
 
 const ImportFromExcelButton: React.FC = () => {
     const canImport = PERMISSIONS.IMPORT.GUEST
@@ -20,9 +19,10 @@ const ImportFromExcelButton: React.FC = () => {
 
         try {
             setLoading(true)
-            const fileBuffer = await guestService.putUploadFromExcel(formDate) as ArrayBuffer
-            const blob = new Blob([fileBuffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'});
-            fileSaver.saveAs(blob, `guests-without-photo.xlsx`)
+            await guestService.putUploadFromExcel(formDate)
+            // const fileBuffer = await guestService.putUploadFromExcel(formDate) as ArrayBuffer
+            // const blob = new Blob([fileBuffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'});
+            // fileSaver.saveAs(blob, `guests-without-photo.xlsx`)
 
             enqueueSnackbar(`Успешно загружено`, {variant: 'success'})
         } catch (error: any) {
