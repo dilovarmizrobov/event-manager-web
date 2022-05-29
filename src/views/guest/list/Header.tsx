@@ -6,7 +6,7 @@ import hasPermission from "../../../utils/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 import ImportFromExcelButton from "./ImportFromExcelButton";
 
-const Header = () => {
+const Header: React.FC<{setUpdateRows: Function}> = ({setUpdateRows}) => {
     const canAdd = hasPermission(PERMISSIONS.CREATE.GUEST)
 
     return (
@@ -23,7 +23,7 @@ const Header = () => {
             {
                 canAdd && (
                     <Grid item>
-                        <ImportFromExcelButton/>
+                        <ImportFromExcelButton handleImport={() => setUpdateRows()} />
                         <Button
                             color="secondary"
                             variant="contained"

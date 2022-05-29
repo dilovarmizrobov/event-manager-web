@@ -58,7 +58,7 @@ const CountryListView = () => {
 
                 if (!cancel) {
                     setRows(data.content)
-                    setRowsCount(data.totalPages)
+                    setRowsCount(data.totalElements)
                 }
 
             } catch (error: any) {
@@ -131,7 +131,6 @@ const CountryListView = () => {
                                         <Table>
                                             <TableHead>
                                                 <TableRow>
-                                                    <TableCell>№</TableCell>
                                                     <TableCell>Название</TableCell>
                                                     <TableCell>аббревиатура</TableCell>
                                                     <TableCell>Флаг</TableCell>
@@ -142,9 +141,8 @@ const CountryListView = () => {
                                                 rows.length > 0 ? (
                                                     <TableBody>
                                                         {
-                                                            rows.map((row, index) => (
+                                                            rows.map(row => (
                                                                 <TableRow hover key={row.id}>
-                                                                    <TableCell>{index + 1}</TableCell>
                                                                     <TableCell>{row.name}</TableCell>
                                                                     <TableCell>{row.abbr}</TableCell>
                                                                     <TableCell>
@@ -154,7 +152,7 @@ const CountryListView = () => {
                                                                             width="45px"
                                                                         />
                                                                     </TableCell>
-                                                                    <TableCell style={{width: 165}}>
+                                                                    <TableCell style={{width: 120}}>
                                                                         <IconButton
                                                                             size="large"
                                                                             component={RouterLink}

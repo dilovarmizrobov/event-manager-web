@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import Header from "./Header";
 import {
+    Autocomplete,
     Box,
     Card, Checkbox,
-    Container, FormControl, IconButton,
-    InputAdornment, InputLabel, MenuItem, Select, SelectChangeEvent,
+    Container, IconButton,
+    InputAdornment,
     SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
     TextField, Toolbar, Typography
 } from "@mui/material";
@@ -42,33 +43,28 @@ const GuestListView = () => {
     const canPrint = hasPermission(PERMISSIONS.PRINT.GUEST)
     const {enqueueSnackbar} = useSnackbar()
     const navigate = useNavigate()
+    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [page, setPage] = useState<number>(0)
     const [size, setSize] = useState<number>(30)
     const [query, setQuery] = useState('')
     const debouncedSearchTerm = useDebounce(query, 500)
-    const [countryId, setCountryId] = useState<number>(0)
     const [selected, setSelected] = useState<number[]>([])
     const [loading, setLoading] = useState(true)
+    const [loadingRow, setLoadingRow] = useState(true)
     const [error, setError] = useState(false)
     const [rows, setRows] = useState<IGuest[]>([])
     const [rowsCount, setRowsCount] = useState<number>(0);
     const [countries, setCountries] = useState<ICountryOption[]>([])
+    const [country, setCountry] = useState<ICountryOption | null>(null)
 
     useEffect(() => {
         let cancel = false;
 
         (async () => {
             try {
-                setRows([])
-
-                const data: any = await guestService.getListGuests(page + 1, size, debouncedSearchTerm, countryId)
                 const dataCountries: any = await countryService.getOptionCountries()
-
-                if (!cancel) {
-                    setRows(data.content)
-                    setRowsCount(data.totalElements)
-                    setCountries(dataCountries)
-                }
+                
+                if (!cancel) setCountries(dataCountries)
             } catch (error: any) {
                 !cancel && setError(true)
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
@@ -78,19 +74,37 @@ const GuestListView = () => {
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar, page, size, debouncedSearchTerm, countryId, navigate])
+    }, [enqueueSnackbar])
+
+    useEffect(() => {
+        let cancel = false;
+
+        (async () => {
+            try {
+                setLoadingRow(true)
+                setRows([])
+
+                const data: any = await guestService.getListGuests(page + 1, size, debouncedSearchTerm, country?.id || 0)
+
+                if (!cancel) {
+                    setRows(data.content)
+                    setRowsCount(data.totalElements)
+                }
+            } catch (error: any) {
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                !cancel && setLoadingRow(false)
+            }
+        })()
+
+        return () => {cancel = true}
+    }, [enqueueSnackbar, page, size, debouncedSearchTerm, country, navigate, updateRows])
 
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setQuery(event.target.value);
         setPage(0);
         setSelected([]);
     };
-
-    const handleChangeCountry = (event: SelectChangeEvent<string | number>) => {
-        setCountryId(Number(event.target.value));
-        setPage(0);
-        setSelected([]);
-    }
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -148,7 +162,7 @@ const GuestListView = () => {
                 !loading && !error ? (
                     <Root>
                         <Container maxWidth="xl">
-                            <Header />
+                            <Header setUpdateRows={setUpdateRows} />
                             <Box mt={3}>
                                 <Card>
                                     <PerfectScrollbar>
@@ -181,7 +195,7 @@ const GuestListView = () => {
                                                         <>
                                                             <Box sx={{ flex: '1 1 100%'}}>
                                                                 <TextField
-                                                                    sx={{width: 400}}
+                                                                    sx={{width: 300}}
                                                                     size="small"
                                                                     InputProps={{
                                                                         startAdornment: (
@@ -202,21 +216,25 @@ const GuestListView = () => {
                                                                 />
                                                             </Box>
                                                             <Box sx={{mr: 2}}>
-                                                                <FormControl sx={{ minWidth: 120 }} size="small">
-                                                                    <InputLabel id="country-select-label">Страна</InputLabel>
-                                                                    <Select
-                                                                        labelId="country-select-label"
-                                                                        id="country-select"
-                                                                        value={countryId}
-                                                                        label="Страна"
-                                                                        onChange={handleChangeCountry}
-                                                                    >
-                                                                        <MenuItem value={0}>Все</MenuItem>
-                                                                        {countries.map((item, index) => (
-                                                                            <MenuItem key={index} value={item.id}>{item.name}</MenuItem>
-                                                                        ))}
-                                                                    </Select>
-                                                                </FormControl>
+                                                                <Autocomplete
+                                                                    options={countries}
+                                                                    getOptionLabel={option => option.name}
+                                                                    value={country}
+                                                                    onChange={(e, value) => {
+                                                                        setCountry(value)
+                                                                        setPage(0);
+                                                                        setSelected([]);
+                                                                    }}
+                                                                    sx={{ minWidth: 250 }}
+                                                                    size="small"
+                                                                    renderInput={params => (
+                                                                        <TextField
+                                                                            label="Страны"
+                                                                            variant="outlined"
+                                                                            {...params}
+                                                                        />
+                                                                    )}
+                                                                />
                                                             </Box>
                                                         </>
                                                     )
@@ -235,12 +253,14 @@ const GuestListView = () => {
                                                                 />
                                                             </TableCell>
                                                             <TableCell>№</TableCell>
+                                                            <TableCell>QR-code</TableCell>
                                                             <TableCell>ФИО</TableCell>
                                                             <TableCell>Паспорт</TableCell>
                                                             <TableCell>Страна</TableCell>
                                                             <TableCell>Email</TableCell>
                                                             <TableCell>Статус</TableCell>
                                                             <TableCell>Бейджик</TableCell>
+                                                            {/*<TableCell>Выдано</TableCell>*/}
                                                             {(canEdit || canDelete || canPrint) && <TableCell/>}
                                                         </TableRow>
                                                     </TableHead>
@@ -257,6 +277,7 @@ const GuestListView = () => {
                                                                                     <Checkbox color="primary" checked={isItemSelected} onClick={(event) => handleClick(event, row.id!)}/>
                                                                                 </TableCell>
                                                                                 <TableCell>{row.id}</TableCell>
+                                                                                <TableCell>{row.barcode}</TableCell>
                                                                                 <TableCell component="th" scope="row" padding="none">
                                                                                     {row.fullName}
                                                                                 </TableCell>
@@ -268,6 +289,7 @@ const GuestListView = () => {
                                                                                 {
                                                                                     (canEdit || canDelete || canPrint) && (
                                                                                         <TableCell style={{ width: 165 }}>
+
                                                                                             {canPrint && <PrintBadgeButton guestsId={[row.id!]} page={page + 1} />}
                                                                                             {canEdit && (
                                                                                                 <IconButton
@@ -293,7 +315,7 @@ const GuestListView = () => {
                                                                     })
                                                                 }
                                                             </TableBody>
-                                                        ) : <NoFoundTableBody loading={loading}/>
+                                                        ) : <NoFoundTableBody loading={loadingRow}/>
                                                     }
                                                 </Table>
                                             </TableContainer>

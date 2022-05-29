@@ -6,7 +6,7 @@ import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 import PERMISSIONS from "../../../constants/permissions";
 
-const ImportFromExcelButton: React.FC = () => {
+const ImportFromExcelButton: React.FC<{handleImport: VoidFunction}> = ({handleImport}) => {
     const canImport = PERMISSIONS.IMPORT.GUEST
     const {enqueueSnackbar} = useSnackbar()
     const [loading, setLoading] = useState(false)
@@ -24,10 +24,12 @@ const ImportFromExcelButton: React.FC = () => {
             // const blob = new Blob([fileBuffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'});
             // fileSaver.saveAs(blob, `guests-without-photo.xlsx`)
 
+            handleImport()
             enqueueSnackbar(`Успешно загружено`, {variant: 'success'})
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         } finally {
+            (e.target as HTMLInputElement).value = ''
             setLoading(false)
         }
     }
