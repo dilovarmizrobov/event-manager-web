@@ -6,6 +6,7 @@ export interface IGuest {
     [key: string]: any;
     id?: number;
     barcode?: string;
+    badgeIssued?: boolean;
     fullName: string;
     passport: string;
     passportImage?: string | File;

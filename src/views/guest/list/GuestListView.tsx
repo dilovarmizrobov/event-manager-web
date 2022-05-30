@@ -30,6 +30,7 @@ import DeleteButtonTable from "../../../components/DeleteButtonTable";
 import hasPermission from "../../../utils/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 import {IBadgeOption} from "../../../models/IBadge";
+import IssueButton from "./IssueButton";
 
 const Root = styled('div')(({ theme }) => ({
     minHeight: '100%',
@@ -45,7 +46,7 @@ const GuestListView = () => {
     const navigate = useNavigate()
     const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const [page, setPage] = useState<number>(0)
-    const [size, setSize] = useState<number>(30)
+    const [size, setSize] = useState<number>(50)
     const [query, setQuery] = useState('')
     const debouncedSearchTerm = useDebounce(query, 500)
     const [selected, setSelected] = useState<number[]>([])
@@ -153,6 +154,13 @@ const GuestListView = () => {
         setRows(newRows)
     }
 
+    const handleIssueBadge = (rowId: number) => {
+        let newRows = [...rows]
+        let index = newRows.findIndex(row => row.id! === rowId)
+        newRows[index].badgeIssued = true
+        setRows(newRows)
+    }
+
     const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
     return (
@@ -257,10 +265,9 @@ const GuestListView = () => {
                                                             <TableCell>ФИО</TableCell>
                                                             <TableCell>Паспорт</TableCell>
                                                             <TableCell>Страна</TableCell>
-                                                            <TableCell>Email</TableCell>
                                                             <TableCell>Статус</TableCell>
                                                             <TableCell>Бейджик</TableCell>
-                                                            {/*<TableCell>Выдано</TableCell>*/}
+                                                            <TableCell>Выдано</TableCell>
                                                             {(canEdit || canDelete || canPrint) && <TableCell/>}
                                                         </TableRow>
                                                     </TableHead>
@@ -283,9 +290,15 @@ const GuestListView = () => {
                                                                                 </TableCell>
                                                                                 <TableCell>{row.passport}</TableCell>
                                                                                 <TableCell>{row.country!.name}</TableCell>
-                                                                                <TableCell>{row.email}</TableCell>
                                                                                 <TableCell>{(row.type as IBadgeOption).name}</TableCell>
                                                                                 <TableCell>{row.qty}</TableCell>
+                                                                                <TableCell>
+                                                                                    <IssueButton
+                                                                                        rowId={row.id!}
+                                                                                        badgeIssued={row.badgeIssued!}
+                                                                                        handleIssue={handleIssueBadge}
+                                                                                    />
+                                                                                </TableCell>
                                                                                 {
                                                                                     (canEdit || canDelete || canPrint) && (
                                                                                         <TableCell style={{ width: 165 }}>

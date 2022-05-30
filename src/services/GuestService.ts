@@ -69,6 +69,8 @@ class GuestService {
     getPrintBadgeGuests = (guestIds: number[]) =>
         apiHelper.get(`/guests/badge?guestIds=${guestIds.join(',')}`, {responseType: "blob"})
 
+    putIssueBadgeGuest = (rowId: number) => apiHelper.put(`/guests/${rowId}/badge-issue`)
+
     getVerifyGuest = (barcode: string) => apiHelper.get(`/guests/check`, {barcode})
 
     deleteGuest = (guestId: number) => apiHelper.delete(`/guests/${guestId}`)
