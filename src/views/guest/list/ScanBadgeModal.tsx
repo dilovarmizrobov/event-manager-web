@@ -33,7 +33,7 @@ interface IVerifyGuest {
     passed: boolean;
 }
 
-const ScanBadgeModal: React.FC = () => {
+const ScanBadgeModal: React.FC<{barcode?: string}> = ({barcode}) => {
     const [verifyGuest, setVerifyGuest] = useState<IVerifyGuest>()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
@@ -81,6 +81,10 @@ const ScanBadgeModal: React.FC = () => {
             document.removeEventListener("keydown", handleKeyDown);
         }
     }, [])
+
+    useEffect(() => {
+        barcode && verifyGuestHandle(barcode)
+    }, [barcode])
 
     return (
         <>

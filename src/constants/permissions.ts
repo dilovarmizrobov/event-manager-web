@@ -100,19 +100,25 @@ const PERMISSIONS = {
             UserRolesEnum.ADMIN_EVENT
         ]
     },
-    PRINT: {
-        GUEST: [
-            UserRolesEnum.ADMIN,
-            UserRolesEnum.ADMIN_EVENT,
-            UserRolesEnum.EMPLOYEE,
-        ],
-    },
-    IMPORT: {
-        GUEST: [
-            UserRolesEnum.ADMIN,
-            UserRolesEnum.ADMIN_EVENT,
-        ],
-    }
+    PRINT_BADGE: [
+        UserRolesEnum.ADMIN,
+        UserRolesEnum.ADMIN_EVENT,
+        UserRolesEnum.EMPLOYEE,
+    ],
+    IMPORT_GUEST: [
+        UserRolesEnum.ADMIN,
+        UserRolesEnum.ADMIN_EVENT,
+    ],
+    ISSUE_BADGE: [
+        UserRolesEnum.ADMIN,
+        UserRolesEnum.ADMIN_EVENT,
+        UserRolesEnum.EMPLOYEE,
+    ],
+    SELECT_GUEST: [
+        UserRolesEnum.ADMIN,
+        UserRolesEnum.ADMIN_EVENT,
+        UserRolesEnum.EMPLOYEE,
+    ]
 }
 
 export default PERMISSIONS

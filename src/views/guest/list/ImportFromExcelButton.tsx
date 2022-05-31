@@ -7,7 +7,7 @@ import {useSnackbar} from "notistack";
 import PERMISSIONS from "../../../constants/permissions";
 
 const ImportFromExcelButton: React.FC<{handleImport: VoidFunction}> = ({handleImport}) => {
-    const canImport = PERMISSIONS.IMPORT.GUEST
+    const canImport = PERMISSIONS.IMPORT_GUEST
     const {enqueueSnackbar} = useSnackbar()
     const [loading, setLoading] = useState(false)
 

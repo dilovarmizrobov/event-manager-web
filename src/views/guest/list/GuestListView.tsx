@@ -2,9 +2,9 @@ import React, {useEffect, useReducer, useState} from 'react';
 import Header from "./Header";
 import {
     Autocomplete,
-    Box,
+    Box, Button,
     Card, Checkbox,
-    Container, IconButton,
+    Container, Grid, IconButton,
     InputAdornment,
     SvgIcon, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
     TextField, Toolbar, Typography
@@ -41,7 +41,9 @@ const Root = styled('div')(({ theme }) => ({
 const GuestListView = () => {
     const canEdit = hasPermission(PERMISSIONS.EDIT.GUEST)
     const canDelete = hasPermission(PERMISSIONS.DELETE.GUEST)
-    const canPrint = hasPermission(PERMISSIONS.PRINT.GUEST)
+    const canPrint = hasPermission(PERMISSIONS.PRINT_BADGE)
+    const canIssue = hasPermission(PERMISSIONS.ISSUE_BADGE)
+    const canSelect = hasPermission(PERMISSIONS.SELECT_GUEST)
     const {enqueueSnackbar} = useSnackbar()
     const navigate = useNavigate()
     const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
@@ -57,6 +59,7 @@ const GuestListView = () => {
     const [rowsCount, setRowsCount] = useState<number>(0);
     const [countries, setCountries] = useState<ICountryOption[]>([])
     const [country, setCountry] = useState<ICountryOption | null>(null)
+    const [barcode, setBarcode] = useState<string | undefined>()
 
     useEffect(() => {
         let cancel = false;
@@ -104,27 +107,34 @@ const GuestListView = () => {
     const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setQuery(event.target.value);
         setPage(0);
-        setSelected([]);
     };
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
-        setSelected([]);
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSize(parseInt(event.target.value, 10));
         setPage(0);
-        setSelected([]);
     };
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const rowIds = rows.map(item => item.id!);
+
         if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n.id!);
-            setSelected(newSelecteds);
+            const numbers: number[] = [];
+
+            for (let i = 0; i < rowIds.length; i++) {
+                if (selected.indexOf(rowIds[i]) === -1) {
+                    numbers.push(rowIds[i])
+                }
+            }
+
+            setSelected([...selected, ...numbers])
             return;
         }
-        setSelected([]);
+
+        setSelected([...selected].filter(n => !rowIds.includes(n)));
     };
 
     const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
@@ -161,7 +171,20 @@ const GuestListView = () => {
         setRows(newRows)
     }
 
+    const getCountSelectedRow = () => {
+        let count = 0;
+
+        for (let i = 0; i < rows.length; i++) {
+            if (selected.indexOf(rows[i].id!) > -1) {
+                count++
+            }
+        }
+
+        return count
+    }
+
     const isSelected = (id: number) => selected.indexOf(id) !== -1;
+    const countSelectedRow = getCountSelectedRow()
 
     return (
         <>
@@ -175,91 +198,92 @@ const GuestListView = () => {
                                 <Card>
                                     <PerfectScrollbar>
                                         <Box minWidth={750} sx={{ mb: 2 }}>
-                                            <Toolbar
+                                            {selected.length > 0 && (
+                                                <Toolbar
+                                                    sx={{
+                                                        py: 2,
+                                                        pl: { sm: 2 },
+                                                        pr: { xs: 1, sm: 1 },
+                                                        bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+                                                    }}
+                                                >
+                                                    <Typography
+                                                        sx={{ flex: '1 1 100%' }}
+                                                        color="inherit"
+                                                        variant="subtitle1"
+                                                        component="div"
+                                                    >
+                                                        Выбрано: {selected.length > 10 ? selected.length : selected.join(", ")}
+                                                    </Typography>
+                                                    {canPrint && <PrintBadgeButton guestsId={selected} page={page + 1} />}
+                                                </Toolbar>
+                                            )}
+                                            <Grid
+                                                container
+                                                spacing={2}
                                                 sx={{
                                                     py: 3,
-                                                    pl: { sm: 2 },
-                                                    pr: { xs: 1, sm: 1 },
-                                                    ...(selected.length > 0 && {
-                                                        bgcolor: (theme) =>
-                                                            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-                                                    }),
+                                                    px: 2,
+                                                    justifyContent: "space-between"
                                                 }}
                                             >
-                                                {
-                                                    selected.length > 0 ? (
-                                                        <>
-                                                            <Typography
-                                                                sx={{ flex: '1 1 100%' }}
-                                                                color="inherit"
-                                                                variant="subtitle1"
-                                                                component="div"
-                                                            >
-                                                                {selected.length} выбрано
-                                                            </Typography>
-                                                            {canPrint && <PrintBadgeButton guestsId={selected} page={page + 1} />}
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <Box sx={{ flex: '1 1 100%'}}>
-                                                                <TextField
-                                                                    sx={{width: 300}}
-                                                                    size="small"
-                                                                    InputProps={{
-                                                                        startAdornment: (
-                                                                            <InputAdornment position="start">
-                                                                                <SvgIcon
-                                                                                    fontSize="small"
-                                                                                    color="action"
-                                                                                >
-                                                                                    <FiSearchIcon/>
-                                                                                </SvgIcon>
-                                                                            </InputAdornment>
-                                                                        )
-                                                                    }}
-                                                                    onChange={handleQueryChange}
-                                                                    placeholder="Поиск"
-                                                                    value={query}
-                                                                    variant="outlined"
-                                                                />
-                                                            </Box>
-                                                            <Box sx={{mr: 2}}>
-                                                                <Autocomplete
-                                                                    options={countries}
-                                                                    getOptionLabel={option => option.name}
-                                                                    value={country}
-                                                                    onChange={(e, value) => {
-                                                                        setCountry(value)
-                                                                        setPage(0);
-                                                                        setSelected([]);
-                                                                    }}
-                                                                    sx={{ minWidth: 250 }}
-                                                                    size="small"
-                                                                    renderInput={params => (
-                                                                        <TextField
-                                                                            label="Страны"
-                                                                            variant="outlined"
-                                                                            {...params}
-                                                                        />
-                                                                    )}
-                                                                />
-                                                            </Box>
-                                                        </>
-                                                    )
-                                                }
-                                            </Toolbar>
+                                                <Grid item>
+                                                    <TextField
+                                                        sx={{width: 300}}
+                                                        size="small"
+                                                        InputProps={{
+                                                            startAdornment: (
+                                                                <InputAdornment position="start">
+                                                                    <SvgIcon
+                                                                        fontSize="small"
+                                                                        color="action"
+                                                                    >
+                                                                        <FiSearchIcon/>
+                                                                    </SvgIcon>
+                                                                </InputAdornment>
+                                                            )
+                                                        }}
+                                                        onChange={handleQueryChange}
+                                                        placeholder="Поиск"
+                                                        value={query}
+                                                        variant="outlined"
+                                                    />
+                                                </Grid>
+                                                <Grid item>
+                                                    <Autocomplete
+                                                        options={countries}
+                                                        getOptionLabel={option => option.name}
+                                                        value={country}
+                                                        onChange={(e, value) => {
+                                                            setCountry(value)
+                                                            setPage(0);
+                                                        }}
+                                                        sx={{ minWidth: 250 }}
+                                                        size="small"
+                                                        renderInput={params => (
+                                                            <TextField
+                                                                label="Страны"
+                                                                variant="outlined"
+                                                                {...params}
+                                                            />
+                                                        )}
+                                                    />
+                                                </Grid>
+                                            </Grid>
                                             <TableContainer>
                                                 <Table>
                                                     <TableHead>
                                                         <TableRow>
-                                                            <TableCell padding="checkbox">
-                                                                <Checkbox
-                                                                    color="primary"
-                                                                    indeterminate={selected.length > 0 && selected.length < rows.length}
-                                                                    checked={rows.length > 0 && selected.length === rows.length}
-                                                                    onChange={handleSelectAllClick}
-                                                                />
-                                                            </TableCell>
+                                                            {canSelect && (
+                                                                <TableCell padding="checkbox">
+                                                                    <Checkbox
+                                                                        color="primary"
+                                                                        indeterminate={countSelectedRow > 0 && countSelectedRow < rows.length}
+                                                                        checked={countSelectedRow > 0 && countSelectedRow === rows.length}
+                                                                        onChange={handleSelectAllClick}
+                                                                    />
+                                                                </TableCell>
+                                                            )}
                                                             <TableCell>№</TableCell>
                                                             <TableCell>QR-code</TableCell>
                                                             <TableCell>ФИО</TableCell>
@@ -267,7 +291,7 @@ const GuestListView = () => {
                                                             <TableCell>Страна</TableCell>
                                                             <TableCell>Статус</TableCell>
                                                             <TableCell>Бейджик</TableCell>
-                                                            <TableCell>Выдано</TableCell>
+                                                            {canIssue && <TableCell>Выдано</TableCell>}
                                                             {(canEdit || canDelete || canPrint) && <TableCell/>}
                                                         </TableRow>
                                                     </TableHead>
@@ -280,29 +304,40 @@ const GuestListView = () => {
 
                                                                         return (
                                                                             <TableRow hover key={index} selected={isItemSelected}>
-                                                                                <TableCell padding="checkbox">
-                                                                                    <Checkbox color="primary" checked={isItemSelected} onClick={(event) => handleClick(event, row.id!)}/>
-                                                                                </TableCell>
+                                                                                {canSelect && (
+                                                                                    <TableCell padding="checkbox">
+                                                                                        <Checkbox color="primary" checked={isItemSelected} onClick={(event) => handleClick(event, row.id!)}/>
+                                                                                    </TableCell>
+                                                                                )}
                                                                                 <TableCell>{row.id}</TableCell>
-                                                                                <TableCell>{row.barcode}</TableCell>
+                                                                                <TableCell>
+                                                                                    <Button onClick={() => setBarcode(row.barcode)} variant="text"
+                                                                                        sx={{
+                                                                                            textTransform: "none"
+                                                                                        }}
+                                                                                    >
+                                                                                        {row.barcode}
+                                                                                    </Button>
+                                                                                </TableCell>
                                                                                 <TableCell component="th" scope="row" padding="none">
                                                                                     {row.fullName}
                                                                                 </TableCell>
                                                                                 <TableCell>{row.passport}</TableCell>
-                                                                                <TableCell>{row.country!.name}</TableCell>
+                                                                                <TableCell sx={{maxWidth: 250}}>{row.country!.name}</TableCell>
                                                                                 <TableCell>{(row.type as IBadgeOption).name}</TableCell>
                                                                                 <TableCell>{row.qty}</TableCell>
-                                                                                <TableCell>
-                                                                                    <IssueButton
-                                                                                        rowId={row.id!}
-                                                                                        badgeIssued={row.badgeIssued!}
-                                                                                        handleIssue={handleIssueBadge}
-                                                                                    />
-                                                                                </TableCell>
+                                                                                {canIssue && (
+                                                                                    <TableCell>
+                                                                                        <IssueButton
+                                                                                            rowId={row.id!}
+                                                                                            badgeIssued={row.badgeIssued!}
+                                                                                            handleIssue={handleIssueBadge}
+                                                                                        />
+                                                                                    </TableCell>
+                                                                                )}
                                                                                 {
                                                                                     (canEdit || canDelete || canPrint) && (
                                                                                         <TableCell style={{ width: 165 }}>
-
                                                                                             {canPrint && <PrintBadgeButton guestsId={[row.id!]} page={page + 1} />}
                                                                                             {canEdit && (
                                                                                                 <IconButton
@@ -351,7 +386,7 @@ const GuestListView = () => {
                     </Root>
                 ) : <LoadingLayout loading={loading} error={error} />
             }
-            <ScanBadgeModal />
+            <ScanBadgeModal barcode={barcode} />
         </>
     );
 };
