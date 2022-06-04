@@ -127,6 +127,14 @@ const ScanBadgeModal: React.FC<{barcode?: string}> = ({barcode}) => {
                                         <Grid item xs={7}>
                                             <Grid container spacing={1} alignItems="center" sx={{ mb: 2 }}>
                                                 <Grid item xs={6}>
+                                                    <Typography variant="h6">ID:</Typography>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.id}</Typography>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                                                <Grid item xs={6}>
                                                     <Typography variant="h6">ФИО:</Typography>
                                                 </Grid>
                                                 <Grid item xs={6}>
