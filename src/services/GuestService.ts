@@ -24,6 +24,7 @@ class GuestService {
             type: guest.type,
             countryId: guest.countryId,
             locations: guest.locations,
+            hasFloater: guest.hasFloater,
         };
 
         const blob = new Blob([JSON.stringify(json)], {type: 'application/json'});
@@ -49,6 +50,7 @@ class GuestService {
             type: guest.type,
             countryId: guest.countryId,
             locations: guest.locations,
+            hasFloater: guest.hasFloater,
         };
 
         const blob = new Blob([JSON.stringify(json)], {type: 'application/json'});
