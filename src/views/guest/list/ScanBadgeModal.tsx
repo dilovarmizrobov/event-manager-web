@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Box, CircularProgress,
+    Box, ButtonProps, CircularProgress,
     Dialog,
-    Grid,
+    Grid, IconButton,
     Typography
 } from "@mui/material";
 import guestService from "../../../services/GuestService";
 import {GuestTypeEnum} from "../../../constants";
 import {styled} from "@mui/material/styles";
+import {MdClose, MdCheck} from "react-icons/md";
+import {purple} from "@mui/material/colors";
 
 const StyledBox = styled(Box)(() => ({
     height: 70,
@@ -31,7 +33,16 @@ interface IVerifyGuest {
     photo: string;
     type: GuestTypeEnum;
     passed: boolean;
+    hasFloater: boolean;
 }
+
+const FloaterButton = styled(IconButton)<ButtonProps>(({ theme }) => ({
+    color: theme.palette.getContrastText(purple[500]),
+    backgroundColor: '#48e574',
+    '&:hover': {
+        backgroundColor: '#48e574',
+    },
+}));
 
 const ScanBadgeModal: React.FC<{barcode?: string}> = ({barcode}) => {
     const [verifyGuest, setVerifyGuest] = useState<IVerifyGuest>()
@@ -146,14 +157,29 @@ const ScanBadgeModal: React.FC<{barcode?: string}> = ({barcode}) => {
                                                     <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.type}</Typography>
                                                 </Grid>
                                             </Grid>
-                                            {/*<Grid container spacing={1} alignItems="center">*/}
-                                            {/*    <Grid item xs={6}>*/}
-                                            {/*        <Typography variant="h6">Номер пригласительного:</Typography>*/}
-                                            {/*    </Grid>*/}
-                                            {/*    <Grid item xs={6}>*/}
-                                            {/*        <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.barcode}</Typography>*/}
-                                            {/*    </Grid>*/}
-                                            {/*</Grid>*/}
+                                            <Grid container spacing={1} alignItems="center">
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6">Флотер:</Typography>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                                        {verifyGuest?.hasFloater ? (
+                                                            <FloaterButton>
+                                                                <MdCheck size={20}/>
+                                                            </FloaterButton>
+                                                        ) : (
+                                                            <FloaterButton sx={{
+                                                                backgroundColor: '#eb4234',
+                                                                '&:hover': {
+                                                                    backgroundColor: '#eb4234',
+                                                                }}}
+                                                            >
+                                                                <MdClose size={20}/>
+                                                            </FloaterButton>
+                                                        )}
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
                                         </Grid>
                                     </Grid>
                                 </>
@@ -166,4 +192,4 @@ const ScanBadgeModal: React.FC<{barcode?: string}> = ({barcode}) => {
     );
 };
 
-export default ScanBadgeModal;
+export default React.memo(ScanBadgeModal);

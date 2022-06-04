@@ -17,4 +17,5 @@ export interface IGuest {
     country?: ICountryResponse;
     locations: number[] | ILocation[];
     qty?: number;
+    hasFloater: boolean;
 }

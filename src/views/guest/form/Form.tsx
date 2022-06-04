@@ -8,7 +8,7 @@ import {
     Button,
     Card,
     CardContent,
-    Checkbox,
+    Checkbox, FormControlLabel,
     Grid,
     MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField, Typography
@@ -39,6 +39,7 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountr
         type: guest ? (guest.type as IBadgeOption).id : badges[0].id,
         countryId: guest?.country?.id || countries[0].id,
         locations: locations,
+        hasFloater: guest?.hasFloater || false,
     }
 
     const validationSchema = Yup.object().shape({
@@ -281,6 +282,20 @@ const Form: React.FC<{guest?: IGuest, locations: ILocation[], countries: ICountr
                                                     ))
                                                 }
                                             </TextField>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        name="hasFloater"
+                                                        color="primary"
+                                                        onBlur={props.handleBlur}
+                                                        onChange={props.handleChange}
+                                                        checked={props.values.hasFloater}
+                                                    />
+                                                }
+                                                label="Флотер"
+                                            />
                                         </Grid>
                                     </Grid>
                                 </Grid>

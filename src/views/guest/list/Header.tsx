@@ -42,4 +42,4 @@ const Header: React.FC<{setUpdateRows: Function}> = ({setUpdateRows}) => {
     );
 };
 
-export default Header;
+export default React.memo(Header);

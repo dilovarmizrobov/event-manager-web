@@ -6,6 +6,8 @@ import {styled} from "@mui/material/styles";
 import ConfirmationModal from "../../../components/ConfirmationModal";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import guestService from "../../../services/GuestService";
+import {issueBadge} from "../../../store/reducers/guestListSlice";
+import {useAppDispatch} from "../../../store/hooks";
 
 const StyledCircularProgress = styled(CircularProgress)(() => ({
     position: 'absolute',
@@ -15,7 +17,8 @@ const StyledCircularProgress = styled(CircularProgress)(() => ({
     marginLeft: '-22px',
 }))
 
-const IssueButton: React.FC<{rowId: number, badgeIssued: boolean, handleIssue: Function}> = ({rowId, badgeIssued, handleIssue}) => {
+const IssueButton: React.FC<{rowId: number, badgeIssued: boolean}> = ({rowId, badgeIssued}) => {
+    const dispatch = useAppDispatch()
     const {enqueueSnackbar} = useSnackbar()
     const [loading, setLoading] = useState(false)
     const [openModal, setOpenModal] = useState(false)
@@ -28,7 +31,7 @@ const IssueButton: React.FC<{rowId: number, badgeIssued: boolean, handleIssue: F
             await guestService.putIssueBadgeGuest(rowId)
 
             enqueueSnackbar(`Успешно`, {variant: 'success'})
-            handleIssue(rowId)
+            dispatch(issueBadge(rowId))
         } catch (error: any) {
             enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
         } finally {

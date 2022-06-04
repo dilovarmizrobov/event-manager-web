@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useEffect, useReducer} from 'react';
 import Header from "./Header";
 import {
     Autocomplete,
@@ -11,16 +11,14 @@ import {
 } from "@mui/material";
 import Page from "../../../components/Page";
 import {styled} from "@mui/material/styles";
-import {FiSearch as FiSearchIcon, FiEdit} from "react-icons/fi";
+import {FiSearch, FiEdit} from "react-icons/fi";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { alpha } from '@mui/material/styles';
-import {IGuest} from "../../../models/IGuest";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import guestService from "../../../services/GuestService";
 import {useSnackbar} from "notistack";
 import useDebounce from "../../../hooks/useDebounce";
-import {NavLink as RouterLink, useNavigate} from "react-router-dom";
-import {ICountryOption} from "../../../models/ICountry";
+import {NavLink as RouterLink} from "react-router-dom";
 import countryService from "../../../services/CountryService";
 import LoadingLayout from "../../../components/LoadingLayout";
 import NoFoundTableBody from "../../../components/NoFoundTableBody";
@@ -31,6 +29,15 @@ import hasPermission from "../../../utils/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
 import {IBadgeOption} from "../../../models/IBadge";
 import IssueButton from "./IssueButton";
+import {useAppDispatch, useAppSelector} from "../../../store/hooks";
+import {
+    barcodeChange, changePage, changeRowsPerPage, countryChange, deleteRow,
+    fetchCountryError,
+    fetchCountrySuccess, fetchGuestError, fetchGuestPending, fetchGuestSuccess,
+    queryChange, reset,
+    selectGuestList, setSelectedAll, setSelectedOne, unsetSelected
+} from "../../../store/reducers/guestListSlice";
+import {MdCheck, MdClose} from "react-icons/md";
 
 const Root = styled('div')(({ theme }) => ({
     minHeight: '100%',
@@ -39,137 +46,55 @@ const Root = styled('div')(({ theme }) => ({
 }))
 
 const GuestListView = () => {
+    const dispatch = useAppDispatch()
+    const {query, countries, loadingCountry, errorCountry, rowsCount, rows, loadingRow, barcode, country, page,
+        rowsPerPage, selected} = useAppSelector(selectGuestList)
     const canEdit = hasPermission(PERMISSIONS.EDIT.GUEST)
     const canDelete = hasPermission(PERMISSIONS.DELETE.GUEST)
     const canPrint = hasPermission(PERMISSIONS.PRINT_BADGE)
     const canIssue = hasPermission(PERMISSIONS.ISSUE_BADGE)
     const canSelect = hasPermission(PERMISSIONS.SELECT_GUEST)
     const {enqueueSnackbar} = useSnackbar()
-    const navigate = useNavigate()
     const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
-    const [page, setPage] = useState<number>(0)
-    const [size, setSize] = useState<number>(50)
-    const [query, setQuery] = useState('')
     const debouncedSearchTerm = useDebounce(query, 500)
-    const [selected, setSelected] = useState<number[]>([])
-    const [loading, setLoading] = useState(true)
-    const [loadingRow, setLoadingRow] = useState(true)
-    const [error, setError] = useState(false)
-    const [rows, setRows] = useState<IGuest[]>([])
-    const [rowsCount, setRowsCount] = useState<number>(0);
-    const [countries, setCountries] = useState<ICountryOption[]>([])
-    const [country, setCountry] = useState<ICountryOption | null>(null)
-    const [barcode, setBarcode] = useState<string | undefined>()
 
+    useEffect(() => () => {dispatch(reset())}, [dispatch])
+    
     useEffect(() => {
         let cancel = false;
 
         (async () => {
             try {
                 const dataCountries: any = await countryService.getOptionCountries()
-                
-                if (!cancel) setCountries(dataCountries)
+
+                if (!cancel) dispatch(fetchCountrySuccess(dataCountries))
             } catch (error: any) {
-                !cancel && setError(true)
+                !cancel && dispatch(fetchCountryError())
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-            } finally {
-                !cancel && setLoading(false)
             }
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar])
+    }, [dispatch, enqueueSnackbar])
 
     useEffect(() => {
         let cancel = false;
 
         (async () => {
             try {
-                setLoadingRow(true)
-                setRows([])
+                dispatch(fetchGuestPending())
 
-                const data: any = await guestService.getListGuests(page + 1, size, debouncedSearchTerm, country?.id || 0)
+                const data: any = await guestService.getListGuests(page + 1, rowsPerPage, debouncedSearchTerm, country?.id || 0)
 
-                if (!cancel) {
-                    setRows(data.content)
-                    setRowsCount(data.totalElements)
-                }
+                if (!cancel) dispatch(fetchGuestSuccess({rows: data.content, rowsCount: data.totalElements}))
             } catch (error: any) {
+                dispatch(fetchGuestError())
                 enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
-            } finally {
-                !cancel && setLoadingRow(false)
             }
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar, page, size, debouncedSearchTerm, country, navigate, updateRows])
-
-    const handleQueryChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        setQuery(event.target.value);
-        setPage(0);
-    };
-
-    const handleChangePage = (event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSize(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const rowIds = rows.map(item => item.id!);
-
-        if (event.target.checked) {
-            const numbers: number[] = [];
-
-            for (let i = 0; i < rowIds.length; i++) {
-                if (selected.indexOf(rowIds[i]) === -1) {
-                    numbers.push(rowIds[i])
-                }
-            }
-
-            setSelected([...selected, ...numbers])
-            return;
-        }
-
-        setSelected([...selected].filter(n => !rowIds.includes(n)));
-    };
-
-    const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
-        const selectedIndex = selected.indexOf(id);
-        let newSelected: number[] = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        setSelected(newSelected);
-    };
-
-    const handleDeleteRow = (rowId: number) => {
-        let newRows = [...rows]
-        let index = newRows.findIndex(row => row.id! === rowId)
-        newRows.splice(index, 1)
-        setRows(newRows)
-    }
-
-    const handleIssueBadge = (rowId: number) => {
-        let newRows = [...rows]
-        let index = newRows.findIndex(row => row.id! === rowId)
-        newRows[index].badgeIssued = true
-        setRows(newRows)
-    }
+    }, [enqueueSnackbar, page, rowsPerPage, debouncedSearchTerm, country, updateRows, dispatch])
 
     const getCountSelectedRow = () => {
         let count = 0;
@@ -184,13 +109,14 @@ const GuestListView = () => {
     }
 
     const isSelected = (id: number) => selected.indexOf(id) !== -1;
+
     const countSelectedRow = getCountSelectedRow()
 
     return (
         <>
             <Page title="Гости" />
             {
-                !loading && !error ? (
+                !loadingCountry && !errorCountry ? (
                     <Root>
                         <Container maxWidth="xl">
                             <Header setUpdateRows={setUpdateRows} />
@@ -207,8 +133,11 @@ const GuestListView = () => {
                                                         bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
                                                     }}
                                                 >
+                                                    <IconButton onClick={() => dispatch(unsetSelected())}>
+                                                        <MdClose size={20}/>
+                                                    </IconButton>
                                                     <Typography
-                                                        sx={{ flex: '1 1 100%' }}
+                                                        sx={{flex: '1 1 100%', ml: 1}}
                                                         color="inherit"
                                                         variant="subtitle1"
                                                         component="div"
@@ -238,12 +167,12 @@ const GuestListView = () => {
                                                                         fontSize="small"
                                                                         color="action"
                                                                     >
-                                                                        <FiSearchIcon/>
+                                                                        <FiSearch/>
                                                                     </SvgIcon>
                                                                 </InputAdornment>
                                                             )
                                                         }}
-                                                        onChange={handleQueryChange}
+                                                        onChange={(event) => dispatch(queryChange(event.target.value))}
                                                         placeholder="Поиск"
                                                         value={query}
                                                         variant="outlined"
@@ -255,8 +184,7 @@ const GuestListView = () => {
                                                         getOptionLabel={option => option.name}
                                                         value={country}
                                                         onChange={(e, value) => {
-                                                            setCountry(value)
-                                                            setPage(0);
+                                                            dispatch(countryChange(value))
                                                         }}
                                                         sx={{ minWidth: 250 }}
                                                         size="small"
@@ -280,7 +208,7 @@ const GuestListView = () => {
                                                                         color="primary"
                                                                         indeterminate={countSelectedRow > 0 && countSelectedRow < rows.length}
                                                                         checked={countSelectedRow > 0 && countSelectedRow === rows.length}
-                                                                        onChange={handleSelectAllClick}
+                                                                        onChange={(event) => dispatch(setSelectedAll(event.target.checked))}
                                                                     />
                                                                 </TableCell>
                                                             )}
@@ -290,6 +218,7 @@ const GuestListView = () => {
                                                             <TableCell>Паспорт</TableCell>
                                                             <TableCell>Страна</TableCell>
                                                             <TableCell>Статус</TableCell>
+                                                            <TableCell align="center">Флотер</TableCell>
                                                             <TableCell>Бейджик</TableCell>
                                                             {canIssue && <TableCell>Выдано</TableCell>}
                                                             {(canEdit || canDelete || canPrint) && <TableCell/>}
@@ -306,32 +235,30 @@ const GuestListView = () => {
                                                                             <TableRow hover key={index} selected={isItemSelected}>
                                                                                 {canSelect && (
                                                                                     <TableCell padding="checkbox">
-                                                                                        <Checkbox color="primary" checked={isItemSelected} onClick={(event) => handleClick(event, row.id!)}/>
+                                                                                        <Checkbox color="primary" checked={isItemSelected} onClick={() => dispatch(setSelectedOne(row.id!))}/>
                                                                                     </TableCell>
                                                                                 )}
                                                                                 <TableCell>{row.id}</TableCell>
                                                                                 <TableCell>
-                                                                                    <Button onClick={() => setBarcode(row.barcode)} variant="text"
-                                                                                        sx={{
-                                                                                            textTransform: "none"
-                                                                                        }}
-                                                                                    >
+                                                                                    <Button onClick={() => dispatch(barcodeChange(row.barcode!))} variant="text" sx={{textTransform: "none"}}>
                                                                                         {row.barcode}
                                                                                     </Button>
                                                                                 </TableCell>
-                                                                                <TableCell component="th" scope="row" padding="none">
+                                                                                <TableCell>
                                                                                     {row.fullName}
                                                                                 </TableCell>
                                                                                 <TableCell>{row.passport}</TableCell>
                                                                                 <TableCell sx={{maxWidth: 250}}>{row.country!.name}</TableCell>
                                                                                 <TableCell>{(row.type as IBadgeOption).name}</TableCell>
+                                                                                <TableCell align="center">
+                                                                                    {row.hasFloater ? <MdCheck size={20} color="green"/> : <MdClose size={20} color="red"/>}
+                                                                                </TableCell>
                                                                                 <TableCell>{row.qty}</TableCell>
                                                                                 {canIssue && (
                                                                                     <TableCell>
                                                                                         <IssueButton
                                                                                             rowId={row.id!}
                                                                                             badgeIssued={row.badgeIssued!}
-                                                                                            handleIssue={handleIssueBadge}
                                                                                         />
                                                                                     </TableCell>
                                                                                 )}
@@ -352,7 +279,7 @@ const GuestListView = () => {
                                                                                                 <DeleteButtonTable
                                                                                                     rowId={row.id!}
                                                                                                     onDelete={guestService.deleteGuest}
-                                                                                                    handleDelete={handleDeleteRow}
+                                                                                                    handleDelete={(rowId: number) => dispatch(deleteRow(rowId))}
                                                                                                 />
                                                                                             )}
                                                                                         </TableCell>
@@ -374,17 +301,17 @@ const GuestListView = () => {
                                         count={rowsCount}
                                         labelRowsPerPage={'Строк на странице:'}
                                         page={page}
-                                        onPageChange={handleChangePage}
-                                        rowsPerPage={size}
+                                        onPageChange={(event, newPage) => dispatch(changePage(newPage))}
+                                        rowsPerPage={rowsPerPage}
                                         rowsPerPageOptions={[50, 100, 500, 1000]}
-                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                        onRowsPerPageChange={(event) => dispatch(changeRowsPerPage(parseInt(event.target.value, 10)))}
                                         labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
                                     />
                                 </Card>
                             </Box>
                         </Container>
                     </Root>
-                ) : <LoadingLayout loading={loading} error={error} />
+                ) : <LoadingLayout loading={loadingCountry} error={errorCountry} />
             }
             <ScanBadgeModal barcode={barcode} />
         </>
