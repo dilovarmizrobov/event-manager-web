@@ -22,9 +22,19 @@ export const navConfigMain: INavConfig[] = [
         subheader: 'Главная',
         items: [
             {
+                title: 'Дашборд',
+                icon: FaUsers,
+                href: '/dashboards'
+            },
+            {
                 title: 'Гости',
                 icon: FaUsers,
                 href: '/guests',
+            },
+            {
+                title: 'Логирование',
+                icon: FaUsers,
+                href: '/loggers',
             },
             {
                 title: 'Места проведения',

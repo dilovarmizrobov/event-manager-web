@@ -33,6 +33,8 @@ import VerifyView from "./views/verify/VerifyView";
 import AdminUserListView from "./views/admin/user/list/UsersListView";
 import AdminUserCreateView from "./views/admin/user/form/UserCreateView";
 import AdminUserEditView from "./views/admin/user/form/UserEditView";
+import LoggerListView from "./views/logger/LoggerListView";
+import DashboardList from "./views/dashboard/list/DashboardList";
 
 interface CustomRouteObject extends RouteObject {
     perm?: UserRolesEnum[],
@@ -100,9 +102,18 @@ const routes: CustomRouteObject[] = [
                                 element: <MainLayout />,
                                 children: [
                                     {
+                                        path: '/dashboards',
+                                        element: <DashboardList />
+                                    },
+                                    {
                                         path: '/guests',
                                         element: <GuestListView />
                                     },
+                                    {
+                                        path: '/loggers',
+                                        element: <LoggerListView />
+                                    },
+
                                     {
                                         path: '/guests/create',
                                         perm: PERMISSIONS.CREATE.GUEST,

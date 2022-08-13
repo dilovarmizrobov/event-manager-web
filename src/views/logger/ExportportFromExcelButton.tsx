@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
+import {Box, Button, CircularProgress} from "@mui/material";
 import {useSnackbar} from "notistack";
-import errorMessageHandler from "../../../utils/errorMessageHandler";
-import ConfirmationModal from "../../../components/ConfirmationModal";
-import {Box, CircularProgress, IconButton, Tooltip} from "@mui/material";
+import errorMessageHandler from "../../utils/errorMessageHandler";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import {styled} from "@mui/material/styles";
-import {FiPrinter} from "react-icons/fi";
-import guestService from "../../../services/GuestService";
+import loggerService from "../../services/LoggerService";
 
 const StyledCircularProgress = styled(CircularProgress)(() => ({
     position: 'absolute',
@@ -15,7 +14,7 @@ const StyledCircularProgress = styled(CircularProgress)(() => ({
     marginLeft: '-22px',
 }))
 
-const PrintBadgeButton: React.FC<{guestsId: number[], page: number}> = ({guestsId, page}) => {
+const ExportportFromExcelButton: React.FC<{page: number}> = ({page}) => {
     const {enqueueSnackbar} = useSnackbar()
     const [loading, setLoading] = useState(false)
     const [isOpen, setOpen] = useState(false)
@@ -25,12 +24,12 @@ const PrintBadgeButton: React.FC<{guestsId: number[], page: number}> = ({guestsI
             setOpen(false)
             setLoading(true)
 
-            let response = await guestService.getPrintBadgeGuests(guestsId) as Blob
+            let response = await loggerService.getExcelList() as Blob
 
             const url = window.URL.createObjectURL(new Blob([response]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `badges_${page}_${guestsId.length}.pdf`);
+            link.setAttribute('download', `logger_${page}.xlsx`);
             document.body.appendChild(link);
             link.click();
 
@@ -45,21 +44,30 @@ const PrintBadgeButton: React.FC<{guestsId: number[], page: number}> = ({guestsI
     return (
         <>
             <Box sx={{position: 'relative', display: 'inline-block'}}>
-                <Tooltip title="Печать">
-                    <IconButton
-                        size="large"
-                        onClick={() => setOpen(true)}
-                        disabled={loading}
-                    >
-                        <FiPrinter size={20}/>
-                    </IconButton>
-                </Tooltip>
+                {/*<Tooltip title="Печать">*/}
+                {/*    <IconButton*/}
+                {/*        size="large"*/}
+                {/*        onClick={() => setOpen(true)}*/}
+                {/*        disabled={loading}*/}
+                {/*    >*/}
+                {/*        <FiPrinter size={20}/>*/}
+                {/*    </IconButton>*/}
+                {/*</Tooltip>*/}
+                <Button
+                    color="secondary"
+                    variant="contained"
+                    sx={{marginRight: 2}}
+                    component="span"
+                    onClick={() => setOpen(true)}
+                    disabled={loading}
+                >
+                    Экспорт с Excel
+                </Button>
                 {loading && <StyledCircularProgress size={44} color='secondary' thickness={2}/>}
             </Box>
             <ConfirmationModal
                 isOpen={isOpen}
-                title={"Вы уверены, что хотите создать бейдж?"}
-                description={'Пожалуйста, убедитесь, что вы не ошиблись с выбором гостя.'}
+                title={"Вы уверены, что хотите загрузить файл?"}
                 onClose={() => setOpen(false)}
                 onAccept={handleAccept}
             />
@@ -67,4 +75,4 @@ const PrintBadgeButton: React.FC<{guestsId: number[], page: number}> = ({guestsI
     );
 };
 
-export default PrintBadgeButton;
+export default ExportportFromExcelButton;

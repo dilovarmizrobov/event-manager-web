@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from "./reducers/authSlice";
 import guestListReducer from "./reducers/guestListSlice";
+import loggerListReducer from "./reducers/loggerListSlice";
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
         guestList: guestListReducer,
+        loggertList: loggerListReducer,
     },
 })
 
