@@ -5,6 +5,7 @@ import errorMessageHandler from "../../utils/errorMessageHandler";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import {styled} from "@mui/material/styles";
 import loggerService from "../../services/LoggerService";
+import {FiUpload} from "react-icons/fi";
 
 const StyledCircularProgress = styled(CircularProgress)(() => ({
     position: 'absolute',
@@ -60,8 +61,9 @@ const ExportportFromExcelButton: React.FC<{page: number}> = ({page}) => {
                     component="span"
                     onClick={() => setOpen(true)}
                     disabled={loading}
+                    startIcon={loading ? <CircularProgress color="inherit" size={20} /> : <FiUpload />}
                 >
-                    Экспорт с Excel
+                    Экспорт в Excel
                 </Button>
                 {loading && <StyledCircularProgress size={44} color='secondary' thickness={2}/>}
             </Box>

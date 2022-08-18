@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useReducer} from 'react';
 import Header from "./Header";
 import {
     Autocomplete,
@@ -56,6 +56,7 @@ const GuestListView = () => {
     const canSelect = hasPermission(PERMISSIONS.SELECT_GUEST)
     const {enqueueSnackbar} = useSnackbar()
     const debouncedSearchTerm = useDebounce(query, 500)
+    const [update, setUpdate] =  useReducer(x => x + 1, 0);
 
     useEffect(() => () => {dispatch(reset())}, [dispatch])
 
@@ -93,7 +94,7 @@ const GuestListView = () => {
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar, page, rowsPerPage, debouncedSearchTerm, country, dispatch])
+    }, [enqueueSnackbar, page, rowsPerPage, debouncedSearchTerm, update, country, dispatch])
 
     const getCountSelectedRow = () => {
         let count = 0;
@@ -118,7 +119,7 @@ const GuestListView = () => {
                 !loadingCountry && !errorCountry ? (
                     <Root>
                         <Container maxWidth="xl">
-                            <Header/>
+                            <Header setUpdate={setUpdate}/>
                             <Box mt={3}>
                                 <Card>
                                     <PerfectScrollbar>

@@ -1,7 +1,9 @@
 import apiHelper from "./ApiHelper";
 
 class AppService {
-    getDashboardData = () => apiHelper.get(`/guests/location/dashboard`)
+    getDashboardData = (locationId: number) => {
+        return apiHelper.get(`/guests/location/dashboard`, {locationId})
+    }
 }
 
 const appService = new AppService()

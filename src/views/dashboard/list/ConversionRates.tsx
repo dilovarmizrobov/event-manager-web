@@ -9,7 +9,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import {IRate} from "../../models/Dashboard";
+import {IRate} from "../../../models/Dashboard";
 
 ChartJS.register(
     CategoryScale,
@@ -28,7 +28,7 @@ export const options = {
         },
         title: {
             display: true,
-            text: 'Загруженность по типу бейджов',
+            text: 'Загруженность по типу бейджей',
         },
     },
 };

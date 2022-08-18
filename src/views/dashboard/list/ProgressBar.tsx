@@ -35,7 +35,7 @@ const ProgressBar: React.FC<{progress: IProgress}> = ({progress}) => {
                     <Grid container spacing={3}>
                         <Grid item>
                             <Typography color="text.primary">
-                                Общая кол - во
+                                Общее кол - во
                             </Typography>
                             <Text sx={{color:'#3380FF'}}>
                                 {progress.attended + progress.absent}
@@ -48,7 +48,7 @@ const ProgressBar: React.FC<{progress: IProgress}> = ({progress}) => {
                             <Typography variant={"subtitle2"} color="text.primary">
                                 Присутствовали
                             </Typography>
-                            <Text sx={{color: "#00C4DF"}} >
+                            <Text sx={{color: "#3380FF"}} >
                                 {progress.attended}
                             </Text>
                         </Grid>

@@ -132,7 +132,7 @@ const CountryListView = () => {
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell>Название</TableCell>
-                                                    <TableCell>аббревиатура</TableCell>
+                                                    <TableCell>Аббревиатура</TableCell>
                                                     <TableCell>Флаг</TableCell>
                                                     <TableCell/>
                                                 </TableRow>
