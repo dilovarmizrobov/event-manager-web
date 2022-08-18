@@ -1,9 +1,10 @@
-import {FaUserFriends, FaUsers} from "react-icons/fa";
+import {FaBlogger, FaUserFriends, FaUsers} from "react-icons/fa";
 import {IoFlag, IoLocationSharp} from "react-icons/io5";
 import PERMISSIONS from "../constants/permissions";
 import {BsPersonBadge} from "react-icons/bs";
 import {IconType} from "react-icons";
 import {UserRolesEnum} from "../constants";
+import {MdDashboard} from "react-icons/md";
 
 export interface INavItem {
     title: string;
@@ -22,9 +23,19 @@ export const navConfigMain: INavConfig[] = [
         subheader: 'Главная',
         items: [
             {
+                title: 'Дашборд',
+                icon: MdDashboard,
+                href: '/dashboards'
+            },
+            {
                 title: 'Гости',
                 icon: FaUsers,
                 href: '/guests',
+            },
+            {
+                title: 'Логирование',
+                icon: FaBlogger,
+                href: '/loggers',
             },
             {
                 title: 'Места проведения',
@@ -45,7 +56,7 @@ export const navConfigMain: INavConfig[] = [
                 perm: PERMISSIONS.LIST.COUNTRY,
             },
             {
-                title: 'Шаблоны бейджов',
+                title: 'Шаблоны бейджей',
                 icon: BsPersonBadge,
                 href: '/badge-templates',
                 perm: PERMISSIONS.LIST.BADGE,

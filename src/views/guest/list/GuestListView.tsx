@@ -55,11 +55,11 @@ const GuestListView = () => {
     const canIssue = hasPermission(PERMISSIONS.ISSUE_BADGE)
     const canSelect = hasPermission(PERMISSIONS.SELECT_GUEST)
     const {enqueueSnackbar} = useSnackbar()
-    const [updateRows, setUpdateRows] = useReducer(x => x + 1, 0);
     const debouncedSearchTerm = useDebounce(query, 500)
+    const [update, setUpdate] =  useReducer(x => x + 1, 0);
 
     useEffect(() => () => {dispatch(reset())}, [dispatch])
-    
+
     useEffect(() => {
         let cancel = false;
 
@@ -94,7 +94,7 @@ const GuestListView = () => {
         })()
 
         return () => {cancel = true}
-    }, [enqueueSnackbar, page, rowsPerPage, debouncedSearchTerm, country, updateRows, dispatch])
+    }, [enqueueSnackbar, page, rowsPerPage, debouncedSearchTerm, update, country, dispatch])
 
     const getCountSelectedRow = () => {
         let count = 0;
@@ -119,7 +119,7 @@ const GuestListView = () => {
                 !loadingCountry && !errorCountry ? (
                     <Root>
                         <Container maxWidth="xl">
-                            <Header setUpdateRows={setUpdateRows} />
+                            <Header setUpdate={setUpdate}/>
                             <Box mt={3}>
                                 <Card>
                                     <PerfectScrollbar>

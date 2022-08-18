@@ -2,13 +2,12 @@ import React from 'react';
 import {Button, Grid, SvgIcon, Typography} from "@mui/material";
 import {Link as RouterLink} from "react-router-dom";
 import {FiPlusCircle as PlusCircleIcon} from "react-icons/fi";
+import ImportFromExcelButton from "./ImportFromExcelButton";
 import hasPermission from "../../../utils/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
-import ImportFromExcelButton from "./ImportFromExcelButton";
 
-const Header: React.FC<{setUpdateRows: Function}> = ({setUpdateRows}) => {
+const Header: React.FC<{setUpdate: Function}> = ({setUpdate}) => {
     const canAdd = hasPermission(PERMISSIONS.CREATE.GUEST)
-
     return (
         <Grid
             container
@@ -23,7 +22,7 @@ const Header: React.FC<{setUpdateRows: Function}> = ({setUpdateRows}) => {
             {
                 canAdd && (
                     <Grid item>
-                        <ImportFromExcelButton handleImport={() => setUpdateRows()} />
+                        <ImportFromExcelButton handleImport={() => setUpdate()}/>
                         <Button
                             color="secondary"
                             variant="contained"
@@ -38,6 +37,7 @@ const Header: React.FC<{setUpdateRows: Function}> = ({setUpdateRows}) => {
                     </Grid>
                 )
             }
+
         </Grid>
     );
 };

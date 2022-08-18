@@ -134,7 +134,7 @@ const EventListView = () => {
         }
 
         dispatch(updateAuthEvent(event))
-        navigate('/guests')
+        navigate('/dashboards')
     }
 
     const handleComplete = (event: IEventResponse) => {

@@ -13,7 +13,7 @@ const Header = () => {
         >
             <Grid item>
                 <Typography variant="h5" color="textPrimary">
-                    Шаблоны бейджов
+                    Шаблоны бейджей
                 </Typography>
             </Grid>
             <Grid item>
