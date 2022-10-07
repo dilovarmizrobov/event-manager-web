@@ -74,18 +74,6 @@ const LoggerListView = () => {
         return () => {cancel = true}
     }, [enqueueSnackbar, page, rowsPerPage, debouncedSearchTerm, dispatch])
 
-    const formattedTime = (time : any)  => {
-        const date = new Date(time);
-        const [month, day, year] = [date.getMonth(), date.getDate(), date.getFullYear()];
-        const [hours, minutes, seconds] = [date.getHours(), date.getMinutes(), date.getSeconds()];
-        let getDay = day <= 9 ? '0' + day : day
-        let getMonth = month <= 9 ? '0' + month : month
-        let getHour = hours <= 9 ? '0' + hours : hours
-        let getMinute = minutes <= 9 ? '0' + minutes : minutes
-        let getSecond = seconds <= 9 ? '0' + seconds : seconds
-        return getDay +'/'+ getMonth +'/'+ year + " " + getHour + ":" + getMinute + ":" + getSecond;
-    }
-
     return (
         <>
             <Page title="Логирование"/>
@@ -160,7 +148,7 @@ const LoggerListView = () => {
                                                                     <TableCell>{row.country}</TableCell>
                                                                     <TableCell>{row.status}</TableCell>
                                                                     {/*<TableCell>{row.guardName}</TableCell>*/}
-                                                                    <TableCell>{formattedTime(row.createdDate)}</TableCell>
+                                                                    <TableCell>{row.createdDate}</TableCell>
                                                                 </TableRow>
                                                             )
                                                             })

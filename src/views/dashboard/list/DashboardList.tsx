@@ -6,7 +6,7 @@ import Chart from "./Chart";
 import ProgressBar from "./ProgressBar";
 import ConversionRates from "./ConversionRates";
 import {useSnackbar} from "notistack";
-import {IDashboard} from "../../../models/Dashboard";
+import {IChart, IDashboard, IProgress, IRate} from "../../../models/Dashboard";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import LoadingLayout from "../../../components/LoadingLayout";
 import appService from "../../../services/AppService";
@@ -20,12 +20,55 @@ const Root = styled('div')(({theme}) => ({
     paddingBottom: theme.spacing(3)
 }))
 
-const DashboardList = () => {
+const initialDashboardState: IDashboard = {
+    progress: {
+        attended: 0,
+        absent: 0
+    } as IProgress,
+    chart: [] as IChart[],
+    rate: [] as IRate[],
+}
+
+const DashboardList: React.FC = () => {
     const [locations, setLocations] = useState<ILocation[]>([])
-    const [locationId, setLocationId] = useState<number>()
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(false)
+    const {enqueueSnackbar} = useSnackbar()
+
+    useEffect(() => {
+        let cancel = false;
+
+        (async () => {
+            try {
+                const dataLocation = await eventLocationService.getLocations() as ILocation[]
+
+                if (!cancel) setLocations(dataLocation)
+            } catch (error: any) {
+                !cancel && setError(true)
+                enqueueSnackbar(errorMessageHandler(error), {variant: 'error'})
+            } finally {
+                !cancel && setLoading(false)
+            }
+        })()
+
+        return () => {
+            cancel = true
+        }
+    }, [enqueueSnackbar])
+
+    return (
+        <>
+            <Page title={"Дашборд"}/>
+            {loading ? <LoadingLayout loading={loading} error={error}/> : <Dashboard locations={locations}/>}
+        </>
+    )
+}
+
+const Dashboard: React.FC<{locations: ILocation[]}> = ({locations}) => {
+    const [locationId, setLocationId] = useState<number | undefined>(locations.length > 0 ? locations[0].id : undefined)
     const {enqueueSnackbar} = useSnackbar()
     const navigate = useNavigate()
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [dashboardData, setDashboardData] = useState<IDashboard>()
 
@@ -34,24 +77,12 @@ const DashboardList = () => {
 
         (async () => {
             try {
-                setLoading(true)
-
-                if (locations.length === 0) {
-                    const dataLocation = await eventLocationService.getLocations() as ILocation[]
-
-                    if (dataLocation.length === 0) {
-                        navigate(-1)
-                        enqueueSnackbar('Добавьте с начала место', {variant: 'info'})
-                    } else if (!cancel) {
-                        setLocations(dataLocation)
-                        setLocationId(dataLocation[0].id!)
-                    }
-                }
-
                 if (locationId) {
                     const data = await appService.getDashboardData(locationId) as IDashboard
 
                     if (!cancel) setDashboardData(data)
+                } else {
+                    setDashboardData(initialDashboardState)
                 }
             } catch (error: any) {
                 !cancel && setError(true)
@@ -89,12 +120,13 @@ const DashboardList = () => {
                                             }}
                                         >
                                         <FormControl sx={{minWidth: 120}} size="small" variant="outlined">
-                                            <InputLabel shrink id="location-select-label">Место</InputLabel>
+                                            <InputLabel id="location-select-label">Место</InputLabel>
                                             <Select
                                                 labelId="locationId"
                                                 id="location-select"
                                                 value={locationId || ''}
                                                 label="locationId"
+                                                disabled={!Boolean(locationId)}
                                                 onChange={handleChangeLocation}
                                             >
                                                 {locations.map((item, index) => (

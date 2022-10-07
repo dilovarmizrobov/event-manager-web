@@ -238,7 +238,7 @@ const GuestListView = () => {
                                                                                         <Checkbox color="primary" checked={isItemSelected} onClick={() => dispatch(setSelectedOne(row.id!))}/>
                                                                                     </TableCell>
                                                                                 )}
-                                                                                <TableCell>{row.id}</TableCell>
+                                                                                <TableCell>{row.guestNumber}</TableCell>
                                                                                 <TableCell>
                                                                                     <Button onClick={() => dispatch(barcodeChange(row.barcode!))} variant="text" sx={{textTransform: "none"}}>
                                                                                         {row.barcode}

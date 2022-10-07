@@ -22,7 +22,8 @@ const Square = styled('div')(({theme}) => ({
 }))
 
 const ProgressBar: React.FC<{progress: IProgress}> = ({progress}) => {
-    const percentage = Number(((100 * progress.attended)/(progress.attended + progress.absent)).toFixed());
+    let percentage = Number(((100 * progress.attended)/(progress.attended + progress.absent)).toFixed());
+    isNaN(percentage) && (percentage = 0)
 
     return (
         <React.Fragment>
