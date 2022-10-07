@@ -2,7 +2,7 @@ export interface IDashboard {
     progress: IProgress;
     chart: IChart[];
     rate: IRate[];
-    locationId: number;
+    locationId?: number;
 }
 
 export interface IProgress {
