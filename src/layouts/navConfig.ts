@@ -25,7 +25,8 @@ export const navConfigMain: INavConfig[] = [
             {
                 title: 'Дашборд',
                 icon: MdDashboard,
-                href: '/dashboards'
+                href: '/dashboards',
+                perm: PERMISSIONS.LIST.DASHBOARD,
             },
             {
                 title: 'Гости',

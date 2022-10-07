@@ -2,6 +2,11 @@ import {UserRolesEnum} from "./index";
 
 const PERMISSIONS = {
     LIST: {
+        DASHBOARD: [
+            UserRolesEnum.ADMIN,
+            UserRolesEnum.ADMIN_EVENT,
+            UserRolesEnum.EMPLOYEE,
+        ],
         EVENT: [
             UserRolesEnum.ADMIN,
         ],
