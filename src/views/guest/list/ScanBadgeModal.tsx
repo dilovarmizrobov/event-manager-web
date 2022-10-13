@@ -34,6 +34,7 @@ interface IVerifyGuest {
     type: GuestTypeEnum;
     passed: boolean;
     hasFloater: boolean;
+    guestNumber: number;
 }
 
 const FloaterButton = styled(IconButton)<ButtonProps>(({ theme }) => ({
@@ -130,7 +131,7 @@ const ScanBadgeModal: React.FC<{barcode?: string}> = ({barcode}) => {
                                                     <Typography variant="h6">ID:</Typography>
                                                 </Grid>
                                                 <Grid item xs={6}>
-                                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.id}</Typography>
+                                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>{verifyGuest?.guestNumber}</Typography>
                                                 </Grid>
                                             </Grid>
                                             <Grid container spacing={1} alignItems="center" sx={{ mb: 2 }}>
