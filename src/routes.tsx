@@ -1,5 +1,5 @@
 import React from "react";
-import {RouteObject, useRoutes} from "react-router-dom";
+import {NonIndexRouteObject, useRoutes} from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Error404 from "./views/Error404";
 import LoginView from "./views/auth/LoginView";
@@ -36,7 +36,7 @@ import AdminUserEditView from "./views/admin/user/form/UserEditView";
 import LoggerListView from "./views/logger/LoggerListView";
 import DashboardList from "./views/dashboard/list/DashboardList";
 
-interface CustomRouteObject extends RouteObject {
+interface CustomRouteObject extends NonIndexRouteObject {
     perm?: UserRolesEnum[],
     children?: CustomRouteObject[];
 }

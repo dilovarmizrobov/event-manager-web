@@ -5,6 +5,8 @@ import apiHelper from "./ApiHelper";
 class GuestService {
     getGuest = (guestId: string) => apiHelper.get(`/guests/${guestId}`)
 
+    getGuestsExcelList = () => apiHelper.get(`/guests/excel`,{responseType: "blob"})
+
     getListGuests = (page: number, size: number, search: string, countryId: number) => {
         let extraParams
         countryId && (extraParams = {countryId})

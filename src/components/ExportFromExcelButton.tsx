@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {Box, Button, CircularProgress} from "@mui/material";
 import {FiUpload} from "react-icons/fi";
-import ConfirmationModal from "../../../components/ConfirmationModal";
-import errorMessageHandler from "../../../utils/errorMessageHandler";
+import ConfirmationModal from "./ConfirmationModal";
+import errorMessageHandler from "../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
 
 const ExportFromExcelButton: React.FC<{getExcel: Function}> = ({getExcel}) => {
@@ -15,13 +15,12 @@ const ExportFromExcelButton: React.FC<{getExcel: Function}> = ({getExcel}) => {
             setIsOpen(false)
             setLoading(true)
 
-            // let res = await guestService.getGuestsExcelList() as Blob
             let res = await getExcel() as Blob
 
             const url = window.URL.createObjectURL(new Blob([res]))
             const link = document.createElement('a')
             link.href = url
-            link.setAttribute('download', `guests.xlsx`)
+            link.setAttribute('download', `data.xlsx`)
             document.body.appendChild(link)
             link.click()
 

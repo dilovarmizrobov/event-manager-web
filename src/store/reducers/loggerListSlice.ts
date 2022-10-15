@@ -82,11 +82,10 @@ export const {
     fetchLoggerPending,
     fetchLoggerSuccess,
     fetchLoggerError,
-    locationChange,
     queryChange
 } = loggerListSlice.actions
 
-export const selectLoggerList = (state: RootState) => state.loggertList
+export const selectLoggerList = (state: RootState) => state.loggerList
 
 export default loggerListSlice.reducer
 

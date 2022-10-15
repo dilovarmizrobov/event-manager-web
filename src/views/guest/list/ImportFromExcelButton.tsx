@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, CircularProgress} from "@mui/material";
-import {FiUpload} from "react-icons/fi";
+import {FiDownload} from "react-icons/fi";
 import guestService from "../../../services/GuestService";
 import errorMessageHandler from "../../../utils/errorMessageHandler";
 import {useSnackbar} from "notistack";
@@ -48,7 +48,7 @@ const ImportFromExcelButton: React.FC<{handleImport: VoidFunction}> = ({handleIm
                 sx={{marginRight: 2}}
                 component="span"
                 disabled={loading}
-                startIcon={loading ? <CircularProgress color="inherit" size={20} /> : <FiUpload />}
+                startIcon={loading ? <CircularProgress color="inherit" size={20} /> : <FiDownload />}
             >
                 Импорт с Excel
             </Button>
