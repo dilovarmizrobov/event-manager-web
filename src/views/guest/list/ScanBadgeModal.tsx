@@ -10,6 +10,8 @@ import {GuestTypeEnum} from "../../../constants";
 import {styled} from "@mui/material/styles";
 import {MdClose, MdCheck} from "react-icons/md";
 import {purple} from "@mui/material/colors";
+import {useAppDispatch} from "../../../store/hooks";
+import {barcodeChange} from "../../../store/reducers/guestListSlice";
 
 const StyledBox = styled(Box)(() => ({
     height: 70,
@@ -50,6 +52,7 @@ const ScanBadgeModal: React.FC<{barcode?: string}> = ({barcode}) => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
     const [openModal, setOpenModal] = useState(false)
+    const dispatch = useAppDispatch()
 
     const verifyGuestHandle = (barcode: string) => {
         (async () => {
@@ -67,6 +70,11 @@ const ScanBadgeModal: React.FC<{barcode?: string}> = ({barcode}) => {
             }
         })()
     };
+
+    const closeModal = () => {
+        setOpenModal(false)
+        dispatch(barcodeChange(undefined))
+    }
 
     useEffect(() => {
         let barcode = ''
@@ -102,7 +110,7 @@ const ScanBadgeModal: React.FC<{barcode?: string}> = ({barcode}) => {
         <>
             <Dialog
                 open={openModal}
-                onClose={() => setOpenModal(false)}
+                onClose={closeModal}
                 maxWidth="md"
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"

@@ -5,6 +5,8 @@ import {FiPlusCircle as PlusCircleIcon} from "react-icons/fi";
 import ImportFromExcelButton from "./ImportFromExcelButton";
 import hasPermission from "../../../utils/hasPermisson";
 import PERMISSIONS from "../../../constants/permissions";
+import ExportFromExcelButton from "../../../components/ExportFromExcelButton";
+import guestService from "../../../services/GuestService";
 
 const Header: React.FC<{setUpdate: Function}> = ({setUpdate}) => {
     const canAdd = hasPermission(PERMISSIONS.CREATE.GUEST)
@@ -22,6 +24,7 @@ const Header: React.FC<{setUpdate: Function}> = ({setUpdate}) => {
             {
                 canAdd && (
                     <Grid item>
+                        <ExportFromExcelButton getExcel={guestService.getGuestsExcelList}/>
                         <ImportFromExcelButton handleImport={() => setUpdate()}/>
                         <Button
                             color="secondary"

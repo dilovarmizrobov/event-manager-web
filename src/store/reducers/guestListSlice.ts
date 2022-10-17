@@ -69,7 +69,7 @@ export const guestListSlice = createSlice({
             state.page = 0
             state.query = action.payload
         },
-        barcodeChange: (state, action: PayloadAction<string>) => {
+        barcodeChange: (state, action: PayloadAction<string | undefined>) => {
             state.barcode = action.payload
         },
         countryChange: (state, action: PayloadAction<ICountryOption | null>) => {

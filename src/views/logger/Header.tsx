@@ -1,8 +1,9 @@
 import React from 'react';
 import {Grid, Typography} from "@mui/material";
-import ExportportFromExcelButton from "./ExportportFromExcelButton";
+import ExportFromExcelButton from "../../components/ExportFromExcelButton";
+import loggerService from "../../services/LoggerService";
 
-const Header: React.FC<{ page: number }> = ({page}) => {
+const Header: React.FC = () => {
     return (
         <Grid
             container
@@ -16,7 +17,7 @@ const Header: React.FC<{ page: number }> = ({page}) => {
             </Grid>
 
             <Grid item>
-                <ExportportFromExcelButton page={page}/>
+                <ExportFromExcelButton getExcel={loggerService.getExcelList}/>
             </Grid>
 
         </Grid>

@@ -79,7 +79,7 @@ const LoggerListView = () => {
             <Page title="Логирование"/>
             <Root>
                 <Container maxWidth="xl">
-                    <Header page={page + 1} />
+                    <Header/>
                     <Box mt={3}>
                         <Card>
                             <PerfectScrollbar>
